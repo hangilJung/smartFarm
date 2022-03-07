@@ -1,5 +1,5 @@
 const DataAccess = require("./DataAccess");
-const headerErrorCode = require("../utils/headerErrorCode");
+const headerStatusCode = require("../utils/headerStatusCode.js");
 
 class Login {
   constructor(body) {
@@ -17,15 +17,15 @@ class Login {
       const result = await DataAccess.login(user_id, user_pw);
 
       if (result[0].length > 0 && result[0][0]) {
-        response.header = headerErrorCode.normalService;
+        response.header = headerStatusCode.normalService;
       } else {
-        response.header = headerErrorCode.invalidRequestParameterError;
+        response.header = headerStatusCode.invalidRequestParameterError;
       }
 
       return response;
     } catch (error) {
       console.log(error);
-      response.header = headerErrorCode.invalidRequestParameterError;
+      response.header = headerStatusCode.invalidRequestParameterError;
 
       return response;
     }

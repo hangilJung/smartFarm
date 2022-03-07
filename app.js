@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-const mqClient = require("./src/models/subscribe");
+// const mqClient = require("./src/models/subscribe");
 const morgan = require("morgan");
 
 dotenv.config();
 
-mqClient();
+// mqClient();
 
 const index = require("./src/routes");
 

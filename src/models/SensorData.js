@@ -1,12 +1,12 @@
 const DataAccess = require("./DataAccess");
 const moment = require("moment");
 const {
-  convertBufferDataToJsonFormat,
-  multipleConditions,
-  dataExtraction,
-  convertJsonInArrayToJson,
+  dataExistsOrNot,
+  responseHeaderNormalServiceOrNotDataError,
+  sensorDataRealtimeCommunication,
 } = require("../lib/fn");
-const headerErrorCode = require("../utils/headerErrorCode");
+const { checkDataValidation } = require("../lib/databaseAccessFn");
+const headerStatusCode = require("../utils/headerStatusCode.js");
 
 class SensorData {
   constructor(body) {
@@ -18,47 +18,65 @@ class SensorData {
       header: {},
     };
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
-
-    // const convertData = convertBufferDataToJsonFormat(this.body);
-    // const convertData = convertJsonInArrayToJson(this.body["data"]);
+    const getSensorDataRange = await DataAccess.getSensorDataRange();
+    const filteringData = await checkDataValidation(
+      this.body,
+      getSensorDataRange,
+      insertDate
+    );
 
     try {
       const result = await DataAccess.saveSensorData(
-        this.body["data"],
+        filteringData,
+        insertDate,
         insertDate
       );
       if (result === this.body["data"].length) {
-        response.header = headerErrorCode.normalService;
+        response.header = headerStatusCode.normalService;
+        sensorDataRealtimeCommunication();
       } else {
-        response.header = headerErrorCode.invalidRequestParameterError;
+        response.header = headerStatusCode.invalidRequestParameterError;
       }
 
       return response;
     } catch (error) {
       console.log(error);
-      response.header = headerErrorCode.invalidRequestParameterError;
+      response.header = headerStatusCode.invalidRequestParameterError;
 
       return response;
     }
   }
 
-  async loadSensorData() {
-    let response = {
-      header: {},
-    };
-    const conditionalDate = moment().format("YYYY-MM-DD HH:mm:00");
+  async loadLatelySensorData() {
+    // const conditionalDate = moment().format("YYYY-MM-DD HH:mm:00");
 
     try {
-      const result = await DataAccess.loadSensorData(conditionalDate);
-      console.log(result[0]);
-      response.header = headerErrorCode.normalService;
-      response.body = result[0];
+      const result = await DataAccess.loadLatelySensorData();
 
-      return response;
+      return responseHeaderNormalServiceOrNotDataError(
+        dataExistsOrNot(result),
+        result
+      );
     } catch (error) {
       console.log(error);
 
-      response.header = headerErrorCode.invalidRequestParameterError;
+      response.header = headerStatusCode.invalidRequestParameterError;
+      return response;
+    }
+  }
+
+  async loadSensorDataAll() {
+    try {
+      const result = await DataAccess.loadSensorDataAll();
+
+      return responseHeaderNormalServiceOrNotDataError(
+        dataExistsOrNot(result),
+        result
+      );
+    } catch (error) {
+      console.log(error);
+      response.header = headerStatusCode.invalidRequestParameterError;
+
       return response;
     }
   }

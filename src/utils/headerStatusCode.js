@@ -15,6 +15,10 @@ module.exports = {
     resultCode: "10",
     resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
   },
+  dataBaseAccessError: {
+    resultCode: "11",
+    resultMsg: "DATABASE_ACCESS_ERROR",
+  },
   tokenIssuanceSuccess: {
     resultCode: "30",
     resultMsg: "TOKEN_ISSUANCE_SUCCESS",

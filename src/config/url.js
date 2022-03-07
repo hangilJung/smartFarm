@@ -1,0 +1,3 @@
+const SOCKETIO_SERVER_HOST = process.env.SOCKETIO_SERVER_HOST;
+
+module.exports = { SOCKETIO_SERVER_HOST };
