@@ -211,18 +211,6 @@ function isUndefinedParams(matter, line) {
   }
 }
 
-function emergency() {
-  const command = [
-    actu.nutrient.act.stop,
-    actu.nutrient.notUseLine.line_1,
-    actu.nutrient.notUseLine.line_2,
-    actu.nutrient.notUseLine.line_3,
-    actu.nutrient.notUseLine.line_4,
-    actu.nutrient.notUse.notUseDetail_1,
-    actu.nutrient.notUse.notUseDetail_2,
-  ];
-}
-
 function findSensorInformationId(filteringData) {
   for (let i of filteringData) {
     if (i.name === "outTemp") {
@@ -257,12 +245,6 @@ function writeNutrientStopContent() {
 function emergencyContent() {
   return "비상정지했습니다.";
 }
-
-function selectActuator() {}
-
-function compareSensorData() {}
-
-function emergencyStop() {}
 
 module.exports = {
   convertBufferDataToJsonFormat,

@@ -90,6 +90,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static actuatorStatusZero() {
+    const sql = query.actuatorStatusZero;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static loadMinutesSensorData(startDate, endDate) {
     const sql = query.loadMinutesSensorData;
     const condition = [startDate, endDate];

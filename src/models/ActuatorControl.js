@@ -137,10 +137,17 @@ class ActuatorControl {
       const content = fn.emergencyContent();
 
       DataAccess.actuatorControlActionRecord(ctrl.deviceName, content);
+      DataAccess.actuatorStatusZero();
 
-      const result = await axios.post(proccess.env.GATEWAY_SERVER, ctl);
+      // const result = await axios.post(proccess.env.GATEWAY_SERVER, ctl);
 
+      // if (result.header.resultCode === "00") {
       response.header = headerStatusCode.normalService;
+      // } else {
+      // response.header = headerStatusCode.invalidRequestParameterError;
+      // }
+
+      return response;
     } catch (error) {
       response.header = headerStatusCode.invalidRequestParameterError;
 

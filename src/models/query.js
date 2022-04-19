@@ -320,6 +320,11 @@ const query = {
                         action_record_created_at desc 
                     limit
                         10;`,
+  actuatorStatusZero: `
+                    update
+                        actuator
+                    set
+                        actuator_status = 0`,
 };
 
 module.exports = query;

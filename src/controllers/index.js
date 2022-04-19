@@ -20,9 +20,9 @@ const process = {
     const result = await actuatorControl.loadActuatorRecord();
     res.json(result);
   },
-  emergency: (req, res) => {
+  emergency: async (req, res) => {
     const actuatorControl = new ActuatorControl();
-    const result = actuatorControl.emergency();
+    const result = await actuatorControl.emergency();
     res.json(result);
   },
   operateSimpleActuator: async (req, res) => {
