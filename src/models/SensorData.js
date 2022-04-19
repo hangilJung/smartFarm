@@ -103,6 +103,22 @@ class SensorData {
     }
   }
 
+  async mainSensorData() {
+    try {
+      const result = await DataAccess.mainSensorData();
+
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
+        result
+      );
+    } catch (error) {
+      console.log(error);
+      response.header = headerStatusCode.invalidRequestParameterError;
+
+      return response;
+    }
+  }
+
   async loadMinutesSensorData() {
     const { startDate, endDate } = this.#getDate();
 

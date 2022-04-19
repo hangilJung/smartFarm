@@ -97,6 +97,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static mainSensorData() {
+    const sql = query.mainSensorData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static loadMinutesSensorData(startDate, endDate) {
     const sql = query.loadMinutesSensorData;
     const condition = [startDate, endDate];

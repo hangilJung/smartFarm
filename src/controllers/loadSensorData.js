@@ -6,6 +6,11 @@ const load = {
     const result = await sensorData.loadLatelySensorData();
     res.json(result);
   },
+  mainSensorData: async (req, res) => {
+    const sensorData = new SensorData();
+    const result = await sensorData.mainSensorData();
+    res.json(result);
+  },
   minutes: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.loadMinutesSensorData();

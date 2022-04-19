@@ -325,6 +325,28 @@ const query = {
                         actuator
                     set
                         actuator_status = 0`,
+  mainSensorData: `                
+                    select 
+                        si.sensor_name,
+                        sd.sensor_data_value,
+                        sd.sensor_data_created_at 
+                    from 
+                        sensor_information si 
+                    join
+                        sensor_data sd 
+                    on
+                        si.sensor_information_id = sd.sensor_information_id
+                    where 
+                        si.sensor_information_id in (3, 4, 6, 30)
+                    and
+                        sd.sensor_data_created_at = (
+                                                    select 
+                                                        max(sensor_data_created_at)	
+                                                    from 
+                                                        sensor_data
+                                                    where 
+                                                        sensor_information_id = 1
+                                                    );`,
 };
 
 module.exports = query;
