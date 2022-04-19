@@ -14,13 +14,13 @@ class Token {
     if (process.env.ACCESS_SERVER_SECRET_KEY === this.auth) {
       const accessToken = jwt.sign(
         {
-          expires_at: moment().add(2, "h").format("YYYY-MM-DD HH:mm:ss"),
+          expires_at: moment().add(1, "m").format("YYYY-MM-DD HH:mm:ss"),
           issued_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         process.env.JWT_SECRET,
         {
           expiresIn: "1m",
-          issuer: "coporation sooin",
+          issuer: "corporation sooin",
         }
       );
 

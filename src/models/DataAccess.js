@@ -28,20 +28,16 @@ class DataAccess {
 
     try {
       for (let i = 0; i < convertData.length; i++) {
-        result = await pool.query(
-          sql,
-          multipleConditions(i, convertData, insertDate)
-        );
-        if (result[0].affectedRows > 0) {
-          ctn += 1;
-        }
+        pool.query(sql, multipleConditions(i, convertData, insertDate));
+
+        // if (result[0].affectedRows > 0) {
+        //   ctn += 1;
+        // }
       }
 
-      return ctn;
+      return cnt;
     } catch (error) {
-      console.log(error);
-
-      return "fail";
+      return error;
     }
   }
 
@@ -66,16 +62,68 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
-  //이름으로 무엇을 하는지 알 수 없음
-  static async dataValidation() {
-    this.#databaseAcess(sql, condition);
+  static loadActionRecord() {
+    const sql = query.loadActionRecord;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
   }
 
-  static async loadMinuteAgoSensorData() {}
+  static loadAFewMinutesAgoSensorData() {
+    const sql = query.aFewMinutesAgo;
+    const condition = [];
 
-  static async runActuatorMachine() {}
+    return this.#databaseAcess(sql, condition);
+  }
 
-  static async stopActuatorMachine() {}
+  static actuatorControlActionRecord(deviceName, content) {
+    const sql = query.actionRecord;
+    const condition = [deviceName, content];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static saveDate(date, id) {
+    const sql = query.maxCreatedAt;
+    const condition = [id, date, id];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadMinutesSensorData(startDate, endDate) {
+    const sql = query.loadMinutesSensorData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadHoursSensorData(startDate, endDate) {
+    const sql = query.loadHoursSensorData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadDaysSensorData(startDate, endDate) {
+    const sql = query.loadDaysSensorData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadMonthsSensorData(startDate, endDate) {
+    const sql = query.loadMonthsSensorData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadYearsSensorData(startDate, endDate) {
+    const sql = query.loadYearSensorData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
 
   /* ===============start test================ */
   static loadSensorDataAll() {

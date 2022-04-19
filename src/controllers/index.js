@@ -1,16 +1,12 @@
 const Login = require("../models/Login");
 const SensorData = require("../models/sensordata");
 const Token = require("../models/Token");
+const ActuatorControl = require("../models/ActuatorControl");
 
 const process = {
   saveSensorData: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.saveSensorData();
-    res.json(result);
-  },
-  loadLatelySensorData: async (req, res) => {
-    const sensorData = new SensorData();
-    const result = await sensorData.loadLatelySensorData();
     res.json(result);
   },
   login: async (req, res) => {
@@ -19,14 +15,30 @@ const process = {
     const result = await login.login();
     res.json(result);
   },
-  loadActuatorRecord: (req, res) => {
-    res.json("hello loadActuatorRecord");
+  loadActuatorRecord: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.loadActuatorRecord();
+    res.json(result);
   },
   emergency: (req, res) => {
-    res.json("hello emergency");
+    const actuatorControl = new ActuatorControl();
+    const result = actuatorControl.emergency();
+    res.json(result);
   },
-  operateActuator: (req, res) => {
-    res.json("hello operateActuator");
+  operateSimpleActuator: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.simpleActuatorControl();
+    res.json(result);
+  },
+  operateNutrientSupply: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.nutrientSupply();
+    res.json(result);
+  },
+  operateNutrientStop: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.nutrientStop();
+    res.json(result);
   },
   tokenV1: (req, res) => {
     const token = new Token(req.headers.authorization);

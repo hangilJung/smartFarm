@@ -1,4 +1,8 @@
 const headerErrorCode = require("../utils/headerStatusCode.js");
+const fs = require("fs");
+const Token = require("../models/Token");
+const actu = require("../utils/actuator");
+const moment = require("moment");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -83,37 +87,182 @@ const requestWithToken = async (url, body) => {
   }
 };
 
-function sensorDataRealtimeCommunication() {
-  const { io } = require("socket.io-client");
-  const url = require("../config/url");
+function reissuanceToken() {
+  const tokenIssue = new Token(process.env.ACCESS_SERVER_SECRET_KEY);
+  const result = tokenIssue.tokenIssue();
+  tokenFsWrite(result.body.token);
+}
 
-  const socket = io(url.SOCKETIO_SERVER_HOST, {
-    transports: ["websocket"],
-    auth: {
-      account: process.env.SOCKETIO_SECRET_KEY, // 계정의 아이디를 넣을 예정
-      user: "local",
-    },
-  });
-  socket.on("connect", () => {
-    console.log("@@");
-  });
+function tokenFsWrite(issuedToken) {
+  const token = tokenFsRead();
+  token["accessToken"] = issuedToken;
+  fs.writeFileSync(
+    __dirname + "/../utils/accessToken.json",
+    JSON.stringify(token)
+  );
+  return __dirname;
+}
 
-  socket.emit("test", "test");
-
-  socket.on("disconnet", () => {
-    console.log(socket.id);
-  });
+function tokenFsRead() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/accessToken.json", "utf8")
+  );
 }
 
 function takeOutData(data) {
   return data["data"];
 }
 
-function emergencyStop() {}
-
-function outRangeDataPush(data) {
-  const convertData = convertJsonInArrayToJson(data);
+function parameterIsUndefinded(a) {
+  return a === undefined;
 }
+
+function stopNutrientCommand(actu) {
+  let commandList = [
+    actu.nutrient.act["stop"],
+    actu.nutrient.notUseLine["line_1"],
+    actu.nutrient.notUseLine["line_2"],
+    actu.nutrient.notUseLine["line_3"],
+    actu.nutrient.notUseLine["line_4"],
+    actu.nutrient.notUse["notUseDetail_1"],
+    actu.nutrient.notUse["notUseDetail_2"],
+  ];
+
+  return commandList;
+}
+
+function whereToSupply(matter, line) {
+  let commandList = [];
+
+  if (matter === "water") {
+    commandList.push(actu.nutrient.use.useDetail_1);
+    if (line === 1) {
+      commandList.push(actu.nutrient.useLine.line_1);
+    } else if (line === 2) {
+      commandList.push(actu.nutrient.useLine.line_2);
+    } else if (line === 3) {
+      commandList.push(actu.nutrient.useLine.line_3);
+    } else if (line === 4) {
+      commandList.push(actu.nutrient.useLine.line_4);
+    }
+  } else {
+    commandList.push(actu.nutrient.use.useDetail_2);
+    if (line === 1) {
+      commandList.push(actu.nutrient.useLine.line_1);
+    } else if (line === 2) {
+      commandList.push(actu.nutrient.useLine.line_2);
+    } else if (line === 3) {
+      commandList.push(actu.nutrient.useLine.line_3);
+    } else if (line === 4) {
+      commandList.push(actu.nutrient.useLine.line_4);
+    }
+  }
+
+  commandList.push(actu.nutrient.act.run);
+
+  return commandList;
+}
+
+function createCharacter(deviceName, active) {
+  let content = deviceName + " 을(를)";
+
+  if (active === "open") {
+    content += " 열었습니다.";
+  } else if (active === "close") {
+    content += " 닫았습니다.";
+  } else if (active === "on") {
+    content += " 작동하였습니다.";
+  } else if (active === "stop") {
+    content += " 중지하였습니다.";
+  }
+
+  return content;
+}
+
+function isNutrientSupplyFnParamsAValid(matter, line) {
+  if (isMatterAValid(matter) && isLineAValid(line)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function isMatterAValid(matter) {
+  if (matter === "water" || matter === "fertilizer") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isLineAValid(line) {
+  if (line === 1 || line === 2 || line === 3 || line === 4) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isUndefinedParams(matter, line) {
+  if (matter === undefined || line === undefined) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function emergency() {
+  const command = [
+    actu.nutrient.act.stop,
+    actu.nutrient.notUseLine.line_1,
+    actu.nutrient.notUseLine.line_2,
+    actu.nutrient.notUseLine.line_3,
+    actu.nutrient.notUseLine.line_4,
+    actu.nutrient.notUse.notUseDetail_1,
+    actu.nutrient.notUse.notUseDetail_2,
+  ];
+}
+
+function findSensorInformationId(filteringData) {
+  for (let i of filteringData) {
+    if (i.name === "outTemp") {
+      return 1;
+    } else if (i.name === "actPow") {
+      return 40;
+    }
+  }
+}
+
+function dateChecker(start_date, end_date) {
+  return (
+    moment(start_date).format("YYYYMMDD") === "Invalid date" ||
+    moment(end_date).format("YYYYMMDD") === "Invalid date" ||
+    Number(moment(start_date).format("YYYYMMDD")) >
+      Number(moment(end_date).format("YYYYMMDD"))
+  );
+}
+
+function addEndDate(endDate) {
+  return moment(endDate).add(1, "days").format("YYYY-MM-DD");
+}
+
+function writeNutrientSupplyContent(matter, line) {
+  return `양액기에서 ${matter}을(를) ${line}라인에 공급합니다.`;
+}
+
+function writeNutrientStopContent() {
+  return `양액기에서 공급을 중단합니다.`;
+}
+
+function emergencyContent() {
+  return "비상정지했습니다.";
+}
+
+function selectActuator() {}
+
+function compareSensorData() {}
+
+function emergencyStop() {}
 
 module.exports = {
   convertBufferDataToJsonFormat,
@@ -123,6 +272,17 @@ module.exports = {
   dataExistsOrNot,
   responseHeaderNormalServiceOrNotDataError,
   requestWithToken,
-  sensorDataRealtimeCommunication,
   takeOutData,
+  reissuanceToken,
+  parameterIsUndefinded,
+  stopNutrientCommand,
+  whereToSupply,
+  createCharacter,
+  isNutrientSupplyFnParamsAValid,
+  findSensorInformationId,
+  addEndDate,
+  writeNutrientSupplyContent,
+  writeNutrientStopContent,
+  emergencyContent,
+  isUndefinedParams,
 };

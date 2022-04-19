@@ -1,41 +1,63 @@
 const DataAccess = require("./DataAccess");
 const moment = require("moment");
-const {
-  dataExistsOrNot,
-  responseHeaderNormalServiceOrNotDataError,
-  sensorDataRealtimeCommunication,
-} = require("../lib/fn");
-const { checkDataValidation } = require("../lib/databaseAccessFn");
+const fn = require("../lib/fn");
+const daFn = require("../lib/databaseAccessFn");
 const headerStatusCode = require("../utils/headerStatusCode.js");
+const socket = require("../utils/io");
 
 class SensorData {
   constructor(body) {
     this.body = body;
   }
 
+  async #trycatch(a) {
+    try {
+      const result = await a;
+
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
+        result
+      );
+    } catch (error) {
+      console.log(error);
+      response.header = headerStatusCode.invalidRequestParameterError;
+
+      return response;
+    }
+  }
+
+  #getDate() {
+    let { startDate, endDate } = this.body;
+
+    endDate = fn.addEndDate(endDate);
+
+    return { startDate, endDate };
+  }
+
   async saveSensorData() {
+    const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
+
     let response = {
       header: {},
     };
-    const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
-    const getSensorDataRange = await DataAccess.getSensorDataRange();
-    const filteringData = await checkDataValidation(
-      this.body,
-      getSensorDataRange,
-      insertDate
-    );
 
     try {
-      const result = await DataAccess.saveSensorData(
-        filteringData,
-        insertDate,
+      const getSensorDataRange = await DataAccess.getSensorDataRange();
+      const filteringData = await daFn.checkDataValidation(
+        this.body,
+        getSensorDataRange,
         insertDate
       );
-      if (result === this.body["data"].length) {
-        response.header = headerStatusCode.normalService;
-        sensorDataRealtimeCommunication();
-      } else {
-        response.header = headerStatusCode.invalidRequestParameterError;
+      const id = fn.findSensorInformationId(filteringData);
+
+      DataAccess.saveDate(insertDate, id);
+
+      const result = await DataAccess.saveSensorData(filteringData, insertDate);
+
+      response.header = headerStatusCode.normalService;
+
+      if (await daFn.compareSensorData(filteringData)) {
+        socket.emit("changeSensorData", "changeData");
       }
 
       return response;
@@ -53,8 +75,8 @@ class SensorData {
     try {
       const result = await DataAccess.loadLatelySensorData();
 
-      return responseHeaderNormalServiceOrNotDataError(
-        dataExistsOrNot(result),
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
         result
       );
     } catch (error) {
@@ -69,8 +91,8 @@ class SensorData {
     try {
       const result = await DataAccess.loadSensorDataAll();
 
-      return responseHeaderNormalServiceOrNotDataError(
-        dataExistsOrNot(result),
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
         result
       );
     } catch (error) {
@@ -79,6 +101,36 @@ class SensorData {
 
       return response;
     }
+  }
+
+  async loadMinutesSensorData() {
+    const { startDate, endDate } = this.#getDate();
+
+    return this.#trycatch(DataAccess.loadMinutesSensorData(startDate, endDate));
+  }
+
+  async loadHoursSensorData() {
+    const { startDate, endDate } = this.#getDate();
+
+    return this.#trycatch(DataAccess.loadHoursSensorData(startDate, endDate));
+  }
+
+  async loadDaysSensorData() {
+    const { startDate, endDate } = this.#getDate();
+
+    return this.#trycatch(DataAccess.loadDaysSensorData(startDate, endDate));
+  }
+
+  async loadMonthsSensorData() {
+    const { startDate, endDate } = this.#getDate();
+
+    return this.#trycatch(DataAccess.loadMonthsSensorData(startDate, endDate));
+  }
+
+  async loadYearsSensorData() {
+    const { startDate, endDate } = this.#getDate();
+
+    return this.#trycatch(DataAccess.loadYearsSensorData(startDate, endDate));
   }
 }
 
