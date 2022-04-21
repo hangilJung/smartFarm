@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const headerStatusCode = require("../utils/headerStatusCode");
+const logger = require("../config/logger");
 
 const verifyToken = (req, res, next) => {
   let response = {
@@ -22,6 +23,29 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const ipAndUrl = (req, res, next) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logger.info(`access IP ${ip} / url ${req.url}`);
+  next();
+};
+
+const wrongApproch = (req, res) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+  let response = {
+    header: {},
+  };
+
+  console.log(`접속 아이피 : ${ip}`);
+  logger.info(`wrong access ${ip}  Url ${req.url}`);
+  response.header = headerStatusCode.httpError;
+  response.header.receiveMethodAndUrl = `${req.method} ${req.url}`;
+
+  res.json(response);
+};
+
 module.exports = {
   verifyToken,
+  ipAndUrl,
+  wrongApproch,
 };

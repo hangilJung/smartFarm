@@ -1,10 +1,10 @@
 module.exports = () => {
   const SensorData = require("../models/sensordata");
-  const socket = require("./io");
+  const io = require("./io");
 
-  socket.on("showMeTheData", async (data) => {
+  io.socket.on("showMeTheData", async (data) => {
     const sensorData = new SensorData();
     const response = await sensorData.loadLatelySensorData();
-    socket.emit("sensorData", response);
+    io.socket.emit("sensorData", response);
   });
 };

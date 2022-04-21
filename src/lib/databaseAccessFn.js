@@ -45,7 +45,61 @@ async function compareSensorData(filteringData) {
   return compare;
 }
 
+async function compareMainSensorData(filteringData) {
+  const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
+  let compare = false;
+  console.log("fn발동");
+
+  if (agoSensorData[0].length > 0) {
+    for (let i of filteringData) {
+      if (compare) break;
+      if (mainSensorName(i)) {
+        for (let j of agoSensorData[0]) {
+          if (loadDbSensorName(j)) {
+            if (compareDataValue(i, j)) {
+              compare = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return compare;
+}
+
+function mainSensorName(i) {
+  if (
+    i["name"] === "inTemp" ||
+    i["name"] === "inHumi" ||
+    i["name"] === "inInsol" ||
+    i["name"] === "co2"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function loadDbSensorName(j) {
+  if (
+    j["sensor_name"] === "inTemp" ||
+    j["sensor_name"] === "inHumi" ||
+    j["sensor_name"] === "inInsol" ||
+    j["sensor_name"] === "co2"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function compareDataValue(i, j) {
+  return Number(i["value"]) != Number(j["sensor_data_value"]);
+}
+
 module.exports = {
   checkDataValidation,
   compareSensorData,
+  compareMainSensorData,
 };

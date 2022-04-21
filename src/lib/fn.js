@@ -3,6 +3,7 @@ const fs = require("fs");
 const Token = require("../models/Token");
 const actu = require("../utils/actuator");
 const moment = require("moment");
+const { ifError } = require("assert");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -246,6 +247,31 @@ function emergencyContent() {
   return "비상정지했습니다.";
 }
 
+function pickUpData(filteringData, insertDate) {
+  let b = [];
+  for (let i of filteringData) {
+    if (i["name"] === "inTemp") {
+      b.push(findName(i, "inTemp", insertDate));
+    } else if (i["name"] === "inHumi") {
+      b.push(findName(i, "inHumi", insertDate));
+    } else if (i["name"] === "inInsol") {
+      b.push(findName(i, "inInsol", insertDate));
+    } else if (i["name"] === "co2") {
+      b.push(findName(i, "co2", insertDate));
+    }
+  }
+
+  return b;
+}
+
+function findName(i, name, insertDate) {
+  return {
+    sensor_name: name,
+    sensor_data_value: i["value"],
+    sensor_data_created_at: insertDate,
+  };
+}
+
 module.exports = {
   convertBufferDataToJsonFormat,
   multipleConditions,
@@ -267,4 +293,5 @@ module.exports = {
   writeNutrientStopContent,
   emergencyContent,
   isUndefinedParams,
+  pickUpData,
 };

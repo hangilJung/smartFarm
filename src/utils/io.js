@@ -29,4 +29,30 @@ socket.on("disconnect", (reason) => {
   console.log("disconnect");
 });
 
-module.exports = socket;
+const mainData = io(url.SOCKETIO_MAIN_DATA_SERVER_HOST, {
+  transports: ["websocket"],
+  auth: {
+    // account: process.env.SOCKETIO_SECRET_KEY,
+    key: accessToken.accessToken,
+    user: "local", // 계정의 아이디를 넣을 예정
+  },
+});
+
+mainData.on("connect", () => {
+  console.log(socket.id);
+
+  console.log(socket.connected);
+});
+
+mainData.on("connect_error", (reason) => {
+  // socketio 서버가 닫히면 에러 발생 or new Error 객체로 에러 발생
+  console.log(reason);
+  reissuanceToken();
+});
+
+mainData.on("disconnect", (reason) => {
+  console.log(reason);
+  console.log("disconnect");
+});
+
+module.exports = { socket, mainData };

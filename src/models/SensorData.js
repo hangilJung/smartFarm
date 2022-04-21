@@ -3,7 +3,7 @@ const moment = require("moment");
 const fn = require("../lib/fn");
 const daFn = require("../lib/databaseAccessFn");
 const headerStatusCode = require("../utils/headerStatusCode.js");
-const socket = require("../utils/io");
+const io = require("../utils/io");
 
 class SensorData {
   constructor(body) {
@@ -50,14 +50,20 @@ class SensorData {
       );
       const id = fn.findSensorInformationId(filteringData);
 
-      DataAccess.saveDate(insertDate, id);
+      await DataAccess.saveDate(insertDate, id);
 
       const result = await DataAccess.saveSensorData(filteringData, insertDate);
 
       response.header = headerStatusCode.normalService;
 
       if (await daFn.compareSensorData(filteringData)) {
-        socket.emit("changeSensorData", "changeData");
+        io.socket.emit("changeSensorData", "changeData");
+      }
+
+      if (await daFn.compareMainSensorData(filteringData)) {
+        const mainData = fn.pickUpData(filteringData, insertDate);
+
+        io.mainData.emit("changeMainSensorData", mainData);
       }
 
       return response;
