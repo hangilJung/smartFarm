@@ -347,6 +347,14 @@ const query = {
                                                     where 
                                                         sensor_information_id = 1
                                                     );`,
+  updateSensorDataSettingValue: `
+                                update 
+                                    sensor_information 
+                                set
+                                    sensor_setting_value = ?
+                                where 
+                                    sensor_name = ?
+                                ;`,
 };
 
 module.exports = query;

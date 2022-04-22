@@ -13,6 +13,7 @@ router.post("/save-sensor-data", ctrl.process.saveSensorData);
 router.post("/emergency", ipAndUrl, ctrl.process.emergency);
 router.post("/login", ipAndUrl, ctrl.process.login);
 router.post("/load-actuator-record", ipAndUrl, ctrl.process.loadActuatorRecord);
+router.post("/update", ipAndUrl, ctrl.process.updateSensorSettingValue);
 
 router.post("/token-v1", ipAndUrl, ctrl.process.tokenV1);
 

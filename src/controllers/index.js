@@ -45,6 +45,11 @@ const process = {
     const result = token.tokenIssue();
     res.json(result);
   },
+  updateSensorSettingValue: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.updateSensorSettingValue();
+    res.json(result);
+  },
 };
 
 const test = {

@@ -272,6 +272,28 @@ function findName(i, name, insertDate) {
   };
 }
 
+function invalidRequestParameterError() {
+  const response = {
+    header: headerStatusCode.invalidRequestParameterError,
+  };
+
+  return response;
+}
+
+function hasItbeenUpdated(result) {
+  const response = {
+    header: {},
+  };
+
+  if (result[0].affectedRows > 0) {
+    response.header = headerErrorCode.normalService;
+  } else {
+    response.header = headerErrorCode.invalidRequestParameterError;
+  }
+
+  return response;
+}
+
 module.exports = {
   convertBufferDataToJsonFormat,
   multipleConditions,
@@ -294,4 +316,6 @@ module.exports = {
   emergencyContent,
   isUndefinedParams,
   pickUpData,
+  invalidRequestParameterError,
+  hasItbeenUpdated,
 };

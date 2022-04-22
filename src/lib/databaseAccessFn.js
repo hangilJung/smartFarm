@@ -48,7 +48,6 @@ async function compareSensorData(filteringData) {
 async function compareMainSensorData(filteringData) {
   const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
   let compare = false;
-  console.log("fn발동");
 
   if (agoSensorData[0].length > 0) {
     for (let i of filteringData) {

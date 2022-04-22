@@ -139,6 +139,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static updateSensorSettingValue(settingValue, sensorName) {
+    const sql = query.updateSensorDataSettingValue;
+    const condition = [settingValue, sensorName];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   /* ===============start test================ */
   static loadSensorDataAll() {
     const sql = query.loadSensorDataAll;

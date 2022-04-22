@@ -4,6 +4,7 @@ const fn = require("../lib/fn");
 const daFn = require("../lib/databaseAccessFn");
 const headerStatusCode = require("../utils/headerStatusCode.js");
 const io = require("../utils/io");
+const { response } = require("express");
 
 class SensorData {
   constructor(body) {
@@ -20,9 +21,8 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
-      response.header = headerStatusCode.invalidRequestParameterError;
 
-      return response;
+      return fn.invalidRequestParameterError();
     }
   }
 
@@ -36,10 +36,6 @@ class SensorData {
 
   async saveSensorData() {
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
-
-    let response = {
-      header: {},
-    };
 
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
@@ -56,9 +52,9 @@ class SensorData {
 
       response.header = headerStatusCode.normalService;
 
-      if (await daFn.compareSensorData(filteringData)) {
-        io.socket.emit("changeSensorData", "changeData");
-      }
+      // if (await daFn.compareSensorData(filteringData)) {
+      //   io.socket.emit("changeSensorData", "changeData");
+      // }
 
       if (await daFn.compareMainSensorData(filteringData)) {
         const mainData = fn.pickUpData(filteringData, insertDate);
@@ -69,9 +65,7 @@ class SensorData {
       return response;
     } catch (error) {
       console.log(error);
-      response.header = headerStatusCode.invalidRequestParameterError;
-
-      return response;
+      return fn.invalidRequestParameterError();
     }
   }
 
@@ -88,8 +82,7 @@ class SensorData {
     } catch (error) {
       console.log(error);
 
-      response.header = headerStatusCode.invalidRequestParameterError;
-      return response;
+      return fn.invalidRequestParameterError();
     }
   }
 
@@ -103,9 +96,7 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
-      response.header = headerStatusCode.invalidRequestParameterError;
-
-      return response;
+      return fn.invalidRequestParameterError();
     }
   }
 
@@ -119,9 +110,24 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
-      response.header = headerStatusCode.invalidRequestParameterError;
+      return fn.invalidRequestParameterError();
+    }
+  }
 
-      return response;
+  async updateSensorSettingValue() {
+    const { sensorName, settingValue } = this.body;
+
+    try {
+      const result = await DataAccess.updateSensorSettingValue(
+        settingValue,
+        sensorName
+      );
+
+      return fn.hasItbeenUpdated(result);
+    } catch (error) {
+      console.log(error);
+
+      return fn.invalidRequestParameterError();
     }
   }
 
