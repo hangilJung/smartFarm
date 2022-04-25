@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 // const mqClient = require("./src/models/subscribe");
 const morgan = require("morgan");
 const ioEmit = require("./src/utils/ioEmit");
-const headerStatusCode = require("./src/utils/headerStatusCode");
-const moment = require("moment");
 const { wrongApproch } = require("./src/lib/middleware");
+const helmet = require("helmet");
+const hpp = require("hpp");
 
 dotenv.config();
 
@@ -16,7 +16,14 @@ ioEmit();
 const index = require("./src/routes");
 
 app.use(express.json());
-app.use(morgan("dev"));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(hpp());
+} else {
+  app.use(morgan("dev"));
+}
 
 app.use("/", index);
 

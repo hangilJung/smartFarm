@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon bin/www.js",
+    "dev": "cross-env NODE_ENV=dev nodemon bin/www.js",
     "start": "pm2 start bin/www.js --name=LOCAL"
   },
   "author": "",
@@ -12,8 +12,11 @@
   "dependencies": {
     "aedes": "^0.46.2",
     "axios": "^0.26.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "helmet": "^5.0.2",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mosca": "^2.8.3",
