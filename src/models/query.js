@@ -178,7 +178,6 @@ const query = {
                     ?,
                     now()
                 );`,
-  readActionRecord: ``,
   maxCreatedAt: `
                 update 
                     max_created_at 
@@ -198,118 +197,108 @@ const query = {
                     sensor_information_id = ?;`,
   loadMinutesSensorData: `
                         select 
-                            si.sensor_name,
-                            cast(cast((sd.sensor_data_value) as decimal(7, 1)) as float) as sensor_data_value,
-                            sd.sensor_data_created_at 
+                            sd.sensor_information_id,
+                            cast((sd.sensor_data_value) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y-%m-%d %H') as sensor_data_created_at
                         from 
                             sensor_data sd 
-                        join
-                            sensor_information si 
-                        on
-                            si.sensor_information_id  = sd.sensor_information_id 
-                        where 
-                            sd.sensor_data_created_at >= ?
+                        where  
+                            sd.sensor_data_created_at >=  ?
                         and
                             sd.sensor_data_created_at < ?
+                        and
+                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
                         group by
                             year(sd.sensor_data_created_at),
                             month(sd.sensor_data_created_at),
                             day(sd.sensor_data_created_at),
-	                        hour(sd.sensor_data_created_at),
-                            minute(sd.sensor_data_created_at),
-                            si.sensor_name 
+                            hour(sd.sensor_data_created_at),    
+                            minute(sd.sensor_data_created_at),                        
+                            sd.sensor_information_id
                         order by
-                            si.sensor_information_id,
+                            sd.sensor_information_id,
                             sd.sensor_data_created_at;`,
   loadHoursSensorData: `
                         select 
-                            si.sensor_name,
-                            cast(cast((sd.sensor_data_value) as decimal(7, 1)) as float) as sensor_data_value,
-                            sd.sensor_data_created_at 
+                            sd.sensor_information_id,
+                            cast((avg(sd.sensor_data_value)) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y-%m-%d %H') as sensor_data_created_at
                         from 
                             sensor_data sd 
-                        join
-                            sensor_information si 
-                        on
-                            si.sensor_information_id  = sd.sensor_information_id 
-                        where 
+                        where  
                             sd.sensor_data_created_at >= ?
                         and
                             sd.sensor_data_created_at < ?
+                        and
+                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
                         group by
                             year(sd.sensor_data_created_at),
                             month(sd.sensor_data_created_at),
                             day(sd.sensor_data_created_at),
-                            hour(sd.sensor_data_created_at),
-                            si.sensor_name 
+                            hour(sd.sensor_data_created_at),                            
+                            sd.sensor_information_id
                         order by
-                            si.sensor_information_id,
+                            sd.sensor_information_id,
                             sd.sensor_data_created_at;`,
   loadDaysSensorData: `
                         select 
-                            si.sensor_name,
-                            cast(cast((sd.sensor_data_value) as decimal(7, 1)) as float) as sensor_data_value,
-                            sd.sensor_data_created_at 
+                            sd.sensor_information_id,
+                            cast((avg(sd.sensor_data_value)) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
                         from 
                             sensor_data sd 
-                        join
-                            sensor_information si 
-                        on
-                            si.sensor_information_id  = sd.sensor_information_id 
-                        where 
+                        where  
                             sd.sensor_data_created_at >= ?
                         and
                             sd.sensor_data_created_at < ?
+                        and
+                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
                         group by
                             year(sd.sensor_data_created_at),
                             month(sd.sensor_data_created_at),
-                            day(sd.sensor_data_created_at),
-                            si.sensor_name 
+                            day(sd.sensor_data_created_at),                            
+                            sd.sensor_information_id
                         order by
-                            si.sensor_information_id,
+                            sd.sensor_information_id,
                             sd.sensor_data_created_at;`,
   loadMonthsSensorData: `
                         select 
-                            si.sensor_name,
-                            cast(cast((sd.sensor_data_value) as decimal(7, 1)) as float) as sensor_data_value,
-                            sd.sensor_data_created_at 
+                            sd.sensor_information_id,
+                            cast((avg(sd.sensor_data_value)) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y-%m') as sensor_data_created_at
                         from 
                             sensor_data sd 
-                        join
-                            sensor_information si 
-                        on
-                            si.sensor_information_id  = sd.sensor_information_id 
-                        where 
+                        where  
                             sd.sensor_data_created_at >= ?
                         and
                             sd.sensor_data_created_at < ?
+                        and
+                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
                         group by
                             year(sd.sensor_data_created_at),
-                            month(sd.sensor_data_created_at),
-                            si.sensor_name 
+                            month(sd.sensor_data_created_at),                        
+                            sd.sensor_information_id
                         order by
-                            si.sensor_information_id,
+                            sd.sensor_information_id,
                             sd.sensor_data_created_at;`,
   loadYearSensorData: `
                         select 
-                            si.sensor_name,
-                            cast(cast((sd.sensor_data_value) as decimal(7, 1)) as float) as sensor_data_value,
-                            sd.sensor_data_created_at 
+                            sd.sensor_information_id,
+                            cast((avg(sd.sensor_data_value)) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y') as sensor_data_created_at
                         from 
                             sensor_data sd 
-                        join
-                            sensor_information si 
-                        on
-                            si.sensor_information_id  = sd.sensor_information_id 
-                        where 
+                        where  
                             sd.sensor_data_created_at >= ?
                         and
                             sd.sensor_data_created_at < ?
+                        and
+                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
                         group by
-                            year(sd.sensor_data_created_at),
-                            si.sensor_name 
+                            year(sd.sensor_data_created_at),                        
+                            sd.sensor_information_id
                         order by
-                            si.sensor_information_id,
+                            sd.sensor_information_id,
                             sd.sensor_data_created_at;`,
   loadActionRecord: `
                     select 
@@ -325,10 +314,10 @@ const query = {
                         actuator
                     set
                         actuator_status = 0`,
-  mainSensorData: `                
+  mainInsideSensorData: `                
                     select 
                         si.sensor_name,
-                        sd.sensor_data_value,
+                        cast((sd.sensor_data_value) as decimal(5, 0)) as sensor_data_value,
                         sd.sensor_data_created_at 
                     from 
                         sensor_information si 
@@ -346,7 +335,35 @@ const query = {
                                                         sensor_data
                                                     where 
                                                         sensor_information_id = 1
-                                                    );`,
+                                                    )
+                    order by
+                        sd.sensor_information_id,
+                        sd.sensor_data_created_at;`,
+  mainOutsideSensorData: `                
+                    select 
+                        si.sensor_name,
+                        cast((sd.sensor_data_value) as decimal(5, 1)) as sensor_data_value,
+                        sd.sensor_data_created_at 
+                    from 
+                        sensor_information si 
+                    join
+                        sensor_data sd 
+                    on
+                        si.sensor_information_id = sd.sensor_information_id
+                    where 
+                        si.sensor_information_id in (1, 2, 5, 7, 8)
+                    and
+                        sd.sensor_data_created_at = (
+                                                    select 
+                                                        max(sensor_data_created_at)	
+                                                    from 
+                                                        sensor_data
+                                                    where 
+                                                        sensor_information_id = 1
+                                                    )
+                    order by
+                        sd.sensor_information_id,
+                        sd.sensor_data_created_at;`,
   updateSensorDataSettingValue: `
                                 update 
                                     sensor_information 
@@ -355,6 +372,50 @@ const query = {
                                 where 
                                     sensor_name = ?
                                 ;`,
+  nutrientStartSupplyDatetime: `
+                                insert into
+                                    nutrient_supply (matter, line, start_supply_date_time)
+                                values
+                                    (?, ?, ?);`,
+  nutrientLineSupply: `
+                        select 
+                            * 
+                        from 
+                            nutrient_supply 
+                        order by 
+                            start_supply_date_time desc 
+                        limit 2;`,
+  nutrientEndSupplyDatetime: `
+                            update 
+                                nutrient_supply 
+                            set 
+                                supply = ?, 
+                                total_supply = ?, 
+                                end_supply_date_time = ?
+                            where 
+                                start_supply_date_time = (
+                                                            select 
+                                                                * 
+                                                            from 
+                                                                (
+                                                                select 
+                                                                    max(start_supply_date_time) 
+                                                                from 
+                                                                    nutrient_supply) as a
+                                                        );`,
+  readNutrientSupply: `
+                    select 
+                        * 
+                    from 
+                        nutrient_supply 
+                    order by 
+                        end_supply_date_time desc 
+                    limit 1;`,
+  hourlyLineSupply: `
+                    insert into 
+                        nutrient_hourly_line_supply (matter, line, supply_date_time, supply) 
+                    values 
+                        (?, ?, ?, ?);`,
 };
 
 module.exports = query;

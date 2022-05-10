@@ -1,4 +1,4 @@
-const SensorData = require("../models/sensordata");
+const SensorData = require("../models/SensorData");
 
 const load = {
   loadLatelySensorData: async (req, res) => {
@@ -6,9 +6,14 @@ const load = {
     const result = await sensorData.loadLatelySensorData();
     res.json(result);
   },
-  mainSensorData: async (req, res) => {
+  mainInsideSensorData: async (req, res) => {
     const sensorData = new SensorData();
-    const result = await sensorData.mainSensorData();
+    const result = await sensorData.mainInsideSensorData();
+    res.json(result);
+  },
+  mainOutsideSensorData: async (req, res) => {
+    const sensorData = new SensorData();
+    const result = await sensorData.mainOutsideSensorData();
     res.json(result);
   },
   minutes: async (req, res) => {
@@ -43,4 +48,12 @@ const load = {
   },
 };
 
-module.exports = { load };
+const socketIO = {
+  reactFirstMainSensorData: async () => {
+    const sensorData = new SensorData();
+    const result = await sensorData.mainInsideSensorData();
+    return result.body;
+  },
+};
+
+module.exports = { load, socketIO };

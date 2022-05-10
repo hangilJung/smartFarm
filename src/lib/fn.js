@@ -1,9 +1,8 @@
-const headerErrorCode = require("../utils/headerStatusCode.js");
+const headerStatusCode = require("../utils/headerStatusCode.js");
 const fs = require("fs");
 const Token = require("../models/Token");
 const actu = require("../utils/actuator");
 const moment = require("moment");
-const { ifError } = require("assert");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -35,10 +34,10 @@ function responseHeaderNormalServiceOrNotDataError(trueAndFalse, data) {
     header: {},
   };
   if (trueAndFalse) {
-    response.header = headerErrorCode.normalService;
+    response.header = headerStatusCode.normalService;
     response.body = data[0];
   } else {
-    response.header = headerErrorCode.noDataError;
+    response.header = headerStatusCode.noDataError;
     response.body = data[0];
   }
 
@@ -272,6 +271,19 @@ function findName(i, name, insertDate) {
   };
 }
 
+function normalService(result) {
+  const response = {
+    header: headerStatusCode.normalService,
+  };
+  // if (result["body"] != undefined) {
+  //   if (result["body"] > 0) {
+  //     response.body = result[0];
+  //   }
+  // }
+
+  return response;
+}
+
 function invalidRequestParameterError() {
   const response = {
     header: headerStatusCode.invalidRequestParameterError,
@@ -286,18 +298,135 @@ function hasItbeenUpdated(result) {
   };
 
   if (result[0].affectedRows > 0) {
-    response.header = headerErrorCode.normalService;
+    response.header = headerStatusCode.normalService;
   } else {
-    response.header = headerErrorCode.invalidRequestParameterError;
+    response.header = headerStatusCode.invalidRequestParameterError;
   }
 
   return response;
 }
 
+function deliverDataFormatWrite(actu) {
+  const ctl = {
+    farmlandId: 1,
+    data: [
+      {
+        bedId: 5,
+        device: "nuctrl",
+        active: "nctrl_write",
+        deviceName: "nutrient",
+        dev_data: stopNutrientCommand(actu),
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+      },
+    ],
+  };
+
+  return ctl;
+}
+
+function deliverDataFormatRead(wantData) {
+  const dataFormat = actu.readNutrient[wantData];
+  const ctl = {
+    farmlandId: 1,
+    data: [
+      {
+        bedId: 5,
+        device: "nuctrl",
+        active: "nctrl_read",
+        deviceName: "nutrient",
+        dev_data: dataFormat,
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+      },
+    ],
+  };
+
+  return ctl;
+}
+
+function responseHeaderAndBody(data) {
+  const response = {
+    header: headerStatusCode.normalService,
+    body: data,
+  };
+
+  return response;
+}
+
+function whatLine(line) {
+  let command;
+  if (line === 1) {
+    command = actu.supply.list["line_1"];
+  } else if (line === 2) {
+    command = actu.supply.list["line_2"];
+  } else if (line === 3) {
+    command = actu.supply.list["line_3"];
+  } else if (line === 4) {
+    command = actu.supply.list["line_4"];
+  }
+
+  const ctl = {
+    farmlandId: 1,
+    data: [
+      {
+        bedId: 5,
+        device: "nuctrl",
+        active: "nctrl_read",
+        deviceName: "nutrient",
+        dev_data: [command],
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+      },
+    ],
+  };
+
+  return ctl;
+}
+
+function arrayCondition(i, data) {
+  return [
+    data[i]["matter"],
+    data[i]["line"],
+    data[i]["supplyDatetime"],
+    data[i]["supply"],
+  ];
+}
+
+function twoHourData(
+  matter,
+  line,
+  startSupplyDatetime,
+  endSupplyDatetime,
+  minutePerLitter
+) {
+  return [
+    {
+      matter: matter,
+      line: line,
+      supply_date_time: startSupplyDatetime.format("YYYY-MM-DD HH"),
+      supply:
+        moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")).diff(
+          startSupplyDatetime,
+          "minutes"
+        ) * minutePerLitter,
+    },
+    {
+      matter: matter,
+      line: line,
+      supply_date_time: endSupplyDatetime.format("YYYY-MM-DD HH"),
+      supply:
+        moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")).diff(
+          endSupplyDatetime,
+          "minutes"
+        ) * minutePerLitter,
+    },
+  ];
+}
+
 module.exports = {
+  responseHeaderAndBody,
   convertBufferDataToJsonFormat,
   multipleConditions,
   dataExtraction,
+  whatLine,
   convertJsonInArrayToJson,
   dataExistsOrNot,
   responseHeaderNormalServiceOrNotDataError,
@@ -305,6 +434,7 @@ module.exports = {
   takeOutData,
   reissuanceToken,
   parameterIsUndefinded,
+  deliverDataFormatWrite,
   stopNutrientCommand,
   whereToSupply,
   createCharacter,
@@ -318,4 +448,8 @@ module.exports = {
   pickUpData,
   invalidRequestParameterError,
   hasItbeenUpdated,
+  normalService,
+  deliverDataFormatRead,
+  arrayCondition,
+  twoHourData,
 };

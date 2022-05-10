@@ -97,8 +97,15 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
-  static mainSensorData() {
-    const sql = query.mainSensorData;
+  static mainInsideSensorData() {
+    const sql = query.mainInsideSensorData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static mainOutsideSensorData() {
+    const sql = query.mainOutsideSensorData;
     const condition = [];
 
     return this.#databaseAcess(sql, condition);
@@ -144,6 +151,52 @@ class DataAccess {
     const condition = [settingValue, sensorName];
 
     return this.#databaseAcess(sql, condition);
+  }
+
+  static nutrientStartSupplyDatetime(matter, line, startSupplyDatetime) {
+    const sql = query.nutrientStartSupplyDatetime;
+    const condition = [matter, line, startSupplyDatetime];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static nutrientLineSupply() {
+    const sql = query.nutrientLineSupply;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static nutrientEndSupplyDatetime(supply, todaySupply, endSupplyDatetime) {
+    const sql = query.nutrientStartSupplyDatetime;
+    const condition = [supply, todaySupply, endSupplyDatetime];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static readNutrientSupply() {
+    const sql = query.readNutrientSupply;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async hourlyLineSupply(data) {
+    const sql = query.hourlyLineSupply;
+
+    try {
+      for (let i = 0; i < data.length; i++) {
+        pool.query(sql, arrayCondition(i, data));
+
+        // if (result[0].affectedRows > 0) {
+        //   ctn += 1;
+        // }
+      }
+
+      return cnt;
+    } catch (error) {
+      return error;
+    }
   }
 
   /* ===============start test================ */

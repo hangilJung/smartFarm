@@ -9,6 +9,7 @@ router.post("/hours", ipAndUrl, ctrl.load.hours);
 router.post("/days", ipAndUrl, ctrl.load.days);
 router.post("/months", ipAndUrl, ctrl.load.months);
 router.post("/years", ipAndUrl, ctrl.load.years);
-router.post("/main", ipAndUrl, ctrl.load.mainSensorData);
+router.post("/main-inside", ipAndUrl, ctrl.load.mainInsideSensorData);
+router.post("/main-outside", ipAndUrl, ctrl.load.mainOutsideSensorData);
 
 module.exports = router;

@@ -2,9 +2,7 @@ const DataAccess = require("./DataAccess");
 const moment = require("moment");
 const fn = require("../lib/fn");
 const daFn = require("../lib/databaseAccessFn");
-const headerStatusCode = require("../utils/headerStatusCode.js");
 const io = require("../utils/io");
-const { response } = require("express");
 
 class SensorData {
   constructor(body) {
@@ -50,19 +48,13 @@ class SensorData {
 
       const result = await DataAccess.saveSensorData(filteringData, insertDate);
 
-      response.header = headerStatusCode.normalService;
-
-      // if (await daFn.compareSensorData(filteringData)) {
-      //   io.socket.emit("changeSensorData", "changeData");
-      // }
-
       if (await daFn.compareMainSensorData(filteringData)) {
         const mainData = fn.pickUpData(filteringData, insertDate);
 
         io.mainData.emit("changeMainSensorData", mainData);
       }
 
-      return response;
+      return fn.normalService();
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -100,14 +92,53 @@ class SensorData {
     }
   }
 
-  async mainSensorData() {
+  async mainInsideSensorData() {
     try {
-      const result = await DataAccess.mainSensorData();
+      const result = await DataAccess.mainInsideSensorData();
 
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
         result
       );
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async mainOutsideSensorData() {
+    try {
+      const result = await DataAccess.mainOutsideSensorData();
+
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
+        result
+      );
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async vmainOutsidSensorData() {
+    try {
+      const result = await DataAccess.mainInsideSensorData();
+
+      return fn.responseHeaderNormalServiceOrNotDataError(
+        fn.dataExistsOrNot(result),
+        result
+      );
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async reactFirstMainData() {
+    try {
+      const result = await this.mainSensorData();
+
+      return result.body;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();

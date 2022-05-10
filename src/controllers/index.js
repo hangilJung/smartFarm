@@ -1,5 +1,5 @@
 const Login = require("../models/Login");
-const SensorData = require("../models/sensordata");
+const SensorData = require("../models/Sensordata");
 const Token = require("../models/Token");
 const ActuatorControl = require("../models/ActuatorControl");
 
@@ -40,6 +40,16 @@ const process = {
     const result = await actuatorControl.nutrientStop();
     res.json(result);
   },
+  readNutrient: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.nutrientStop();
+    res.json(result);
+  },
+  loadNutrientData: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.loadNutrientData();
+    res.json(result);
+  },
   tokenV1: (req, res) => {
     const token = new Token(req.headers.authorization);
     const result = token.tokenIssue();
@@ -56,6 +66,11 @@ const test = {
   loadSensorDataAll: async (req, res) => {
     const sensorData = new SensorData();
     const result = await sensorData.loadSensorDataAll();
+    res.json(result);
+  },
+  test: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.test();
     res.json(result);
   },
 };
