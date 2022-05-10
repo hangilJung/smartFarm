@@ -120,9 +120,9 @@ class SensorData {
     }
   }
 
-  async vmainOutsidSensorData() {
+  async readBedData() {
     try {
-      const result = await DataAccess.mainInsideSensorData();
+      const result = await DataAccess.readBedData();
 
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),

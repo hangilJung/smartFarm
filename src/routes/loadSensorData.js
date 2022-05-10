@@ -11,5 +11,6 @@ router.post("/months", ipAndUrl, ctrl.load.months);
 router.post("/years", ipAndUrl, ctrl.load.years);
 router.post("/main-inside", ipAndUrl, ctrl.load.mainInsideSensorData);
 router.post("/main-outside", ipAndUrl, ctrl.load.mainOutsideSensorData);
+router.post("/bed-data", ipAndUrl, ctrl.load.bedData);
 
 module.exports = router;

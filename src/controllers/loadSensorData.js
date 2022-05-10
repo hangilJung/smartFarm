@@ -46,6 +46,11 @@ const load = {
     const result = await sensorData.loadYearsSensorData();
     res.json(result);
   },
+  bedData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.readBedData();
+    res.json(result);
+  },
 };
 
 const socketIO = {

@@ -199,6 +199,13 @@ class DataAccess {
     }
   }
 
+  static async readBedData() {
+    const sql = query.readBedData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   /* ===============start test================ */
   static loadSensorDataAll() {
     const sql = query.loadSensorDataAll;
