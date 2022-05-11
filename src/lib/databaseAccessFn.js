@@ -1,20 +1,52 @@
 const DataAccess = require("../models/DataAccess");
 
 function checkDataValidation(body, getSensorDataRange, date) {
-  return body["data"].map((data) => {
-    for (let i of getSensorDataRange[0]) {
-      if (data.name === i.sensor_name) {
-        if (
-          data.value < Number(i.sensor_minimum_value) ||
-          data.value > Number(i.sensor_maximum_value)
-        ) {
-          saveOriginalSensorData(data, date);
-          return (data = { name: data.name, value: null });
+  let arr = [];
+
+  for (let j of body["data"]) {
+    if (fiteringName(j["name"])) {
+      for (let i of getSensorDataRange[0]) {
+        if (j.name === i.sensor_name) {
+          if (
+            j.value < Number(i.sensor_minimum_value) ||
+            j.value > Number(i.sensor_maximum_value)
+          ) {
+            saveOriginalSensorData(j, date);
+            arr.push({ name: j.name, value: null });
+          }
+          arr.push({ name: j.name, value: j.value });
         }
-        return (data = { name: data.name, value: data.value });
       }
     }
-  });
+  }
+  return arr;
+}
+
+function fiteringName(param) {
+  const list = {
+    bVol: "bVol",
+    bCur: "bCur",
+    bVolCurAng: "bVolCurAng",
+    bFac: "bFac",
+    totActPow: "totActPow",
+    totReactPow: "totReactPow",
+    aActCur: "aActCur",
+    bActCur: "bActCur",
+    aReactCur: "aReactCur",
+    bReactCur: "bReactCur",
+    cVol: "cVol",
+    cCur: "cCur",
+    cVolCurAng: "cVolCurAng",
+    cFac: "cFac",
+    cActCur: "cActCur",
+    cReactCur: "cReactCur",
+  };
+
+  if (list[param] === undefined) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function saveOriginalSensorData(data, date) {

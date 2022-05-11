@@ -302,13 +302,12 @@ const query = {
                             sd.sensor_data_created_at;`,
   loadActionRecord: `
                     select 
-                        *
+                        contents,
+                        action_record_created_at
                     from 
                         action_record ar
                     order by
-                        action_record_created_at desc 
-                    limit
-                        10;`,
+                        action_record_created_at desc;`,
   actuatorStatusZero: `
                     update
                         actuator

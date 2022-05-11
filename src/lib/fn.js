@@ -275,6 +275,7 @@ function normalService(result) {
   const response = {
     header: headerStatusCode.normalService,
   };
+
   // if (result["body"] != undefined) {
   //   if (result["body"] > 0) {
   //     response.body = result[0];

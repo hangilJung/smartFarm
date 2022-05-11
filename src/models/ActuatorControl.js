@@ -23,7 +23,7 @@ class ActuatorControl {
           bedId: 5,
           device,
           active,
-          deviceName,
+          device_name: deviceName,
           dev_data: [],
           datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
         },
@@ -38,7 +38,7 @@ class ActuatorControl {
 
     try {
       const content = fn.createCharacter(deviceName, active);
-
+      console.log(content);
       DataAccess.actuatorControlActionRecord(deviceName, content);
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
 
@@ -83,15 +83,17 @@ class ActuatorControl {
     try {
       const content = fn.writeNutrientSupplyContent(matter, line);
 
-      // const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
       DataAccess.actuatorControlActionRecord(ctl.deviceName, content);
       DataAccess.nutrientStartSupplyDatetime(matter, line, nowTime);
 
-      // if (result.header.resultCode === "00") {
-      response.header = headerStatusCode.normalService;
-      // } else {
-      // response.header = headerStatusCode.invalidRequestParameterError;
-      // }
+      console.log(result);
+
+      if (result.header.resultCode === "00") {
+        response.header = headerStatusCode.normalService;
+      } else {
+        response.header = headerStatusCode.invalidRequestParameterError;
+      }
 
       return response;
     } catch (error) {
@@ -111,7 +113,10 @@ class ActuatorControl {
       const content = fn.writeNutrientStopContent();
 
       // const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
-      DataAccess.actuatorControlActionRecord(dataFormat.deviceName, content);
+      DataAccess.actuatorControlActionRecord(
+        dataFormat.data[0]["deviceName"],
+        content
+      );
       const nutrientLineSupplyResult = await DataAccess.nutrientLineSupply();
 
       for (let i of nutrientLineSupplyResult[0]) {
@@ -121,54 +126,54 @@ class ActuatorControl {
         }
       }
 
-      const getDataNutrientTotalSupplyResult = await axios.post(
-        process.env.GATEWAY_SERVER,
-        fn.whatLine(line)
-      );
+      // const getDataNutrientTotalSupplyResult = await axios.post(
+      //   process.env.GATEWAY_SERVER,
+      //   fn.whatLine(line)
+      // );
 
-      const todaySupply = Number(
-        getDataNutrientTotalSupplyResult.data[0].dev_data[0]["description"]
-      );
+      // const todaySupply = Number(
+      //   getDataNutrientTotalSupplyResult.data[0].dev_data[0]["description"]
+      // );
 
-      const supply = todaySupply - latelyTotalSupply;
-      console.log(supply);
+      // const supply = todaySupply - latelyTotalSupply;
+      // console.log(supply);
 
-      await DataAccess.nutrientEndSupplyDatetime(supply, todaySupply, nowTime);
-      const readNutrientSupplyResult = await DataAccess.readNutrientSupply();
+      // await DataAccess.nutrientEndSupplyDatetime(supply, todaySupply, nowTime);
+      // const readNutrientSupplyResult = await DataAccess.readNutrientSupply();
 
-      const startSupplyDatetime = moment(
-        readNutrientSupplyResult[0][0]["start_supply_date_time"]
-      );
-      const endSupplyDatetime = moment(
-        readNutrientSupplyResult[0][0]["end_supply_date_time"]
-      );
+      // const startSupplyDatetime = moment(
+      //   readNutrientSupplyResult[0][0]["start_supply_date_time"]
+      // );
+      // const endSupplyDatetime = moment(
+      //   readNutrientSupplyResult[0][0]["end_supply_date_time"]
+      // );
 
-      const matter = readNutrientSupplyResult[0][0]["matter"];
+      // const matter = readNutrientSupplyResult[0][0]["matter"];
 
-      if (startSupplyDatetime.format("HH") === endSupplyDatetime.format("HH")) {
-        data = [
-          {
-            matter: matter,
-            line: line,
-            supply_date_time: nowTime,
-            supply: supply,
-          },
-        ];
-      } else {
-        const minutePerLitter =
-          supply /
-          endSupplyDatetime.diff(moment(startSupplyDatetime), "minutes");
+      // if (startSupplyDatetime.format("HH") === endSupplyDatetime.format("HH")) {
+      //   data = [
+      //     {
+      //       matter: matter,
+      //       line: line,
+      //       supply_date_time: nowTime,
+      //       supply: supply,
+      //     },
+      //   ];
+      // } else {
+      //   const minutePerLitter =
+      //     supply /
+      //     endSupplyDatetime.diff(moment(startSupplyDatetime), "minutes");
 
-        data = fn.twoHourData(
-          matter,
-          line,
-          startSupplyDatetime,
-          endSupplyDatetime,
-          minutePerLitter
-        );
-      }
+      //   data = fn.twoHourData(
+      //     matter,
+      //     line,
+      //     startSupplyDatetime,
+      //     endSupplyDatetime,
+      //     minutePerLitter
+      //   );
+      // }
 
-      DataAccess.hourlyLineSupply(data);
+      // DataAccess.hourlyLineSupply(data);
       return fn.normalService();
     } catch (error) {
       return fn.invalidRequestParameterError();
@@ -219,10 +224,20 @@ class ActuatorControl {
   }
 
   async loadActuatorRecord() {
+    const response = {
+      header: {},
+    };
     try {
       const result = await DataAccess.loadActionRecord();
 
-      return fn.normalService(result);
+      if (result[0].length > 0) {
+        response.header = headerStatusCode.normalService;
+        response.body = result[0];
+      } else {
+        response.header = headerStatusCode.invalidRequestParameterError;
+      }
+
+      return response;
     } catch (error) {
       return fn.invalidRequestParameterError();
     }
@@ -237,23 +252,23 @@ class ActuatorControl {
         {
           bedId: 5,
           device: "nuctrl",
-          active: "nctrl_write",
+          active: "nctrl_read",
           deviceName: "nutrient",
-          dev_data: actu.readNutrientDataDigitalAndAnalog,
+          dev_data: actu.readNutrientDataDigitalAndAnalog.list,
           datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
         },
       ],
     };
     try {
-      // const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
-      if (result.data.header.resultCode === "00") {
-        response = fn.responseHeaderAndBody(result.data.body);
-      } else {
-        response = fn.invalidRequestParameterError();
-      }
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
+      console.log(result);
+      // if (result.data.header.resultCode === "00") {
+      //   response = fn.responseHeaderAndBody(result.data.body);
+      // } else {
+      //   response = fn.invalidRequestParameterError();
+      // }
 
-      const result = "success";
-      return result;
+      return JSON.parse(result);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();

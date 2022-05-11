@@ -195,7 +195,6 @@ const supply = {
 
 const readNutrientDataDigitalAndAnalog = {
   list: [
-    //digital
     { modbus_address: "1", description: "", property: "read" },
     { modbus_address: "16", description: "", property: "read" },
     { modbus_address: "17", description: "", property: "read" },
@@ -494,7 +493,6 @@ const readNutrientDataDigitalAndAnalog = {
     { modbus_address: "10272", description: "", property: "read" },
     { modbus_address: "10273", description: "", property: "read" },
 
-    //analog
     { modbus_address: "40000", description: "", property: "read" },
     { modbus_address: "40001", description: "", property: "read" },
     { modbus_address: "40210", description: "", property: "read" },
