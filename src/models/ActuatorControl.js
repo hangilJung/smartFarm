@@ -72,7 +72,7 @@ class ActuatorControl {
         {
           bedId: 5,
           device: "nuctrl",
-          active: "nctrl_write",
+          active: "nuctrl_write",
           deviceName: "nutrient",
           dev_data: fn.whereToSupply(matter, line),
           datetime: nowTime,
@@ -112,7 +112,7 @@ class ActuatorControl {
     try {
       const content = fn.writeNutrientStopContent();
 
-      // const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
+      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
       DataAccess.actuatorControlActionRecord(
         dataFormat.data[0]["deviceName"],
         content
@@ -252,7 +252,7 @@ class ActuatorControl {
         {
           bedId: 5,
           device: "nuctrl",
-          active: "nctrl_read",
+          active: "nuctrl_read",
           deviceName: "nutrient",
           dev_data: actu.readNutrientDataDigitalAndAnalog.list,
           datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
@@ -269,6 +269,58 @@ class ActuatorControl {
       // }
 
       return JSON.parse(result);
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async start() {
+    try {
+      const ctrl = {
+        farmlandId: 1,
+        data: [
+          {
+            bedId: 5,
+            device: "nuctrl",
+            active: "nuctrl_write",
+            deviceName: "nutrient",
+            dev_data: [
+              { modbus_address: "560", description: "1", property: "write" },
+            ],
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+          },
+        ],
+      };
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async stop() {
+    try {
+      const ctrl = {
+        farmlandId: 1,
+        data: [
+          {
+            bedId: 5,
+            device: "nuctrl",
+            active: "nuctrl_write",
+            deviceName: "nutrient",
+            dev_data: [
+              { modbus_address: "561", description: "1", property: "write" },
+            ],
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+          },
+        ],
+      };
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+
+      return result.data;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();

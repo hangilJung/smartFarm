@@ -8,6 +8,7 @@ const { ipAndUrl } = require("../lib/middleware");
 
 router.use("/load-sensor-data", verifyToken, loadSensorData);
 router.use("/operate-actuator", verifyToken, actuator);
+
 router.post("/save-sensor-data", ctrl.process.saveSensorData);
 router.post("/emergency", ipAndUrl, verifyToken, ctrl.process.emergency);
 router.post("/login", ipAndUrl, verifyToken, ctrl.process.login);
