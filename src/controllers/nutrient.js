@@ -11,6 +11,47 @@ const nutrient = {
     const result = await actuatorControl.stop();
     res.json(result);
   },
+  nutricultureMachineStatus: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.nutricultureMachineStatus();
+    res.json(result);
+  },
+  easySelection: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.easySelection();
+    res.json(result);
+  },
+  detailSelection: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.detailSelection();
+    res.json(result);
+  },
+  easySetting: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.easySetting();
+    res.json(result);
+  },
+  //1231231231231
+  detailSettingTime: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSettingTime();
+    res.json(result);
+  },
+  detailSettingMatter: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSettingMatter();
+    res.json(result);
+  },
+  detailSettingIsUse: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSettingIsUse();
+    res.json(result);
+  },
+  detailSettingTrayIsUse: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSettingTrayIsUse();
+    res.json(result);
+  },
 };
 
 module.exports = { nutrient };

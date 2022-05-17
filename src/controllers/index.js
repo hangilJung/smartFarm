@@ -42,7 +42,7 @@ const process = {
   },
   readNutrient: async (req, res) => {
     const actuatorControl = new ActuatorControl(req.body);
-    const result = await actuatorControl.nutrientStop();
+    const result = await actuatorControl.readNutrient();
     res.json(result);
   },
   loadNutrientData: async (req, res) => {

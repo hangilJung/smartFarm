@@ -333,10 +333,10 @@ function deliverDataFormatRead(wantData) {
       {
         bedId: 5,
         device: "nuctrl",
-        active: "nctrl_read",
+        active: "nuctrl_read",
         deviceName: "nutrient",
-        dev_data: dataFormat,
         datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+        dev_data: dataFormat,
       },
     ],
   };
@@ -422,6 +422,42 @@ function twoHourData(
   ];
 }
 
+function readNutreint(params) {
+  const ctrl = {
+    farmland_id: 1,
+    data: [
+      {
+        bed_id: 5,
+        device: "nuctrl",
+        active: "nuctrl_read",
+        device_name: "nutrient",
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+        dev_data: params,
+      },
+    ],
+  };
+
+  return ctrl;
+}
+
+function writeNutreint(params) {
+  const ctrl = {
+    farmland_id: 1,
+    data: [
+      {
+        bed_id: 5,
+        device: "nuctrl",
+        active: "nuctrl_write",
+        device_name: "nutrient",
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+        dev_data: params,
+      },
+    ],
+  };
+
+  return ctrl;
+}
+
 module.exports = {
   responseHeaderAndBody,
   convertBufferDataToJsonFormat,
@@ -453,4 +489,6 @@ module.exports = {
   deliverDataFormatRead,
   arrayCondition,
   twoHourData,
+  readNutreint,
+  writeNutreint,
 };

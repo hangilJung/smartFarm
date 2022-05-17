@@ -4,6 +4,7 @@ const moment = require("moment");
 const actu = require("../utils/actuator");
 const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
+const nt = require("../lib/fnNutrient");
 
 class ActuatorControl {
   constructor(body) {
@@ -40,9 +41,9 @@ class ActuatorControl {
       const content = fn.createCharacter(deviceName, active);
       console.log(content);
       DataAccess.actuatorControlActionRecord(deviceName, content);
-      // const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
 
-      return fn.normalService();
+      return result.data;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -185,7 +186,7 @@ class ActuatorControl {
 
     const dataFormat = fn.deliverDataFormatRead(wantData);
     try {
-      // const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
+      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
 
       return result;
     } catch (error) {
@@ -246,53 +247,18 @@ class ActuatorControl {
   async loadNutrientData() {
     let response;
 
-    const ctl = {
-      farmlandId: 1,
-      data: [
-        {
-          bedId: 5,
-          device: "nuctrl",
-          active: "nuctrl_read",
-          deviceName: "nutrient",
-          dev_data: actu.readNutrientDataDigitalAndAnalog.list,
-          datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-        },
-      ],
-    };
     try {
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
-      console.log(result);
+      //process.env.GATEWAY_SERVER
+      const result = await axios.post(
+        "http://223.171.80.50:9500/gwserver",
+        fn.readNutreint(actu.readNutrientDataDigitalAndAnalog["list"])
+      );
+      console.log(result.data);
       // if (result.data.header.resultCode === "00") {
       //   response = fn.responseHeaderAndBody(result.data.body);
       // } else {
       //   response = fn.invalidRequestParameterError();
       // }
-
-      return JSON.parse(result);
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
-  async start() {
-    try {
-      const ctrl = {
-        farmlandId: 1,
-        data: [
-          {
-            bedId: 5,
-            device: "nuctrl",
-            active: "nuctrl_write",
-            deviceName: "nutrient",
-            dev_data: [
-              { modbus_address: "560", description: "1", property: "write" },
-            ],
-            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-          },
-        ],
-      };
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
 
       return result.data;
     } catch (error) {
@@ -301,25 +267,179 @@ class ActuatorControl {
     }
   }
 
+  async start() {
+    try {
+      // const result = await axios.post(
+      //   process.env.GATEWAY_SERVER,
+      //   fn.writeNutreint(actu.nutrient.act.run)
+      // );
+
+      // return result.data;
+      return "1회 관수 성공";
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
   async stop() {
     try {
-      const ctrl = {
-        farmlandId: 1,
-        data: [
-          {
-            bedId: 5,
-            device: "nuctrl",
-            active: "nuctrl_write",
-            deviceName: "nutrient",
-            dev_data: [
-              { modbus_address: "561", description: "1", property: "write" },
-            ],
-            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-          },
-        ],
-      };
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
 
+      // return result.data;
+      return "정지 성공";
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  //nutricultureMachine 페이지 상태값들
+  async nutricultureMachineStatus() {
+    const response = {
+      header: {},
+    };
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.readNutreint(actu.nutricultureMachine["list"])
+      );
+
+      console.log(result.data.body.data[0]["dev_data"]);
+      const getData = result.data.body.data[0]["dev_data"];
+
+      const processData = getData.map((data) => {
+        return { address: data.modbus_address, value: data.description };
+      });
+      response.header = headerStatusCode.normalService;
+      response.body = processData;
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async easySelection() {
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint([
+          {
+            modbus_address: "44400",
+            description: "0",
+            property: "write",
+          },
+        ])
+      );
+
+      console.log(result.data);
+
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSelection() {
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint([
+          {
+            modbus_address: "44400",
+            description: "1",
+            property: "write",
+          },
+        ])
+      );
+
+      console.log(result.data);
+
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async easySetting() {
+    try {
+      console.log(nt.easySetting(this.body));
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.easySetting(this.body))
+      );
+
+      console.log(result.data);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSettingTime() {
+    const { where, hour, minute } = this.body;
+    try {
+      console.log(nt.detailHourMinute(where, hour, minute));
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.detailHourMinute(where, hour, minute))
+      );
+
+      console.log(result.data);
+
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSettingMatter() {
+    const { where, matter } = this.body;
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.detailMatter(where, matter))
+      );
+
+      console.log(result.data);
+
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSettingIsUse() {
+    const { where, isUse } = this.body;
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.detailIsUse(where, isUse))
+      );
+      console.log(result.data);
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSettingTrayIsUse() {
+    const { where, tray, isUse } = this.body;
+
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.detailTrayIsUse(where, tray, isUse))
+      );
+      console.log(result.data);
       return result.data;
     } catch (error) {
       console.log(error);

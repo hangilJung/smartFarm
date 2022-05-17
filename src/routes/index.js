@@ -7,7 +7,7 @@ const actuator = require("./actuator");
 const { ipAndUrl } = require("../lib/middleware");
 
 router.use("/load-sensor-data", verifyToken, loadSensorData);
-router.use("/operate-actuator", verifyToken, actuator);
+router.use("/operate-actuator", actuator);
 
 router.post("/save-sensor-data", ctrl.process.saveSensorData);
 router.post("/emergency", ipAndUrl, verifyToken, ctrl.process.emergency);
