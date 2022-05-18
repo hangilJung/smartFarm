@@ -248,11 +248,10 @@ class ActuatorControl {
     let response;
 
     try {
-      //process.env.GATEWAY_SERVER
-      const result = await axios.post(
-        "http://223.171.80.50:9500/gwserver",
-        fn.readNutreint(actu.readNutrientDataDigitalAndAnalog["list"])
-      );
+      // const result = await axios.post(
+      //   process.env.GATEWAY_SERVER,
+      //   fn.readNutreint(actu.readNutrientDataDigitalAndAnalog["list"])
+      // );
       console.log(result.data);
       // if (result.data.header.resultCode === "00") {
       //   response = fn.responseHeaderAndBody(result.data.body);

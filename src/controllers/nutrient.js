@@ -31,7 +31,6 @@ const nutrient = {
     const result = await actuatorControl.easySetting();
     res.json(result);
   },
-  //1231231231231
   detailSettingTime: async (req, res) => {
     const actuatorControl = new ActuatorControl(req.body);
     const result = await actuatorControl.detailSettingTime();
