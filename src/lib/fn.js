@@ -458,6 +458,26 @@ function writeNutreint(params) {
   return ctrl;
 }
 
+function hoursSensorDataFilter(what) {
+  let id1;
+  let id2;
+
+  if (what === "temperature") {
+    id1 = 1;
+    id2 = 3;
+  } else if (what === "humidity") {
+    id1 = 2;
+    id2 = 4;
+  } else if (what === "insolation") {
+    id1 = 5;
+    id2 = 6;
+  } else if (what === "co2") {
+    id1 = 30;
+  }
+
+  return { id1, id2 };
+}
+
 module.exports = {
   responseHeaderAndBody,
   convertBufferDataToJsonFormat,
@@ -491,4 +511,5 @@ module.exports = {
   twoHourData,
   readNutreint,
   writeNutreint,
+  hoursSensorDataFilter,
 };

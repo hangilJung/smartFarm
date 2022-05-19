@@ -228,12 +228,26 @@ const query = {
                         where  
                             sd.sensor_data_created_at >= ?
                         and
-                            sd.sensor_data_created_at < ?
-                        and
-                            sensor_information_id in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
+                            sensor_information_id in (?, ?)
                         group by
-                            year(sd.sensor_data_created_at),
-                            month(sd.sensor_data_created_at),
+                            day(sd.sensor_data_created_at),
+                            hour(sd.sensor_data_created_at),                            
+                            sd.sensor_information_id
+                        order by
+                            sd.sensor_information_id,
+                            sd.sensor_data_created_at;`,
+  loadHoursCo2SensorData: `
+                        select 
+                            sd.sensor_information_id,
+                            cast((avg(sd.sensor_data_value)) as decimal(8, 1)) as sensor_data_value,
+                            date_format(sd.sensor_data_created_at, '%Y-%m-%d %H') as sensor_data_created_at
+                        from 
+                            sensor_data sd 
+                        where  
+                            sd.sensor_data_created_at >= ?
+                        and
+                            sensor_information_id in (?)
+                        group by
                             day(sd.sensor_data_created_at),
                             hour(sd.sensor_data_created_at),                            
                             sd.sensor_information_id
@@ -440,6 +454,11 @@ const query = {
                 ) as a
                 order by
                     sensor_information_id;`,
+  nutricultureMachinePageStatusValue: `
+                                    select 
+                                        * 
+                                    from 
+                                        nutrient_status_value`,
 };
 
 module.exports = query;

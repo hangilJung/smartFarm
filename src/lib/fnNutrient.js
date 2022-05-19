@@ -358,84 +358,114 @@ function easySetting(body) {
     easySupplyTray4Minute,
     easySupplyTray4Second,
   } = body;
+  const list = [];
+  const par = "";
 
-  const list = [
-    {
+  if (easyStartHour !== par) {
+    list.push({
       modbus_address: "44100",
       description: easyStartHour,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyStartMinute !== par) {
+    list.push({
       modbus_address: "44101",
       description: easyStartMinute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyRepeatHour !== par) {
+    list.push({
       modbus_address: "44102",
       description: easyRepeatHour,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyRepeatMinute !== par) {
+    list.push({
       modbus_address: "44103",
       description: easyRepeatMinute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyRepeatCycle !== par) {
+    list.push({
       modbus_address: "44104",
       description: easyRepeatCycle,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyEcSetting !== par) {
+    list.push({
       modbus_address: "44105",
       description: easyEcSetting,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easyPhSetting !== par) {
+    list.push({
       modbus_address: "44106",
       description: easyPhSetting,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray1Minute !== par) {
+    list.push({
       modbus_address: "44110",
       description: easySupplyTray1Minute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray1Second !== par) {
+    list.push({
       modbus_address: "44111",
       description: easySupplyTray1Second,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray2Minute !== par) {
+    list.push({
       modbus_address: "44112",
       description: easySupplyTray2Minute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray2Second !== par) {
+    list.push({
       modbus_address: "44113",
       description: easySupplyTray2Second,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray3Minute !== par) {
+    list.push({
       modbus_address: "44114",
       description: easySupplyTray3Minute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray3Second !== par) {
+    list.push({
       modbus_address: "44115",
       description: easySupplyTray3Second,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray4Minute !== par) {
+    list.push({
       modbus_address: "44116",
       description: easySupplyTray4Minute,
       property: "write",
-    },
-    {
+    });
+  }
+  if (easySupplyTray4Second !== par) {
+    list.push({
       modbus_address: "44117",
       description: easySupplyTray4Second,
       property: "write",
-    },
-  ];
+    });
+  }
 
   return list;
 }

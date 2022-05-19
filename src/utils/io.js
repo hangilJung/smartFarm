@@ -3,6 +3,7 @@ const url = require("../config/url");
 const accessToken = require("./accessToken.json");
 const { reissuanceToken } = require("../lib/fn");
 const ctrl = require("../controllers/loadSensorData");
+const ntctrl = require("../controllers/nutrient");
 
 const socket = io(url.SOCKETIO_SERVER_HOST, {
   transports: ["websocket"],
@@ -56,4 +57,28 @@ mainData.on("disconnect", (reason) => {
   console.log("disconnect");
 });
 
-module.exports = { socket, mainData };
+const nutrientData = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
+  transports: ["websocket"],
+});
+
+nutrientData.on("connect", () => {
+  console.log(socket.id);
+  console.log(socket.connected);
+});
+
+nutrientData.on("connect_error", (reason) => {
+  console.log(reason);
+});
+
+nutrientData.on("requestNutrientData", async (data) => {
+  console.log("nutriculture 데이터 요청 들어옴");
+  const result = await ntctrl.socketIO.nutricultureMachinePageData();
+  nutrientData.emit("getNutrientData", result);
+});
+
+nutrientData.on("disconnect", (reason) => {
+  console.log(reason);
+  console.log("disconnect");
+});
+
+module.exports = { socket, mainData, nutrientData };

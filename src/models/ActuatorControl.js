@@ -304,15 +304,15 @@ class ActuatorControl {
         fn.readNutreint(actu.nutricultureMachine["list"])
       );
 
-      console.log(result.data.body.data[0]["dev_data"]);
-      const getData = result.data.body.data[0]["dev_data"];
+      const getData = await result.data.body?.data[0]["dev_data"];
 
-      const processData = getData.map((data) => {
+      const processData = getData?.map((data) => {
         return { address: data.modbus_address, value: data.description };
       });
       response.header = headerStatusCode.normalService;
       response.body = processData;
-
+      // DataAccess.statusValue();
+      console.log(response.body);
       return response;
     } catch (error) {
       console.log(error);

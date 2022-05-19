@@ -118,9 +118,16 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
-  static loadHoursSensorData(startDate, endDate) {
+  static loadHoursSensorData(settingDate, id1, id2) {
     const sql = query.loadHoursSensorData;
-    const condition = [startDate, endDate];
+    const condition = [settingDate, id1, id2];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static loadHoursCo2SensorData(settingDate, id1) {
+    const sql = query.loadHoursCo2SensorData;
+    const condition = [settingDate, id1];
 
     return this.#databaseAcess(sql, condition);
   }
@@ -201,6 +208,13 @@ class DataAccess {
 
   static async readBedData() {
     const sql = query.readBedData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async nutricultureMachinePageStatusValue() {
+    const sql = query.nutricultureMachinePageStatusValue;
     const condition = [];
 
     return this.#databaseAcess(sql, condition);

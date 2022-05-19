@@ -169,9 +169,21 @@ class SensorData {
   }
 
   async loadHoursSensorData() {
-    const { startDate, endDate } = this.#getDate();
+    const { what } = this.body;
+    const settingDate = moment()
+      .subtract(5, "hours")
+      .format("YYYY-MM-DD HH:mm:ss");
+    const { id1, id2 } = fn.hoursSensorDataFilter(what);
 
-    return this.#trycatch(DataAccess.loadHoursSensorData(startDate, endDate));
+    if (what === "co2") {
+      return this.#trycatch(
+        DataAccess.loadHoursCo2SensorData(settingDate, id1)
+      );
+    } else {
+      return this.#trycatch(
+        DataAccess.loadHoursSensorData(settingDate, id1, id2)
+      );
+    }
   }
 
   async loadDaysSensorData() {

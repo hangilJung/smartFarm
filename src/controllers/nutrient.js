@@ -12,7 +12,7 @@ const nutrient = {
     res.json(result);
   },
   nutricultureMachineStatus: async (req, res) => {
-    const actuatorControl = new ActuatorControl(req.body);
+    const actuatorControl = new ActuatorControl();
     const result = await actuatorControl.nutricultureMachineStatus();
     res.json(result);
   },
@@ -52,5 +52,12 @@ const nutrient = {
     res.json(result);
   },
 };
+const socketIO = {
+  nutricultureMachinePageData: async () => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.nutricultureMachineStatus();
+    return result.body;
+  },
+};
 
-module.exports = { nutrient };
+module.exports = { nutrient, socketIO };
