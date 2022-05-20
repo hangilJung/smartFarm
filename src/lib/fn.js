@@ -478,6 +478,11 @@ function hoursSensorDataFilter(what) {
   return { id1, id2 };
 }
 
+function nutrientMultipleConditions(i, data) {
+  let condition = [data[i]["value"], data[i]["address"]];
+  return condition;
+}
+
 module.exports = {
   responseHeaderAndBody,
   convertBufferDataToJsonFormat,
@@ -512,4 +517,5 @@ module.exports = {
   readNutreint,
   writeNutreint,
   hoursSensorDataFilter,
+  nutrientMultipleConditions,
 };

@@ -56,7 +56,16 @@ const socketIO = {
   nutricultureMachinePageData: async () => {
     const actuatorControl = new ActuatorControl();
     const result = await actuatorControl.nutricultureMachineStatus();
-    return result.body;
+    const bodyData = await result.body;
+    if (bodyData == undefined) {
+      return "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}";
+    } else {
+      return bodyData;
+    }
+  },
+  detectNutrientData: async () => {
+    const actuatorControl = new ActuatorControl();
+    await actuatorControl.sendToFrontNutrienNewtData();
   },
 };
 

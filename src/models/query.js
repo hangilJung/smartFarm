@@ -454,11 +454,22 @@ const query = {
                 ) as a
                 order by
                     sensor_information_id;`,
+  insertNutricultureMachinePageStatusValue: `
+                                            insert into 
+                                                nutrient_status_value (address, value) 
+                                            values (?, ?)`,
   nutricultureMachinePageStatusValue: `
                                     select 
                                         * 
                                     from 
                                         nutrient_status_value`,
+  updateNutricultureMachinePageStatus: `
+                                    update
+                                        nutrient_status_value
+                                    set
+                                        value = ?
+                                    where
+                                        address = ?`,
 };
 
 module.exports = query;

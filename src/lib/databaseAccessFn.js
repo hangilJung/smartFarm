@@ -1,5 +1,5 @@
 const DataAccess = require("../models/DataAccess");
-
+const fn = require("./fn");
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
 
@@ -129,8 +129,36 @@ function compareDataValue(i, j) {
   return Number(i["value"]) != Number(j["sensor_data_value"]);
 }
 
+async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
+  let result = false;
+  let list = [];
+  console.log(nutrientData);
+
+  try {
+    for (let i of nutrientData) {
+      for (let j of dbData) {
+        if (i["address"] == j["address"]) {
+          if (i["value"] != j["value"]) {
+            console.log("양액기 데이터 다름");
+            list.push(i);
+            result = true;
+          }
+        }
+      }
+    }
+
+    await DataAccess.updateNutricultureMachinePageStatus(list);
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    return fn.invalidRequestParameterError();
+  }
+}
+
 module.exports = {
   checkDataValidation,
   compareSensorData,
   compareMainSensorData,
+  compareNutricultureMachinePageStatusValue,
 };

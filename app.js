@@ -7,17 +7,17 @@ const ioEmit = require("./src/utils/ioEmit");
 const { wrongApproch } = require("./src/lib/middleware");
 const helmet = require("helmet");
 const hpp = require("hpp");
-const cors = require("cors");
+const detect = require("./src/utils/detect");
 
 dotenv.config();
 
 // mqClient();
 ioEmit();
+detect();
 
 const index = require("./src/routes");
 
 app.use(express.json());
-app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));

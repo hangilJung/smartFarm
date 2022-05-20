@@ -48,8 +48,13 @@ mainData.on("connect_error", (reason) => {
 
 mainData.on("requestData", async (data) => {
   console.log(data);
-  const result = await ctrl.socketIO.reactFirstMainSensorData();
-  mainData.emit("main", result);
+  try {
+    const result = await ctrl.socketIO.reactFirstMainSensorData();
+
+    mainData.emit("main", result);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 mainData.on("disconnect", (reason) => {
@@ -57,28 +62,35 @@ mainData.on("disconnect", (reason) => {
   console.log("disconnect");
 });
 
-const nutrientData = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
+const nutrient = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
   transports: ["websocket"],
 });
 
-nutrientData.on("connect", () => {
+nutrient.on("connect", () => {
   console.log(socket.id);
   console.log(socket.connected);
 });
 
-nutrientData.on("connect_error", (reason) => {
+nutrient.on("connect_error", (reason) => {
   console.log(reason);
 });
 
-nutrientData.on("requestNutrientData", async (data) => {
+nutrient.on("requestNutrientData", async (data) => {
   console.log("nutriculture 데이터 요청 들어옴");
-  const result = await ntctrl.socketIO.nutricultureMachinePageData();
-  nutrientData.emit("getNutrientData", result);
+  try {
+    const result = await ntctrl.socketIO.nutricultureMachinePageData();
+
+    nutrient.emit("getNutrientData", result);
+    return;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 });
 
-nutrientData.on("disconnect", (reason) => {
+nutrient.on("disconnect", (reason) => {
   console.log(reason);
   console.log("disconnect");
 });
 
-module.exports = { socket, mainData, nutrientData };
+module.exports = { socket, mainData, nutrient };

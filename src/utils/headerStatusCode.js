@@ -11,6 +11,10 @@ module.exports = {
     resultCode: "03",
     resultMsg: "HTTP_ERROR",
   },
+  serviceTimeOut: {
+    resultCode: "05",
+    resultMsg: "SERVICE_TIME_OUT",
+  },
   invalidRequestParameterError: {
     resultCode: "10",
     resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",

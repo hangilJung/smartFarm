@@ -5,6 +5,26 @@ const actu = require("../utils/actuator");
 const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
+const { io } = require("socket.io-client");
+const dbfn = require("../lib/databaseAccessFn");
+
+const nutrient = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
+  transports: ["websocket"],
+});
+
+nutrient.on("connect", () => {
+  console.log(nutrient.id);
+  console.log(nutrient.connected);
+});
+
+nutrient.on("connect_error", (reason) => {
+  console.log(reason);
+});
+
+nutrient.on("disconnect", (reason) => {
+  console.log(reason);
+  console.log("disconnect");
+});
 
 class ActuatorControl {
   constructor(body) {
@@ -301,22 +321,51 @@ class ActuatorControl {
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"])
+        fn.readNutreint(actu.nutricultureMachine["list"]),
+        { timeout: 1500 }
       );
 
-      const getData = await result.data.body?.data[0]["dev_data"];
+      const getData = await result.data.body["data"][0]["dev_data"];
 
-      const processData = getData?.map((data) => {
+      const processData = getData.map((data) => {
         return { address: data.modbus_address, value: data.description };
       });
+
+      // DataAccess.test(processData);
       response.header = headerStatusCode.normalService;
       response.body = processData;
-      // DataAccess.statusValue();
-      console.log(response.body);
+
       return response;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
+    }
+  }
+
+  async sendToFrontNutrienNewtData() {
+    try {
+      const nutrientData = await this.nutricultureMachineStatus();
+      const dbData = await DataAccess.nutricultureMachinePageStatusValue();
+      const bodyData = await nutrientData["body"];
+      if (
+        await dbfn.compareNutricultureMachinePageStatusValue(
+          bodyData,
+          dbData[0]
+        )
+      ) {
+        if (bodyData.length > 0) {
+          nutrient.emit("getNutrientData", bodyData);
+        } else {
+          nutrient.emit(
+            "getNutrientData",
+            "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}"
+          );
+        }
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   }
 

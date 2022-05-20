@@ -49,9 +49,9 @@ class SensorData {
       const result = await DataAccess.saveSensorData(filteringData, insertDate);
 
       if (await daFn.compareMainSensorData(filteringData)) {
-        const mainData = fn.pickUpData(filteringData, insertDate);
+        const data = fn.pickUpData(filteringData, insertDate);
 
-        io.mainData.emit("changeMainSensorData", mainData);
+        io.mainData.emit("changeMainSensorData", data);
       }
 
       return fn.normalService();

@@ -1,5 +1,5 @@
 const pool = require("../config/db");
-const { multipleConditions } = require("../lib/fn");
+const { multipleConditions, nutrientMultipleConditions } = require("../lib/fn");
 const query = require("./query");
 
 class DataAccess {
@@ -35,8 +35,9 @@ class DataAccess {
         // }
       }
 
-      return cnt;
+      return "success";
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
@@ -213,11 +214,45 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async updateNutricultureMachinePageStatus(data) {
+    const sql = query.updateNutricultureMachinePageStatus;
+
+    try {
+      for (let i = 0; i < data.length; i++) {
+        const result = await pool.query(
+          sql,
+          nutrientMultipleConditions(i, data)
+        );
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   static async nutricultureMachinePageStatusValue() {
     const sql = query.nutricultureMachinePageStatusValue;
     const condition = [];
 
     return this.#databaseAcess(sql, condition);
+  }
+
+  static async test(data) {
+    const sql = query.insertNutricultureMachinePageStatusValue;
+
+    try {
+      for (let i = 0; i < data.length; i++) {
+        const result = await pool.query(sql, [
+          data[i]["address"],
+          data[i]["value"],
+        ]);
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   /* ===============start test================ */
