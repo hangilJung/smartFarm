@@ -1,5 +1,6 @@
 const DataAccess = require("../models/DataAccess");
 const fn = require("./fn");
+const logger = require("../config/logger");
 
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
@@ -13,7 +14,7 @@ function checkDataValidation(body, getSensorDataRange, date) {
             j.value > Number(i.sensor_maximum_value)
           ) {
             saveOriginalSensorData(j, date);
-            arr.push({ name: j.name, value: null });
+            break;
           }
           arr.push({ name: j.name, value: j.value });
         }
@@ -53,6 +54,11 @@ function saveOriginalSensorData(data, date) {
   DataAccess.saveInvalidSensorData(
     { name: data.name, value: data.value },
     date
+  );
+  logger.error("sensor data error ", data);
+  DataAccess.actuatorControlActionRecord(
+    "1",
+    `데이터 이상 sensor name : ${data.name}, value : ${data.value}`
   );
 }
 

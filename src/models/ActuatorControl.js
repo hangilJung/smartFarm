@@ -402,6 +402,7 @@ class ActuatorControl {
   }
 
   async sendToFrontNutrienNewtData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const nutrientData = await this.nutricultureMachineStatus();
       const dbData = await DataAccess.nutricultureMachinePageStatusValue();
@@ -411,11 +412,21 @@ class ActuatorControl {
           bodyData,
           dbData[0]
         );
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log("@#@#@", compareResult.result);
       console.log("@#@#@", compareResult.list);
       if (compareResult.result) {
         if (bodyData != undefined || bodyData.length == 0) {
-          nutrient.emit("getNutrientData", bodyData);
+          const response = {
+            header: {
+              resultCode: "00",
+              resultMsg: "NORMAL_SERVICE",
+              requestDatetime: reqDatetime,
+              responseDatetime: resDatetime,
+            },
+            body: bodyData,
+          };
+          nutrient.emit("getNutrientData", response);
         } else {
           nutrient.emit(
             "getNutrientData",

@@ -10,13 +10,15 @@ class SensorData {
     this.body = body;
   }
 
-  async #trycatch(a) {
+  async #trycatch(a, reqDatetime) {
     try {
       const result = await a;
-
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result
+        result,
+        reqDatetime,
+        resDatetime
       );
     } catch (error) {
       console.log(error);
@@ -181,7 +183,7 @@ class SensorData {
 
   async loadMinutesSensorData() {
     const { startDate, endDate } = this.#getDate();
-
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     return this.#trycatch(DataAccess.loadMinutesSensorData(startDate, endDate));
   }
 
@@ -190,35 +192,44 @@ class SensorData {
     const settingDate = moment()
       .subtract(5, "hours")
       .format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { id1, id2 } = fn.hoursSensorDataFilter(what);
 
     if (what === "co2") {
       return this.#trycatch(
-        DataAccess.loadHoursCo2SensorData(settingDate, id1)
+        DataAccess.loadHoursCo2SensorData(settingDate, id1),
+        reqDatetime
       );
     } else {
       return this.#trycatch(
-        DataAccess.loadHoursSensorData(settingDate, id1, id2)
+        DataAccess.loadHoursSensorData(settingDate, id1, id2),
+        reqDatetime
       );
     }
   }
 
   async loadDaysSensorData() {
     const { startDate, endDate } = this.#getDate();
-
-    return this.#trycatch(DataAccess.loadDaysSensorData(startDate, endDate));
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    return this.#trycatch(
+      DataAccess.loadDaysSensorData(startDate, endDate, reqDatetime)
+    );
   }
 
   async loadMonthsSensorData() {
     const { startDate, endDate } = this.#getDate();
-
-    return this.#trycatch(DataAccess.loadMonthsSensorData(startDate, endDate));
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    return this.#trycatch(
+      DataAccess.loadMonthsSensorData(startDate, endDate, reqDatetime)
+    );
   }
 
   async loadYearsSensorData() {
     const { startDate, endDate } = this.#getDate();
-
-    return this.#trycatch(DataAccess.loadYearsSensorData(startDate, endDate));
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    return this.#trycatch(
+      DataAccess.loadYearsSensorData(startDate, endDate, reqDatetime)
+    );
   }
 
   async hourConsumptionData() {
