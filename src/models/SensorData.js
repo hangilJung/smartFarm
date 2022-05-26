@@ -3,6 +3,7 @@ const moment = require("moment");
 const fn = require("../lib/fn");
 const daFn = require("../lib/databaseAccessFn");
 const io = require("../utils/io");
+const logger = require("../config/logger");
 
 class SensorData {
   constructor(body) {
@@ -33,6 +34,8 @@ class SensorData {
   }
 
   async saveSensorData() {
+    logger.info(JSON.stringify(this.body));
+
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
@@ -93,12 +96,20 @@ class SensorData {
   }
 
   async mainInsideSensorData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainInsideSensorData();
 
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (result[0] > 0) {
+      }
+
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result
+        result,
+        reqDatetime,
+        resDatetime
       );
     } catch (error) {
       console.log(error);
@@ -107,12 +118,15 @@ class SensorData {
   }
 
   async mainOutsideSensorData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainOutsideSensorData();
-
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result
+        result,
+        reqDatetime,
+        resDatetime
       );
     } catch (error) {
       console.log(error);
@@ -121,12 +135,15 @@ class SensorData {
   }
 
   async readBedData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.readBedData();
-
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result
+        result,
+        reqDatetime,
+        resDatetime
       );
     } catch (error) {
       console.log(error);
@@ -202,6 +219,90 @@ class SensorData {
     const { startDate, endDate } = this.#getDate();
 
     return this.#trycatch(DataAccess.loadYearsSensorData(startDate, endDate));
+  }
+
+  async hourConsumptionData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.hourConsumptionData();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async dayConsumptionData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.dayConsumptionData();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async monthConsumptionData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.monthConsumptionData();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async yearConsumptionData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.yearConsumptionData();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
   }
 }
 

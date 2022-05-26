@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const { multipleConditions, nutrientMultipleConditions } = require("../lib/fn");
 const query = require("./query");
+const moment = require("moment");
 
 class DataAccess {
   static async #databaseAcess(sql, condition) {
@@ -216,7 +217,6 @@ class DataAccess {
 
   static async updateNutricultureMachinePageStatus(data) {
     const sql = query.updateNutricultureMachinePageStatus;
-
     try {
       for (let i = 0; i < data.length; i++) {
         const result = await pool.query(
@@ -238,6 +238,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async writeHourConsumptionData() {
+    const sql = query.writeHourConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async test(data) {
     const sql = query.insertNutricultureMachinePageStatusValue;
 
@@ -253,6 +260,34 @@ class DataAccess {
       console.log(error);
       return error;
     }
+  }
+
+  static async hourConsumptionData() {
+    const sql = query.hourConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async dayConsumptionData() {
+    const sql = query.dayConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async monthConsumptionData() {
+    const sql = query.monthConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async yearConsumptionData() {
+    const sql = query.yearConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
   }
 
   /* ===============start test================ */

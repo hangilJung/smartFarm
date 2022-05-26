@@ -470,6 +470,165 @@ const query = {
                                         value = ?
                                     where
                                         address = ?`,
+  writeHourConsumptionData: `
+                        insert into
+                            power_consumption_data (hour_value, total_value, ago_value, created_at)
+                        values(
+                        (
+                        select
+                            a.sensor_data_value - b.sensor_data_value
+                        from 
+                            (
+                            select 
+                                sensor_data_value
+                            from 
+                            (
+                            select
+                                max(sd.sensor_data_value) as sensor_data_value,
+                                max(sensor_data_created_at) as sensor_data_created_at
+                            from 
+                                sensor_data sd 
+                            where
+                                sensor_data_created_at >= date_sub(now(), interval 1 hour)
+                            and
+                                sensor_information_id = 40
+                            group by
+                                hour(sensor_data_created_at)
+                            order by
+                                sensor_data_created_at desc 
+                            limit 2
+                            ) x
+                            order by
+                                x.sensor_data_created_at
+                            limit 1
+                            ) a,
+                            (
+                            select 
+                                sensor_data_value
+                            from 
+                                (
+                                select
+                                    max(sd.sensor_data_value) as sensor_data_value,
+                                    max(sensor_data_created_at) as sensor_data_created_at
+                                from 
+                                    sensor_data sd 
+                                where
+                                    sensor_data_created_at >= date_sub(now(), interval 2 hour)
+                                and
+                                    sensor_data_created_at < date_format((date_sub(now(), interval 1 hour)), '%Y-%m-%d %H:59:59')
+                                and 
+                                    sensor_information_id = 40
+                                group by
+                                    hour(sensor_data_created_at)
+                                order by
+                                    sensor_data_created_at desc 
+                                limit 2
+                                ) x
+                            order by
+                                x.sensor_data_created_at
+                            limit 1
+                            )  b
+                            ), 
+                            (
+                            select 
+                                sensor_data_value
+                            from 
+                            (
+                            select
+                                max(sd.sensor_data_value) as sensor_data_value,
+                                max(sensor_data_created_at) as sensor_data_created_at
+                            from 
+                                sensor_data sd 
+                            where
+                                sensor_data_created_at >= date_sub(now(), interval 1 hour)
+                            and
+                                sensor_information_id = 40
+                            group by
+                                hour(sensor_data_created_at)
+                            order by
+                                sensor_data_created_at desc 
+                            limit 2
+                            ) x
+                            order by
+                                x.sensor_data_created_at
+                            limit 1
+                            ), 
+                            ( 
+                            select 
+                                sensor_data_value
+                            from 
+                                (
+                                select
+                                    max(sd.sensor_data_value) as sensor_data_value,
+                                    max(sensor_data_created_at) as sensor_data_created_at
+                                from 
+                                    sensor_data sd 
+                                where
+                                    sensor_data_created_at >= date_sub(now(), interval 2 hour)
+                                and
+                                    sensor_data_created_at < date_format((date_sub(now(), interval 1 hour)), '%Y-%m-%d %H:59:59')
+                                and 
+                                    sensor_information_id = 40
+                                group by
+                                    hour(sensor_data_created_at)
+                                order by
+                                    sensor_data_created_at desc 
+                                limit 2
+                                ) x
+                            order by
+                                x.sensor_data_created_at
+                            limit 1
+                            ), 
+                            (select date_format(date_sub(now(), interval 1 hour), '%Y-%m-%d %H:00:00')));`,
+
+  hourConsumptionData: `
+                        select
+                            hour_value,
+                            created_at
+                        from 
+                            power_consumption_data
+                        where
+                            created_at >= date_format(date_sub(now(), interval 1 day),'%Y-%m-%d %T');`,
+  dayConsumptionData: `
+                        select
+                            sum(hour_value) as hour_value,
+                            date_format(created_at, '%Y-%m-%d') as created_at
+                        from
+                            power_consumption_data 
+                        where
+                            created_at >= date_format(now(),'%Y-%m-%d 00:00:00')
+                        and
+                            created_at < date_format(now(), '%Y-%m-%d 23:59:59')
+                        group by
+                            year(created_at),
+                            month(created_at),
+                            day(created_at);`,
+
+  monthConsumptionData: `
+                        select
+                            sum(hour_value) as hour_value,
+                            date_format(created_at, '%Y-%m') as created_at
+                        from
+                            power_consumption_data 
+                        where
+                            created_at >= date_format(now(),'%Y-%m-% 00:00:00')
+                        and
+                            created_at < date_format(date_add(last_day(now()), interval 1 day), '%Y-%m-%d 00:00:00')
+                        group by
+                            year(created_at),
+                            month(created_at);`,
+  yearConsumptionData: `
+                        select
+                            sum(hour_value) as hour_value,
+                            date_format(created_at, '%Y') as created_at
+                        from
+                            power_consumption_data 
+                        where
+                            created_at >= date_format(now(),'%Y-01-01 00:00:00')
+                        and
+                            created_at < date_format(date_add(last_day(now()), interval 1 year), '%Y-1-1 00:00:00')
+                        group by
+                            year(created_at);`,
 };
 
 module.exports = query;

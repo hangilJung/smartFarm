@@ -645,10 +645,27 @@ function detailTrayIsUse(where, tray, isUse) {
   return list[where][tray];
 }
 
+function nutricultureMachineList() {
+  const list = {
+    detail1: [
+      { modbus_address: "44200", description: isUse, property: "read" },
+      { modbus_address: "44201", description: isUse, property: "read" },
+      { modbus_address: "16", description: isUse, property: "read" },
+      { modbus_address: "48", description: isUse, property: "read" },
+      { modbus_address: "160", description: isUse, property: "read" },
+      { modbus_address: "161", description: isUse, property: "read" },
+      { modbus_address: "162", description: isUse, property: "read" },
+      { modbus_address: "163", description: isUse, property: "read" },
+    ],
+    detail2: [],
+  };
+}
+
 module.exports = {
   detailHourMinute,
   easySetting,
   detailMatter,
   detailIsUse,
   detailTrayIsUse,
+  nutricultureMachineList,
 };

@@ -13,4 +13,9 @@ router.post("/main-inside", ipAndUrl, ctrl.load.mainInsideSensorData);
 router.post("/main-outside", ipAndUrl, ctrl.load.mainOutsideSensorData);
 router.post("/bed-data", ipAndUrl, ctrl.load.bedData);
 
+router.post("/hour-consum", ipAndUrl, ctrl.load.hourConsumptionData);
+router.post("/day-consum", ipAndUrl, ctrl.load.dayConsumptionData);
+router.post("/month-consum", ipAndUrl, ctrl.load.monthConsumptionData);
+router.post("/year-consum", ipAndUrl, ctrl.load.yearConsumptionData);
+
 module.exports = router;

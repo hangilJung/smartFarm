@@ -3,6 +3,7 @@ const fs = require("fs");
 const Token = require("../models/Token");
 const actu = require("../utils/actuator");
 const moment = require("moment");
+const { response } = require("../../app.js");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -29,19 +30,37 @@ function dataExistsOrNot(result) {
   return result[0].length > 0;
 }
 
-function responseHeaderNormalServiceOrNotDataError(trueAndFalse, data) {
-  const response = {
-    header: {},
-  };
+function responseHeaderNormalServiceOrNotDataError(
+  trueAndFalse,
+  data,
+  reqDatetime,
+  resDatetime
+) {
   if (trueAndFalse) {
-    response.header = headerStatusCode.normalService;
-    response.body = data[0];
-  } else {
-    response.header = headerStatusCode.noDataError;
-    response.body = data[0];
-  }
+    const response = {
+      header: {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        reqDatetime,
+        resDatetime,
+      },
+      body: data[0],
+    };
 
-  return response;
+    return response;
+  } else {
+    const response = {
+      header: {
+        resultCode: "10",
+        resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+        reqDatetime,
+        resDatetime,
+      },
+      body: [{ device: "sensor" }],
+    };
+
+    return response;
+  }
 }
 
 const requestWithToken = async (url, body) => {
@@ -293,6 +312,23 @@ function invalidRequestParameterError() {
   return response;
 }
 
+function fanInvalidRequestParameterError() {
+  const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+  const resDatetime = moment().format("YYYY-MM-DD T HH:mm:ss");
+
+  const response = {
+    header: {
+      resultCode: "10",
+      resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    },
+    body: [{ device: "fan" }],
+  };
+
+  return response;
+}
+
 function hasItbeenUpdated(result) {
   const response = {
     header: {},
@@ -483,8 +519,63 @@ function nutrientMultipleConditions(i, data) {
   return condition;
 }
 
+function nutrientStatusCode(result, reqDatetime, resDatetime) {
+  const response = {
+    header: {},
+  };
+
+  if (result.data.header.resultCode == "00") {
+    response.header = {
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    };
+    response.body = [{ device: "nutrient" }];
+  } else {
+    response.header = {
+      resultCode: "10",
+      resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    };
+    response.body = [{ device: "nutrient" }];
+  }
+
+  return response;
+}
+
+function communicationError(device) {
+  const response = {
+    header: {},
+  };
+
+  response.header = {
+    resultCode: "00",
+    resultMsg: "NORMAL_SERVICE",
+    requestDatetime: reqDatetime,
+    responseDatetime: resDatetime,
+  };
+  response.body = [{ device: device }];
+  return response;
+}
+
+function normalServiceIncludBody(result, reqDatetime, resDatetime) {
+  const response = {
+    header: {
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    },
+    body: result[0],
+  };
+  return response;
+}
+
 module.exports = {
   responseHeaderAndBody,
+  nutrientStatusCode,
   convertBufferDataToJsonFormat,
   multipleConditions,
   dataExtraction,
@@ -518,4 +609,7 @@ module.exports = {
   writeNutreint,
   hoursSensorDataFilter,
   nutrientMultipleConditions,
+  fanInvalidRequestParameterError,
+  communicationError,
+  normalServiceIncludBody,
 };

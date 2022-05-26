@@ -1,5 +1,6 @@
 const DataAccess = require("../models/DataAccess");
 const fn = require("./fn");
+
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
 
@@ -28,7 +29,6 @@ function fiteringName(param) {
     bCur: "bCur",
     bVolCurAng: "bVolCurAng",
     bFac: "bFac",
-    totActPow: "totActPow",
     totReactPow: "totReactPow",
     aActCur: "aActCur",
     bActCur: "bActCur",
@@ -132,7 +132,6 @@ function compareDataValue(i, j) {
 async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
   let result = false;
   let list = [];
-  console.log(nutrientData);
 
   try {
     for (let i of nutrientData) {
@@ -146,10 +145,10 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
         }
       }
     }
-
+    console.log(list);
     await DataAccess.updateNutricultureMachinePageStatus(list);
 
-    return result;
+    return { result, list };
   } catch (error) {
     console.log(error);
     return fn.invalidRequestParameterError();

@@ -34,8 +34,11 @@ class ActuatorControl {
   // String active   on, stop, open, close
   async simpleActuatorControl() {
     const { deviceName, active } = this.body;
-
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const device = actu.deviceList[deviceName];
+    const response = {
+      header: {},
+    };
 
     const ctrl = {
       farmlandId: 1,
@@ -62,11 +65,26 @@ class ActuatorControl {
       console.log(content);
       DataAccess.actuatorControlActionRecord(deviceName, content);
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("fan");
+      }
+
+      if (result.data.header == "00" && ctrl.data[0].device == "fan") {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = [{ device: "fan" }];
+      }
+
+      return response;
     } catch (error) {
       console.log(error);
-      return fn.invalidRequestParameterError();
+      return fn.fanInvalidRequestParameterError();
     }
   }
 
@@ -125,7 +143,7 @@ class ActuatorControl {
 
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
-    const nowTime = moment().format("YYYY-MM-DD T HH:mm:ss");
+    const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");
     let latelyTotalSupply;
     let line;
     let data;
@@ -245,17 +263,30 @@ class ActuatorControl {
   }
 
   async loadActuatorRecord() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
     const response = {
       header: {},
     };
     try {
       const result = await DataAccess.loadActionRecord();
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       if (result[0].length > 0) {
-        response.header = headerStatusCode.normalService;
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
         response.body = result[0];
       } else {
-        response.header = headerStatusCode.invalidRequestParameterError;
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
       }
 
       return response;
@@ -292,7 +323,9 @@ class ActuatorControl {
       //   process.env.GATEWAY_SERVER,
       //   fn.writeNutreint(actu.nutrient.act.run)
       // );
-
+      // if (result.data === undefined) {
+      //   return fn.communicationError("nutrient");
+      // }
       // return result.data;
       return "1회 관수 성공";
     } catch (error) {
@@ -304,7 +337,9 @@ class ActuatorControl {
   async stop() {
     try {
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
-
+      // if (result.data === undefined) {
+      //   return fn.communicationError("nutrient");
+      // }
       // return result.data;
       return "정지 성공";
     } catch (error) {
@@ -315,15 +350,34 @@ class ActuatorControl {
 
   //nutricultureMachine 페이지 상태값들
   async nutricultureMachineStatus() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
     const response = {
       header: {},
     };
+
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"]),
-        { timeout: 1500 }
+        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 1600 })
       );
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      console.log("양액기로부터 받은 데이터 ", result.data);
+      if (result["resultCode"] == "10" || result === undefined) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = [{ device: "nutrient" }];
+
+        return response;
+      }
 
       const getData = await result.data.body["data"][0]["dev_data"];
 
@@ -332,7 +386,12 @@ class ActuatorControl {
       });
 
       // DataAccess.test(processData);
-      response.header = headerStatusCode.normalService;
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
       response.body = processData;
 
       return response;
@@ -347,13 +406,15 @@ class ActuatorControl {
       const nutrientData = await this.nutricultureMachineStatus();
       const dbData = await DataAccess.nutricultureMachinePageStatusValue();
       const bodyData = await nutrientData["body"];
-      if (
+      const compareResult =
         await dbfn.compareNutricultureMachinePageStatusValue(
           bodyData,
           dbData[0]
-        )
-      ) {
-        if (bodyData.length > 0) {
+        );
+      console.log("@#@#@", compareResult.result);
+      console.log("@#@#@", compareResult.list);
+      if (compareResult.result) {
+        if (bodyData != undefined || bodyData.length == 0) {
           nutrient.emit("getNutrientData", bodyData);
         } else {
           nutrient.emit(
@@ -362,6 +423,7 @@ class ActuatorControl {
           );
         }
       }
+
       return;
     } catch (error) {
       console.log(error);
@@ -371,6 +433,7 @@ class ActuatorControl {
 
   async easySelection() {
     try {
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint([
@@ -381,10 +444,14 @@ class ActuatorControl {
           },
         ])
       );
-
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
 
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -393,6 +460,7 @@ class ActuatorControl {
 
   async detailSelection() {
     try {
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint([
@@ -403,10 +471,11 @@ class ActuatorControl {
           },
         ])
       );
-
-      console.log(result.data);
-
-      return result.data;
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -414,6 +483,7 @@ class ActuatorControl {
   }
 
   async easySetting() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       console.log(nt.easySetting(this.body));
       const result = await axios.post(
@@ -421,8 +491,12 @@ class ActuatorControl {
         fn.writeNutreint(nt.easySetting(this.body))
       );
 
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -430,6 +504,7 @@ class ActuatorControl {
   }
 
   async detailSettingTime() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, hour, minute } = this.body;
     try {
       console.log(nt.detailHourMinute(where, hour, minute));
@@ -437,10 +512,13 @@ class ActuatorControl {
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailHourMinute(where, hour, minute))
       );
-
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
 
-      return result.data;
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -448,16 +526,19 @@ class ActuatorControl {
   }
 
   async detailSettingMatter() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, matter } = this.body;
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailMatter(where, matter))
       );
-
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
-
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -465,14 +546,19 @@ class ActuatorControl {
   }
 
   async detailSettingIsUse() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, isUse } = this.body;
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailIsUse(where, isUse))
       );
+      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -480,15 +566,21 @@ class ActuatorControl {
   }
 
   async detailSettingTrayIsUse() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, tray, isUse } = this.body;
+    console.log(this.body);
 
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailTrayIsUse(where, tray, isUse))
       );
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
-      return result.data;
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();

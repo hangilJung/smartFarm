@@ -51,6 +51,26 @@ const load = {
     const result = await sensorData.readBedData();
     res.json(result);
   },
+  hourConsumptionData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.hourConsumptionData();
+    res.json(result);
+  },
+  dayConsumptionData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.dayConsumptionData();
+    res.json(result);
+  },
+  monthConsumptionData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.monthConsumptionData();
+    res.json(result);
+  },
+  yearConsumptionData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.yearConsumptionData();
+    res.json(result);
+  },
 };
 
 const socketIO = {
