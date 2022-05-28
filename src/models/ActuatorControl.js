@@ -6,6 +6,7 @@ const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
+const { response } = require("../../app");
 
 class ActuatorControl {
   constructor(body) {
@@ -50,6 +51,38 @@ class ActuatorControl {
 
       if (result.data === undefined) {
         return fn.communicationError("fan");
+      }
+
+      if (
+        // result.data.header.resultCode == "00"
+        true
+      ) {
+        setTimeout(async () => {
+          try {
+            const result = await DataAccess.currentAmountOfChange();
+            console.log(result[0][0]["sensor_data_value"]);
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+            if (result[0][0]["sensor_data_value"] > 1) {
+              response.header = {
+                resultCode: "00",
+                resultMsg: "NORMAL_SERVICE",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "fan" }];
+            } else {
+              response.header = {
+                resultCode: "40",
+                resultMsg: "NOT_WORKING",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "fan" }];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }, 1500);
       }
 
       if (result.data.header == "00" && ctrl.data[0].device == "fan") {
@@ -299,6 +332,10 @@ class ActuatorControl {
   }
 
   async start() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
     try {
       // const result = await axios.post(
       //   process.env.GATEWAY_SERVER,
@@ -308,7 +345,40 @@ class ActuatorControl {
       //   return fn.communicationError("nutrient");
       // }
       // return result.data;
+      if (
+        // result.data.header.resultCode == "00"
+        true
+      ) {
+        setTimeout(async () => {
+          try {
+            const result = await DataAccess.currentAmountOfChange();
+            console.log(result[0][0]["sensor_data_value"]);
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+            if (result[0][0]["sensor_data_value"] > 1) {
+              response.header = {
+                resultCode: "00",
+                resultMsg: "NORMAL_SERVICE",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            } else {
+              response.header = {
+                resultCode: "40",
+                resultMsg: "NOT_WORKING",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }, 1500);
+      }
+
       return "1회 관수 성공";
+      // return response;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -316,13 +386,48 @@ class ActuatorControl {
   }
 
   async stop() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       // if (result.data === undefined) {
       //   return fn.communicationError("nutrient");
       // }
       // return result.data;
+
+      if (
+        // result.data.header.resultCode == "00"
+        true
+      ) {
+        setTimeout(async () => {
+          try {
+            const result = await DataAccess.currentAmountOfChange();
+            console.log(result[0][0]["sensor_data_value"]);
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+            if (result[0][0]["sensor_data_value"] < 1) {
+              response.header = {
+                resultCode: "00",
+                resultMsg: "NORMAL_SERVICE",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            } else {
+              response.header = {
+                resultCode: "40",
+                resultMsg: "NOT_WORKING",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }, 1500);
+      }
+
       return "정지 성공";
+      return response;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -340,7 +445,7 @@ class ActuatorControl {
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 2000 })
+        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 3000 })
       );
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
@@ -383,7 +488,6 @@ class ActuatorControl {
   }
 
   async sendToFrontNutrienNewtData() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const nutrientData = await this.nutricultureMachineStatus();
       const dbData = await DataAccess.nutricultureMachinePageStatusValue();
@@ -393,7 +497,7 @@ class ActuatorControl {
           bodyData,
           dbData[0]
         );
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
       console.log("@#@#@", compareResult.result);
       console.log("@#@#@", compareResult.list);
       if (compareResult.list.length > 0) {
@@ -509,7 +613,8 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, hour, minute } = this.body;
     try {
-      console.log(nt.detailHourMinute(where, hour, minute));
+      const changeData = nt.detailHourMinute(where, hour, minute);
+      dbfn.dbUpdate(changeData);
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailHourMinute(where, hour, minute))
@@ -531,6 +636,10 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, matter } = this.body;
     try {
+      const changeData = nt.detailMatter(where, matter);
+
+      dbfn.dbUpdate(changeData);
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailMatter(where, matter))
@@ -551,6 +660,9 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, isUse } = this.body;
     try {
+      const changeData = nt.detailIsUse(where, isUse);
+      dbfn.dbUpdate(changeData);
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailIsUse(where, isUse))
@@ -573,6 +685,10 @@ class ActuatorControl {
     console.log(this.body);
 
     try {
+      const changeData = nt.detailTrayIsUse(where, tray, isUse);
+
+      dbfn.dbUpdate(changeData);
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailTrayIsUse(where, tray, isUse))
@@ -582,6 +698,7 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);

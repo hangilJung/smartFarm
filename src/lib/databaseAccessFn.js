@@ -161,9 +161,18 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
   }
 }
 
+function dbUpdate(changeData) {
+  const transChangeData = changeData.map((data) => {
+    return { address: data["modbus_address"], value: data["description"] };
+  });
+
+  DataAccess.updateNutricultureMachinePageStatus(transChangeData);
+}
+
 module.exports = {
   checkDataValidation,
   compareSensorData,
   compareMainSensorData,
   compareNutricultureMachinePageStatusValue,
+  dbUpdate,
 };

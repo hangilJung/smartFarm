@@ -290,6 +290,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async currentAmountOfChange() {
+    const sql = query.currentAmountOfChange;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   /* ===============start test================ */
   static loadSensorDataAll() {
     const sql = query.loadSensorDataAll;

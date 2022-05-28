@@ -629,6 +629,18 @@ const query = {
                             created_at < date_format(date_add(last_day(now()), interval 1 year), '%Y-1-1 00:00:00')
                         group by
                             year(created_at);`,
+  currentAmountOfChange: `
+                        select
+                            sensor_data_value 
+                        from
+                            sensor_data
+                        where
+                            sensor_data_created_at >= date_sub(now(), interval 10 second) 
+                        and
+                            sensor_information_id in (44)
+                        order by 
+                            sensor_data_created_at desc
+                        limit 1;`,
 };
 
 module.exports = query;
