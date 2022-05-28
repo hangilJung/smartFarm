@@ -5,26 +5,7 @@ const actu = require("../utils/actuator");
 const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
-const { io } = require("socket.io-client");
 const dbfn = require("../lib/databaseAccessFn");
-
-const nutrient = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
-  transports: ["websocket"],
-});
-
-nutrient.on("connect", () => {
-  console.log(nutrient.id);
-  console.log(nutrient.connected);
-});
-
-nutrient.on("connect_error", (reason) => {
-  console.log(reason);
-});
-
-nutrient.on("disconnect", (reason) => {
-  console.log(reason);
-  console.log("disconnect");
-});
 
 class ActuatorControl {
   constructor(body) {
@@ -359,7 +340,7 @@ class ActuatorControl {
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 1600 })
+        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 2000 })
       );
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
@@ -415,25 +396,35 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log("@#@#@", compareResult.result);
       console.log("@#@#@", compareResult.list);
-      if (compareResult.result) {
-        if (bodyData != undefined || bodyData.length == 0) {
-          const response = {
-            header: {
-              resultCode: "00",
-              resultMsg: "NORMAL_SERVICE",
-              requestDatetime: reqDatetime,
-              responseDatetime: resDatetime,
-            },
-            body: bodyData,
-          };
-          nutrient.emit("getNutrientData", response);
-        } else {
-          nutrient.emit(
-            "getNutrientData",
-            "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}"
-          );
-        }
+      if (compareResult.list.length > 0) {
+        nt.sendToNutricultureMachinePageSocket(
+          nt.whatDetailNumber(compareResult.list),
+          bodyData
+        );
+        await DataAccess.updateNutricultureMachinePageStatus(
+          compareResult.list
+        );
       }
+
+      // if (compareResult.result) {
+      //   if (bodyData != undefined || bodyData.length == 0) {
+      //     const response = {
+      //       header: {
+      //         resultCode: "00",
+      //         resultMsg: "NORMAL_SERVICE",
+      //         requestDatetime: reqDatetime,
+      //         responseDatetime: resDatetime,
+      //       },
+      //       body: bodyData,
+      //     };
+      //     nutrient.emit("getNutrientData", response);
+      //   } else {
+      //     nutrient.emit(
+      //       "getNutrientData",
+      //       "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}"
+      //     );
+      //   }
+      // }
 
       return;
     } catch (error) {

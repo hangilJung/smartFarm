@@ -36,7 +36,7 @@ class SensorData {
   }
 
   async saveSensorData() {
-    logger.info(JSON.stringify(this.body));
+    // logger.info(JSON.stringify(this.body));
 
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -55,7 +55,7 @@ class SensorData {
 
       if (await daFn.compareMainSensorData(filteringData)) {
         const data = fn.pickUpData(filteringData, insertDate);
-
+        console.log("변한 센서 데이터들을 보냄");
         io.mainData.emit("changeMainSensorData", data);
       }
 
