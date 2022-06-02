@@ -265,7 +265,7 @@ function emergencyContent() {
   return "비상정지했습니다.";
 }
 
-function pickUpData(filteringData, insertDate) {
+function pickUpInsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
     if (i["name"] === "inTemp") {
@@ -276,6 +276,25 @@ function pickUpData(filteringData, insertDate) {
       b.push(findName(i, "inInsol", insertDate));
     } else if (i["name"] === "co2") {
       b.push(findName(i, "co2", insertDate));
+    }
+  }
+
+  return b;
+}
+
+function pickUpOutsideData(filteringData, insertDate) {
+  let b = [];
+  for (let i of filteringData) {
+    if (i["name"] === "outTemp") {
+      b.push(findName(i, "outTemp", insertDate));
+    } else if (i["name"] === "outHumi") {
+      b.push(findName(i, "outHumi", insertDate));
+    } else if (i["name"] === "outInsol") {
+      b.push(findName(i, "outInsol", insertDate));
+    } else if (i["name"] === "ws") {
+      b.push(findName(i, "ws", insertDate));
+    } else if (i["name"] === "rf") {
+      b.push(findName(i, "rf", insertDate));
     }
   }
 
@@ -598,7 +617,7 @@ module.exports = {
   writeNutrientStopContent,
   emergencyContent,
   isUndefinedParams,
-  pickUpData,
+  pickUpInsideData,
   invalidRequestParameterError,
   hasItbeenUpdated,
   normalService,
@@ -612,4 +631,6 @@ module.exports = {
   fanInvalidRequestParameterError,
   communicationError,
   normalServiceIncludBody,
+  pickUpOutsideData,
+  dateChecker,
 };

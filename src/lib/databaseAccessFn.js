@@ -105,6 +105,56 @@ async function compareMainSensorData(filteringData) {
   return compare;
 }
 
+async function compareOutsideSensorData(filteringData) {
+  const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
+  let compare = false;
+
+  if (agoSensorData[0].length > 0) {
+    for (let i of filteringData) {
+      if (compare) break;
+      if (outsideSensorName(i)) {
+        for (let j of agoSensorData[0]) {
+          if (loadDbOutsideSensorName(j)) {
+            if (compareDataValue(i, j)) {
+              compare = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return compare;
+}
+
+function outsideSensorName(i) {
+  if (
+    i["name"] === "outTemp" ||
+    i["name"] === "outHumi" ||
+    i["name"] === "outInsol" ||
+    i["name"] === "ws" ||
+    i["name"] === "rf"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function loadDbOutsideSensorName(j) {
+  if (
+    j["sensor_name"] === "outTemp" ||
+    j["sensor_name"] === "outHumi" ||
+    j["sensor_name"] === "outInsol" ||
+    j["sensor_name"] === "ws" ||
+    j["sensor_name"] === "rf"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function mainSensorName(i) {
   if (
     i["name"] === "inTemp" ||
@@ -175,4 +225,5 @@ module.exports = {
   compareMainSensorData,
   compareNutricultureMachinePageStatusValue,
   dbUpdate,
+  compareOutsideSensorData,
 };

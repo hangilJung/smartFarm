@@ -355,6 +355,10 @@ class ActuatorControl {
             console.log(result[0][0]["sensor_data_value"]);
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
             if (result[0][0]["sensor_data_value"] > 1) {
+              DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기가 공급을 시작합니다."
+              );
               response.header = {
                 resultCode: "00",
                 resultMsg: "NORMAL_SERVICE",
@@ -363,6 +367,10 @@ class ActuatorControl {
               };
               response.body = [{ device: "nutrient" }];
             } else {
+              DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기 작동 명령에도 작동하지 않습니다."
+              );
               response.header = {
                 resultCode: "40",
                 resultMsg: "NOT_WORKING",
@@ -404,6 +412,10 @@ class ActuatorControl {
             console.log(result[0][0]["sensor_data_value"]);
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
             if (result[0][0]["sensor_data_value"] < 1) {
+              DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기가 공급을 중지합니다."
+              );
               response.header = {
                 resultCode: "00",
                 resultMsg: "NORMAL_SERVICE",
@@ -412,6 +424,10 @@ class ActuatorControl {
               };
               response.body = [{ device: "nutrient" }];
             } else {
+              DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기 중지명령에도 중지하지 않습니다."
+              );
               response.header = {
                 resultCode: "40",
                 resultMsg: "NOT_WORKING",

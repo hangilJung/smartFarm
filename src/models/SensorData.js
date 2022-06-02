@@ -54,11 +54,16 @@ class SensorData {
       const result = await DataAccess.saveSensorData(filteringData, insertDate);
 
       if (await daFn.compareMainSensorData(filteringData)) {
-        const data = fn.pickUpData(filteringData, insertDate);
+        const data = fn.pickUpInsideData(filteringData, insertDate);
         console.log("변한 센서 데이터들을 보냄");
-        io.mainData.emit("changeMainSensorData", data);
-      }
+        io.mainData.emit("insideSensorData", data);
 
+        console.log(data);
+      }
+      if (await daFn.compareOutsideSensorData(filteringData)) {
+        const data = fn.pickUpOutsideData(filteringData, insertDate);
+        io.mainData.emit("outsideSensorData", data);
+      }
       return fn.normalService();
     } catch (error) {
       console.log(error);
@@ -137,16 +142,32 @@ class SensorData {
   }
 
   async readBedData() {
+    const response = {
+      header: {},
+    };
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.readBedData();
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-      return fn.responseHeaderNormalServiceOrNotDataError(
-        fn.dataExistsOrNot(result),
-        result,
-        reqDatetime,
-        resDatetime
-      );
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          reqDatetime,
+          resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          reqDatetime,
+          resDatetime,
+        };
+      }
+
+      return response;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();
@@ -308,6 +329,470 @@ class SensorData {
         reqDatetime,
         resDatetime
       );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async accumulateConsumptionData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.accumulateConsumptionData();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async sensorDataMinutely() {
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
+
+    let result;
+    try {
+      if (fn.dateChecker(startDate, endDate)) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+
+      if (what == "inside") {
+        result = await DataAccess.sensorDataMinutelyInside(startDate, endDate);
+      } else if (what == "outside") {
+        result = await DataAccess.sensorDataMinutelyOutside(startDate, endDate);
+      } else if (what == "bed1") {
+        result = await DataAccess.sensorDataMinutelyBed(
+          startDate,
+          endDate,
+          "14",
+          "15",
+          "16",
+          "17"
+        );
+      } else if (what == "bed2") {
+        result = await DataAccess.sensorDataMinutelyBed(
+          startDate,
+          endDate,
+          "22",
+          "23",
+          "24",
+          "25"
+        );
+      } else if (what == "bed3") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "18",
+          "19",
+          "20",
+          "21"
+        );
+      } else if (what == "bed4") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "26",
+          "27",
+          "28",
+          "29"
+        );
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async sensorDataHourly() {
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
+
+    let result;
+    try {
+      if (fn.dateChecker(startDate, endDate)) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+
+      if (what == "inside") {
+        result = await DataAccess.sensorDataHourlyInside(startDate, endDate);
+      } else if (what == "outside") {
+        result = await DataAccess.sensorDataHourlyOutside(startDate, endDate);
+      } else if (what == "bed1") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "14",
+          "15",
+          "16",
+          "17"
+        );
+      } else if (what == "bed2") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "22",
+          "23",
+          "24",
+          "25"
+        );
+      } else if (what == "bed3") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "18",
+          "19",
+          "20",
+          "21"
+        );
+      } else if (what == "bed4") {
+        result = await DataAccess.sensorDataHourlyBed(
+          startDate,
+          endDate,
+          "26",
+          "27",
+          "28",
+          "29"
+        );
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async sensorDataDaily() {
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
+
+    let result;
+    try {
+      if (fn.dateChecker(startDate, endDate)) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+      if (what == "inside") {
+        result = await DataAccess.sensorDataDailyInside(startDate, endDate);
+      } else if (what == "outside") {
+        result = await DataAccess.sensorDataDailyOutside(startDate, endDate);
+      } else if (what == "bed1") {
+        result = await DataAccess.sensorDataDailyBed(
+          startDate,
+          endDate,
+          "14",
+          "15",
+          "16",
+          "17"
+        );
+      } else if (what == "bed2") {
+        result = await DataAccess.sensorDataDailyBed(
+          startDate,
+          endDate,
+          "22",
+          "23",
+          "24",
+          "25"
+        );
+      } else if (what == "bed3") {
+        result = await DataAccess.sensorDataDailyBed(
+          startDate,
+          endDate,
+          "18",
+          "19",
+          "20",
+          "21"
+        );
+      } else if (what == "bed4") {
+        result = await DataAccess.sensorDataDailyBed(
+          startDate,
+          endDate,
+          "26",
+          "27",
+          "28",
+          "29"
+        );
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async sensorDataMonthly() {
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
+
+    let result;
+    try {
+      if (fn.dateChecker(startDate, endDate)) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+
+      if (what == "inside") {
+        result = await DataAccess.sensorDataMonthlyInside(startDate, endDate);
+      } else if (what == "outside") {
+        result = await DataAccess.sensorDataMonthlyOutside(startDate, endDate);
+      } else if (what == "bed1") {
+        result = await DataAccess.sensorDataMonthlyBed(
+          startDate,
+          endDate,
+          "14",
+          "15",
+          "16",
+          "17"
+        );
+      } else if (what == "bed2") {
+        result = await DataAccess.sensorDataMonthlyBed(
+          startDate,
+          endDate,
+          "22",
+          "23",
+          "24",
+          "25"
+        );
+      } else if (what == "bed3") {
+        result = await DataAccess.sensorDataMonthlyBed(
+          startDate,
+          endDate,
+          "18",
+          "19",
+          "20",
+          "21"
+        );
+      } else if (what == "bed4") {
+        result = await DataAccess.sensorDataMonthlyBed(
+          startDate,
+          endDate,
+          "26",
+          "27",
+          "28",
+          "29"
+        );
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
+  async sensorDataYearly() {
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const response = {
+      header: {},
+    };
+
+    let result;
+    try {
+      if (fn.dateChecker(startDate, endDate)) {
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+
+      if (what == "inside") {
+        result = await DataAccess.sensorDataYearlyInside(startDate, endDate);
+      } else if (what == "outside") {
+        result = await DataAccess.sensorDataYearlyOutside(startDate, endDate);
+      } else if (what == "bed1") {
+        result = await DataAccess.sensorDataYearlyOutside(
+          startDate,
+          endDate,
+          "14",
+          "15",
+          "16",
+          "17"
+        );
+      } else if (what == "bed2") {
+        result = await DataAccess.sensorDataYearlyOutside(
+          startDate,
+          endDate,
+          "22",
+          "23",
+          "24",
+          "25"
+        );
+      } else if (what == "bed3") {
+        result = await DataAccess.sensorDataYearlyOutside(
+          startDate,
+          endDate,
+          "18",
+          "19",
+          "20",
+          "21"
+        );
+      } else if (what == "bed4") {
+        result = await DataAccess.sensorDataYearlyOutside(
+          startDate,
+          endDate,
+          "26",
+          "27",
+          "28",
+          "29"
+        );
+      }
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        response.body = result[0];
+      } else if (!fn.dataExistsOrNot(result)) {
+        response.header = {
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+      }
 
       return response;
     } catch (error) {

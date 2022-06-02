@@ -297,6 +297,180 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async sensorDataMinutelyInside(startDate, endDate) {
+    const sql = query.sensorDataMinutelyInside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMinutelyOutside(startDate, endDate) {
+    const sql = query.sensorDataMinutelyOutside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMinutelyBed(
+    startDate,
+    endDate,
+    soilEc,
+    soilTemperature,
+    soilHumidity,
+    soilPh
+  ) {
+    const sql = query.sensorDataMinutelyBed;
+    const condition = [
+      startDate,
+      endDate,
+      soilEc,
+      soilTemperature,
+      soilHumidity,
+      soilPh,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataHourlyInside(startDate, endDate) {
+    const sql = query.sensorDataHourlyInside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataHourlyOutside(startDate, endDate) {
+    const sql = query.sensorDataHourlyOutside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataHourlyBed(
+    startDate,
+    endDate,
+    soilEc,
+    soilTemperature,
+    soilHumidity,
+    soilPh
+  ) {
+    const sql = query.sensorDataHourlyBed;
+    const condition = [
+      startDate,
+      endDate,
+      soilEc,
+      soilTemperature,
+      soilHumidity,
+      soilPh,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataDailyInside(startDate, endDate) {
+    const sql = query.sensorDataDailyInside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataDailyOutside(startDate, endDate) {
+    const sql = query.sensorDataDailyOutside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataDailyBed(
+    startDate,
+    endDate,
+    soilEc,
+    soilTemperature,
+    soilHumidity,
+    soilPh
+  ) {
+    const sql = query.sensorDataDailyBed;
+    const condition = [
+      startDate,
+      endDate,
+      soilEc,
+      soilTemperature,
+      soilHumidity,
+      soilPh,
+    ];
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMonthlyInside(startDate, endDate) {
+    const sql = query.sensorDataMonthlyInside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMonthlyOutside(startDate, endDate) {
+    const sql = query.sensorDataMonthlyOutside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMonthlyBed(
+    startDate,
+    endDate,
+    soilEc,
+    soilTemperature,
+    soilHumidity,
+    soilPh
+  ) {
+    const sql = query.sensorDataMonthlyBed;
+    const condition = [
+      startDate,
+      endDate,
+      soilEc,
+      soilTemperature,
+      soilHumidity,
+      soilPh,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataYearlyInside(startDate, endDate) {
+    const sql = query.sensorDataYearlyInside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataYearlyOutside(startDate, endDate) {
+    const sql = query.sensorDataYearlyOutside;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataYearlyBed(
+    startDate,
+    endDate,
+    soilEc,
+    soilTemperature,
+    soilHumidity,
+    soilPh
+  ) {
+    const sql = query.sensorDataYearlyBed;
+    const condition = [
+      startDate,
+      endDate,
+      soilEc,
+      soilTemperature,
+      soilHumidity,
+      soilPh,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   /* ===============start test================ */
   static loadSensorDataAll() {
     const sql = query.loadSensorDataAll;
