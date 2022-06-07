@@ -290,6 +290,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async accumulateConsumptionData() {
+    const sql = query.accumulateConsumptionData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async currentAmountOfChange() {
     const sql = query.currentAmountOfChange;
     const condition = [];

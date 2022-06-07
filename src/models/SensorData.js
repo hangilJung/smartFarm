@@ -261,13 +261,7 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const response = fn.normalServiceIncludBody(
-        result,
-        reqDatetime,
-        resDatetime
-      );
-
-      return response;
+      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -282,13 +276,7 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const response = fn.normalServiceIncludBody(
-        result,
-        reqDatetime,
-        resDatetime
-      );
-
-      return response;
+      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -303,13 +291,7 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const response = fn.normalServiceIncludBody(
-        result,
-        reqDatetime,
-        resDatetime
-      );
-
-      return response;
+      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -324,13 +306,7 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const response = fn.normalServiceIncludBody(
-        result,
-        reqDatetime,
-        resDatetime
-      );
-
-      return response;
+      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;

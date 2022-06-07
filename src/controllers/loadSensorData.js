@@ -71,6 +71,11 @@ const load = {
     const result = await sensorData.yearConsumptionData();
     res.json(result);
   },
+  accumulateConsumptionData: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.accumulateConsumptionData();
+    res.json(result);
+  },
   sensorDataMinutely: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.sensorDataMinutely();

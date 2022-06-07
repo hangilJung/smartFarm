@@ -1,5 +1,5 @@
 const { io } = require("socket.io-client");
-console.log("fnNutrient 쪽 ", process.env.SOCKETIO_NUTRICULTURE_MACHINE_PAGE);
+
 const nutricultureMachinePage = io(
   process.env.SOCKETIO_NUTRICULTURE_MACHINE_PAGE,
   {

@@ -3,7 +3,6 @@ const fs = require("fs");
 const Token = require("../models/Token");
 const actu = require("../utils/actuator");
 const moment = require("moment");
-const { response } = require("../../app.js");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -41,10 +40,22 @@ function responseHeaderNormalServiceOrNotDataError(
       header: {
         resultCode: "00",
         resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      },
+      body: data[0],
+    };
+
+    return response;
+  } else if (!trueAndFalse) {
+    const response = {
+      header: {
+        resultCode: "02",
+        resultMsg: "NO_DATA_ERROR",
         reqDatetime,
         resDatetime,
       },
-      body: data[0],
+      body: [{ device: "sensor" }],
     };
 
     return response;
@@ -570,8 +581,8 @@ function communicationError(device) {
   };
 
   response.header = {
-    resultCode: "00",
-    resultMsg: "NORMAL_SERVICE",
+    resultCode: "11",
+    resultMsg: "COMMUNICATION_ERROR",
     requestDatetime: reqDatetime,
     responseDatetime: resDatetime,
   };
@@ -590,6 +601,120 @@ function normalServiceIncludBody(result, reqDatetime, resDatetime) {
     body: result[0],
   };
   return response;
+}
+
+function normalServiceAndNoDataError(result, reqDatetime, resDatetime) {
+  if (result[0].length > 0) {
+    const response = {
+      header: {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      },
+      body: result[0],
+    };
+    return response;
+  } else if (result[0] == 0) {
+    const response = {
+      header: {
+        resultCode: "02",
+        resultMsg: "NO_DATA_ERROR",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      },
+    };
+    return response;
+  }
+}
+
+function currentValueFsRead() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/src/utils/currentValue.json", "utf8")
+  );
+}
+
+function currentValueFsWrite(what, status) {
+  const currentFile = fsRead();
+  currentFile[what]["status"] = status;
+  fs.writeFileSync(
+    __dirname + "/src/utils/currentValue.json",
+    JSON.stringify(currentFile)
+  );
+}
+
+function deviceStatus() {
+  const result = fsRead();
+  const onList = [];
+
+  if (result.fan1.status == "on") {
+    console.log("fan1은 on이다");
+    onList.push("fan1");
+  }
+  if (result.fan2.status == "on") {
+    console.log("fan2은 on이다");
+    onList.push("fan2");
+  }
+  if (result.fan3.status == "on") {
+    console.log("fan3은 on이다");
+    onList.push("fan3");
+  }
+  if (result.nutrient.status == "on") {
+    console.log("nutrient은 on이다");
+    onList.push("nutrient");
+  }
+  if (result.agitator.status == "on") {
+    console.log("agitator은 on이다");
+    onList.push("agitator");
+  }
+
+  return onList;
+}
+
+function addCurrent(onList) {
+  let curr = 0.7;
+
+  if (onList.includes("fan1")) {
+    curr += 0.2;
+    if (onList.includes("fan2")) {
+      curr += 0.2;
+      if (onList.includes("fan3")) {
+        curr += 0.2;
+      }
+    } else if (onList.includes("fan3")) {
+      curr += 0.2;
+    }
+  } else if (onList.includes("fan2")) {
+    curr += 0.2;
+    if (onList.includes("fan1")) {
+      curr += 0.2;
+      if (onList.includes("fan3")) {
+        curr += 0.2;
+      }
+    } else if (onList.includes("fan3")) {
+      curr += 0.2;
+    }
+  } else if (onList.includes("fan3")) {
+    curr += 0.2;
+    if (onList.includes("fan2")) {
+      curr += 0.2;
+      if (onList.includes("fan1")) {
+        curr += 0.2;
+      }
+    } else if (onList.includes("fan1")) {
+      curr += 0.2;
+    }
+  }
+
+  if (onList.includes("nutrient")) {
+    curr += 2.8;
+  }
+
+  if (onList.includes("agitator")) {
+    curr += 0.1;
+  }
+
+  return curr.toFixed(1);
 }
 
 module.exports = {
@@ -633,4 +758,9 @@ module.exports = {
   normalServiceIncludBody,
   pickUpOutsideData,
   dateChecker,
+  normalServiceAndNoDataError,
+  currentValueFsRead,
+  currentValueFsWrite,
+  addCurrent,
+  deviceStatus,
 };

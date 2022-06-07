@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "test": "jest",
     "dev": "cross-env NODE_ENV=dev nodemon bin/www.js",
     "start": "pm2 start bin/www.js --name=LOCAL"
   },

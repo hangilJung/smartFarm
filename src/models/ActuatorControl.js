@@ -6,7 +6,6 @@ const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
-const { response } = require("../../app");
 
 class ActuatorControl {
   constructor(body) {
@@ -52,6 +51,11 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("fan");
       }
+      if (active == "on") {
+        fn.currentValueFsWrite(deviceName, "on");
+      } else {
+        fn.currentValueFsWrite(deviceName, "off");
+      }
 
       if (
         // result.data.header.resultCode == "00"
@@ -62,7 +66,11 @@ class ActuatorControl {
             const result = await DataAccess.currentAmountOfChange();
             console.log(result[0][0]["sensor_data_value"]);
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-            if (result[0][0]["sensor_data_value"] > 1) {
+
+            if (
+              result[0][0]["sensor_data_value"] >
+              fn.addCurrent(fn.deviceStatus())
+            ) {
               response.header = {
                 resultCode: "00",
                 resultMsg: "NORMAL_SERVICE",
@@ -82,7 +90,7 @@ class ActuatorControl {
           } catch (error) {
             console.log(error);
           }
-        }, 1500);
+        }, 3000);
       }
 
       if (result.data.header == "00" && ctrl.data[0].device == "fan") {
@@ -345,6 +353,9 @@ class ActuatorControl {
       //   return fn.communicationError("nutrient");
       // }
       // return result.data;
+
+      fn.currentValueFsWrite("nutrient", "on");
+
       if (
         // result.data.header.resultCode == "00"
         true
@@ -354,7 +365,10 @@ class ActuatorControl {
             const result = await DataAccess.currentAmountOfChange();
             console.log(result[0][0]["sensor_data_value"]);
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-            if (result[0][0]["sensor_data_value"] > 1) {
+            if (
+              result[0][0]["sensor_data_value"] >
+              fn.addCurrent(fn.deviceStatus())
+            ) {
               DataAccess.actuatorControlActionRecord(
                 "nutrient",
                 "양액기가 공급을 시작합니다."
@@ -402,6 +416,7 @@ class ActuatorControl {
       // }
       // return result.data;
 
+      fn.currentValueFsWrite("nutrient", "off");
       if (
         // result.data.header.resultCode == "00"
         true
@@ -411,7 +426,10 @@ class ActuatorControl {
             const result = await DataAccess.currentAmountOfChange();
             console.log(result[0][0]["sensor_data_value"]);
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-            if (result[0][0]["sensor_data_value"] < 1) {
+            if (
+              result[0][0]["sensor_data_value"] <
+              fn.addCurrent(fn.deviceStatus())
+            ) {
               DataAccess.actuatorControlActionRecord(
                 "nutrient",
                 "양액기가 공급을 중지합니다."

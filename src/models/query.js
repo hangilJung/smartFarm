@@ -435,7 +435,7 @@ const query = {
                 from 
                 (   
                 select 
-                    sd.sensor_information_id,
+                    sd.sensor_information_id as sensor_information_id,
                     cast(avg((sd.sensor_data_value)) as decimal(5, 1)) as sensor_data_value,
                     date_format(sd.sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
                 from 
@@ -583,7 +583,7 @@ const query = {
 
   hourConsumptionData: `
                         select
-                            hour_value as  value,
+                            hour_value,
                             created_at
                         from 
                             power_consumption_data
@@ -591,7 +591,7 @@ const query = {
                             created_at >= date_format(date_sub(date_sub(now(), interval 1 day), interval 1 hour),'%Y-%m-%d %T');`,
   dayConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            sum(hour_value) as day_value,
                             date_format(created_at, '%Y-%m-%d') as created_at
                         from
                             power_consumption_data 
@@ -606,7 +606,7 @@ const query = {
 
   monthConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            sum(hour_value) as month_value,
                             date_format(created_at, '%Y-%m') as created_at
                         from
                             power_consumption_data 
@@ -619,7 +619,7 @@ const query = {
                             month(created_at);`,
   yearConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            sum(hour_value) as year_value,
                             date_format(created_at, '%Y') as created_at
                         from
                             power_consumption_data 
@@ -641,9 +641,9 @@ const query = {
                         order by 
                             sensor_data_created_at desc
                         limit 1;`,
-  accumulateCurrent: `
+  accumulateConsumptionData: `
                     select
-                        sensor_data_value as value
+                        sensor_data_value as accumulation_value
                     from
                         sensor_data sd 
                     where
