@@ -1,7 +1,6 @@
 const pool = require("../config/db");
 const { multipleConditions, nutrientMultipleConditions } = require("../lib/fn");
 const query = require("./query");
-const moment = require("moment");
 
 class DataAccess {
   static async #databaseAcess(sql, condition) {
@@ -477,22 +476,6 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
-
-  /* ===============start test================ */
-  static loadSensorDataAll() {
-    const sql = query.loadSensorDataAll;
-    const condition = [];
-
-    return this.#databaseAcess(sql, condition);
-  }
-
-  static loadSensorDataValueRange() {
-    const sql = "";
-
-    return this.#databaseAcess(sql, condition);
-  }
-
-  /* ===============end test================ */
 }
 
 module.exports = DataAccess;

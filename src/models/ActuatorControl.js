@@ -110,59 +110,6 @@ class ActuatorControl {
     }
   }
 
-  // String matter  water, fertilizer
-  // Number line    1,2,3,4
-
-  async nutrientSupply() {
-    const { matter, line } = this.body;
-    const response = {
-      header: {},
-    };
-    const nowTime = moment().format("YYYY-MM-DD T HH:mm:ss");
-
-    if (
-      fn.isNutrientSupplyFnParamsAValid(matter, line) ||
-      fn.isUndefinedParams(matter, line)
-    ) {
-      return fn.invalidRequestParameterError();
-    }
-
-    const ctl = {
-      farmlandId: 1,
-      data: [
-        {
-          bedId: 5,
-          device: "nuctrl",
-          active: "nuctrl_write",
-          deviceName: "nutrient",
-          dev_data: fn.whereToSupply(matter, line),
-          datetime: nowTime,
-        },
-      ],
-    };
-
-    try {
-      const content = fn.writeNutrientSupplyContent(matter, line);
-
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctl);
-      DataAccess.actuatorControlActionRecord(ctl.deviceName, content);
-      DataAccess.nutrientStartSupplyDatetime(matter, line, nowTime);
-
-      console.log(result);
-
-      if (result.header.resultCode === "00") {
-        response.header = headerStatusCode.normalService;
-      } else {
-        response.header = headerStatusCode.invalidRequestParameterError;
-      }
-
-      return response;
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
     const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -241,49 +188,6 @@ class ActuatorControl {
     }
   }
 
-  async readNutrient() {
-    const { wantData } = this.body;
-
-    const dataFormat = fn.deliverDataFormatRead(wantData);
-    try {
-      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
-
-      return result;
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
-  async emergency() {
-    this.nutrientStop();
-
-    const response = {
-      header: {},
-    };
-    const ctrl = actu.emergency;
-
-    try {
-      const content = fn.emergencyContent();
-
-      DataAccess.actuatorControlActionRecord(ctrl.deviceName, content);
-      DataAccess.actuatorStatusZero();
-
-      // const result = await axios.post(proccess.env.GATEWAY_SERVER, ctl);
-
-      // if (result.header.resultCode === "00") {
-      response.header = headerStatusCode.normalService;
-      // } else {
-      // response.header = headerStatusCode.invalidRequestParameterError;
-      // }
-
-      return response;
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
   async loadActuatorRecord() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -313,28 +217,6 @@ class ActuatorControl {
 
       return response;
     } catch (error) {
-      return fn.invalidRequestParameterError();
-    }
-  }
-
-  async loadNutrientData() {
-    let response;
-
-    try {
-      // const result = await axios.post(
-      //   process.env.GATEWAY_SERVER,
-      //   fn.readNutreint(actu.readNutrientDataDigitalAndAnalog["list"])
-      // );
-      console.log(result.data);
-      // if (result.data.header.resultCode === "00") {
-      //   response = fn.responseHeaderAndBody(result.data.body);
-      // } else {
-      //   response = fn.invalidRequestParameterError();
-      // }
-
-      return result.data;
-    } catch (error) {
-      console.log(error);
       return fn.invalidRequestParameterError();
     }
   }

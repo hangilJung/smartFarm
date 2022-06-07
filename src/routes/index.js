@@ -10,7 +10,6 @@ router.use("/load-sensor-data", loadSensorData);
 router.use("/operate-actuator", actuator);
 
 router.post("/save-sensor-data", ipAndUrl, ctrl.process.saveSensorData);
-router.post("/emergency", ipAndUrl, verifyToken, ctrl.process.emergency);
 router.post("/login", ipAndUrl, verifyToken, ctrl.process.login);
 router.post("/load-actuator-record", ipAndUrl, ctrl.process.loadActuatorRecord);
 router.post(

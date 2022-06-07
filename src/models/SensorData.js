@@ -205,7 +205,10 @@ class SensorData {
   async loadMinutesSensorData() {
     const { startDate, endDate } = this.#getDate();
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    return this.#trycatch(DataAccess.loadMinutesSensorData(startDate, endDate));
+    return this.#trycatch(
+      DataAccess.loadMinutesSensorData(startDate, endDate),
+      reqDatetime
+    );
   }
 
   async loadHoursSensorData() {
