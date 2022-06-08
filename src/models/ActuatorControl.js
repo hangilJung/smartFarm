@@ -11,8 +11,7 @@ class ActuatorControl {
   constructor(body) {
     this.body = body;
   }
-  // String deviceName   fan1, fan2, fan3
-  // String active   on, stop, open, close
+
   async simpleActuatorControl() {
     const { deviceName, active } = this.body;
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -414,8 +413,6 @@ class ActuatorControl {
           dbData[0]
         );
 
-      console.log("@#@#@", compareResult.result);
-      console.log("@#@#@", compareResult.list);
       if (compareResult.list.length > 0) {
         nt.sendToNutricultureMachinePageSocket(
           nt.whatDetailNumber(compareResult.list),

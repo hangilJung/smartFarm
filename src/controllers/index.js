@@ -25,11 +25,6 @@ const process = {
     const result = await actuatorControl.simpleActuatorControl();
     res.json(result);
   },
-  operateNutrientSupply: async (req, res) => {
-    const actuatorControl = new ActuatorControl(req.body);
-    const result = await actuatorControl.nutrientSupply();
-    res.json(result);
-  },
   operateNutrientStop: async (req, res) => {
     const actuatorControl = new ActuatorControl();
     const result = await actuatorControl.nutrientStop();

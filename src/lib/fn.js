@@ -677,32 +677,32 @@ function addCurrent(onList) {
   if (onList.includes("fan1")) {
     curr += 0.2;
     if (onList.includes("fan2")) {
-      curr += 0.2;
+      curr += 0.4;
       if (onList.includes("fan3")) {
-        curr += 0.2;
+        curr += 0.6;
       }
     } else if (onList.includes("fan3")) {
-      curr += 0.2;
+      curr += 0.4;
     }
   } else if (onList.includes("fan2")) {
     curr += 0.2;
     if (onList.includes("fan1")) {
-      curr += 0.2;
+      curr += 0.4;
       if (onList.includes("fan3")) {
-        curr += 0.2;
+        curr += 0.6;
       }
     } else if (onList.includes("fan3")) {
-      curr += 0.2;
+      curr += 0.4;
     }
   } else if (onList.includes("fan3")) {
     curr += 0.2;
     if (onList.includes("fan2")) {
-      curr += 0.2;
+      curr += 0.4;
       if (onList.includes("fan1")) {
-        curr += 0.2;
+        curr += 0.6;
       }
     } else if (onList.includes("fan1")) {
-      curr += 0.2;
+      curr += 0.4;
     }
   }
 
