@@ -8,15 +8,13 @@ router.post("/simple", ipAndUrl, ctrl.process.operateSimpleActuator);
 router.post("/nutrient-stop", ipAndUrl, ctrl.process.operateNutrientStop);
 router.post("/read-nutrient", ipAndUrl, ctrl.process.readNutrient);
 router.post("/load-nutrient-data", ipAndUrl, ctrl.process.loadNutrientData);
-router.post("/start", ipAndUrl, nt.nutrient.start);
-router.post("/stop", ipAndUrl, nt.nutrient.stop);
+router.post("/irrigation", ipAndUrl, nt.nutrient.irrigation);
 router.post(
   "/nutriculture-machine-status",
   ipAndUrl,
   nt.nutrient.nutricultureMachineStatus
 );
-router.post("/control-mode-easy", nt.nutrient.easySelection);
-router.post("/control-mode-detail", nt.nutrient.detailSelection);
+router.post("/control-mode", nt.nutrient.controlMode);
 router.post("/easy-setting", nt.nutrient.easySetting);
 router.post("/detail-setting-time", nt.nutrient.detailSettingTime);
 router.post("/detail-setting-matter", nt.nutrient.detailSettingMatter);

@@ -220,6 +220,16 @@ class ActuatorControl {
     }
   }
 
+  async irrigation() {
+    const { what } = this.body;
+
+    if (what == "start") {
+      return this.start();
+    } else if (what == "stop") {
+      return this.stop();
+    }
+  }
+
   async start() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const response = {
@@ -461,6 +471,16 @@ class ActuatorControl {
     }
   }
 
+  async controlMode() {
+    const { what } = this.body;
+
+    if (what == "easy") {
+      return this.easySelection();
+    } else if (what == "detail") {
+      return this.detailSelection();
+    }
+  }
+
   async easySelection() {
     try {
       const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -505,6 +525,7 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);

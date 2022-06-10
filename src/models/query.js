@@ -432,25 +432,25 @@ const query = {
                 select
                     *
                 from 
-                (   
-                select 
-                    sd.sensor_information_id as sensor_information_id,
-                    cast(avg((sd.sensor_data_value)) as decimal(5, 1)) as sensor_data_value,
-                    date_format(sd.sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
-                from 
-                    sensor_data sd
-                where  
-                    sd.sensor_data_created_at >= subtime(now(),'11:00:00')
-                and
-                    sd.sensor_information_id in(14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)
-                group by
-                    day(sd.sensor_data_created_at),
-                    hour(sd.sensor_data_created_at),
-                    sd.sensor_information_id
-                order by    
-                    sd.sensor_data_created_at,
-                    sd.sensor_information_id
-                ) as a
+                    (   
+                    select 
+                        sd.sensor_information_id as sensor_information_id,
+                        cast(avg((sd.sensor_data_value)) as decimal(5, 1)) as sensor_data_value,
+                        date_format(sd.sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
+                    from 
+                        sensor_data sd
+                    where  
+                        sd.sensor_data_created_at >= subtime(now(),'11:00:00')
+                    and
+                        sd.sensor_information_id in(14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)
+                    group by
+                        day(sd.sensor_data_created_at),
+                        hour(sd.sensor_data_created_at),
+                        sd.sensor_information_id
+                    order by    
+                        sd.sensor_data_created_at,
+                        sd.sensor_information_id
+                    ) as a
                 order by
                     sensor_information_id;`,
   insertNutricultureMachinePageStatusValue: `

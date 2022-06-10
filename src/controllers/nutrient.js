@@ -1,14 +1,9 @@
 const ActuatorControl = require("../models/ActuatorControl");
 
 const nutrient = {
-  start: async (req, res) => {
-    const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.start();
-    res.json(result);
-  },
-  stop: async (req, res) => {
-    const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.stop();
+  irrigation: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.irrigation();
     res.json(result);
   },
   nutricultureMachineStatus: async (req, res) => {
@@ -16,14 +11,9 @@ const nutrient = {
     const result = await actuatorControl.nutricultureMachineStatus();
     res.json(result);
   },
-  easySelection: async (req, res) => {
-    const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.easySelection();
-    res.json(result);
-  },
-  detailSelection: async (req, res) => {
-    const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.detailSelection();
+  controlMode: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.controlMode();
     res.json(result);
   },
   easySetting: async (req, res) => {

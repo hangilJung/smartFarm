@@ -14,7 +14,7 @@ function checkDataValidation(body, getSensorDataRange, date) {
             j.value > Number(i.sensor_maximum_value)
           ) {
             saveOriginalSensorData(j, date);
-            arr.push({ name: data.name, value: null });
+            arr.push({ name: j.name, value: null });
             break;
           }
           arr.push({ name: j.name, value: j.value });
