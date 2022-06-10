@@ -220,16 +220,6 @@ class ActuatorControl {
     }
   }
 
-  async irrigation() {
-    const { what } = this.body;
-
-    if (what == "start") {
-      return this.start();
-    } else if (what == "stop") {
-      return this.stop();
-    }
-  }
-
   async start() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const response = {

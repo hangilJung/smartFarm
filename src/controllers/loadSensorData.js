@@ -16,6 +16,11 @@ const load = {
     const result = await sensorData.mainOutsideSensorData();
     res.json(result);
   },
+  main: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.main();
+    res.json(result);
+  },
   minutes: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.loadMinutesSensorData();
