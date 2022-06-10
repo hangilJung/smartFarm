@@ -43,7 +43,7 @@ function responseHeaderNormalServiceOrNotDataError(
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       },
-      body: data[0],
+      body: data,
     };
 
     return response;
@@ -630,15 +630,15 @@ function normalServiceAndNoDataError(result, reqDatetime, resDatetime) {
 
 function currentValueFsRead() {
   return JSON.parse(
-    fs.readFileSync(__dirname + "/src/utils/currentValue.json", "utf8")
+    fs.readFileSync(__dirname + "/../utils/currentValue.json", "utf8")
   );
 }
 
 function currentValueFsWrite(what, status) {
-  const currentFile = fsRead();
+  const currentFile = currentValueFsRead();
   currentFile[what]["status"] = status;
   fs.writeFileSync(
-    __dirname + "/src/utils/currentValue.json",
+    __dirname + "/../utils/currentValue.json",
     JSON.stringify(currentFile)
   );
 }
@@ -663,58 +663,195 @@ function deviceStatus() {
     console.log("nutrient은 on이다");
     onList.push("nutrient");
   }
-  if (result.agitator.status == "on") {
-    console.log("agitator은 on이다");
-    onList.push("agitator");
-  }
 
   return onList;
 }
 
 function addCurrent(onList) {
   let curr = 0.7;
+  const oneFanValue = 0.3;
+  const twoFanValue = 0.7;
+  const threeFanValue = 1.1;
+  const nutrientValue = 5;
 
   if (onList.includes("fan1")) {
-    curr += 0.2;
+    curr += oneFanValue;
     if (onList.includes("fan2")) {
-      curr += 0.4;
+      curr += twoFanValue;
       if (onList.includes("fan3")) {
-        curr += 0.6;
+        curr += threeFanValue;
       }
     } else if (onList.includes("fan3")) {
-      curr += 0.4;
+      curr += twoFanValue;
     }
   } else if (onList.includes("fan2")) {
-    curr += 0.2;
+    curr += oneFanValue;
     if (onList.includes("fan1")) {
-      curr += 0.4;
+      curr += twoFanValue;
       if (onList.includes("fan3")) {
-        curr += 0.6;
+        curr += threeFanValue;
       }
     } else if (onList.includes("fan3")) {
-      curr += 0.4;
+      curr += twoFanValue;
     }
   } else if (onList.includes("fan3")) {
-    curr += 0.2;
+    curr += oneFanValue;
     if (onList.includes("fan2")) {
-      curr += 0.4;
+      curr += twoFanValue;
       if (onList.includes("fan1")) {
-        curr += 0.6;
+        curr += threeFanValue;
       }
     } else if (onList.includes("fan1")) {
-      curr += 0.4;
+      curr += twoFanValue;
     }
   }
 
   if (onList.includes("nutrient")) {
-    curr += 2.8;
-  }
-
-  if (onList.includes("agitator")) {
-    curr += 0.1;
+    curr += nutrientValue;
   }
 
   return curr.toFixed(1);
+}
+
+function invalidInsideMainSensorData(list) {
+  try {
+    const inTemp = "inTemp";
+    const inHumi = "inHumi";
+    const inInsol = "inInsol";
+    const co2 = "co2";
+    const invalidList = [inTemp, inHumi, inInsol, co2];
+    const sortBy = [inTemp, inHumi, inInsol, co2];
+    const sortArr = [];
+
+    let datetime;
+    let onlyOnce = true;
+
+    const result = list.map((data) => {
+      if (onlyOnce) {
+        datetime = data.sensor_data_created_at;
+        onlyOnce = false;
+      }
+      if (data.sensor_name == inTemp) {
+        removeFromArray(invalidList, inTemp);
+
+        return data;
+      } else if (data.sensor_name == inHumi) {
+        removeFromArray(invalidList, inHumi);
+
+        return data;
+      } else if (data.sensor_name == inInsol) {
+        removeFromArray(invalidList, inInsol);
+
+        return data;
+      } else if (data.sensor_name == co2) {
+        removeFromArray(invalidList, co2);
+
+        return data;
+      }
+    });
+
+    if (invalidList.length > 0) {
+      addNullData(invalidList, result, datetime);
+    }
+
+    for (let sortByData of sortBy) {
+      for (let resultData of result) {
+        if (resultData.sensor_name == sortByData) {
+          sortArr.push(resultData);
+        }
+      }
+    }
+
+    return sortArr;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function invalidOutsideMainSensorData(list) {
+  const sensorName1 = "outTemp";
+  const sensorName2 = "outHumi";
+  const sensorName3 = "rf";
+  const sensorName4 = "outInsol";
+  const sensorName5 = "ws";
+  const invalidList = [
+    sensorName1,
+    sensorName2,
+    sensorName3,
+    sensorName4,
+    sensorName5,
+  ];
+  const sortBy = [
+    sensorName1,
+    sensorName2,
+    sensorName3,
+    sensorName4,
+    sensorName5,
+  ];
+  const sortArr = [];
+
+  let datetime;
+  let onlyOnce = true;
+
+  const result = list.map((data) => {
+    if (onlyOnce) {
+      datetime = data.sensor_data_created_at;
+      onlyOnce = false;
+    }
+    if (data.sensor_name == sensorName1) {
+      removeFromArray(invalidList, sensorName1);
+
+      return data;
+    } else if (data.sensor_name == sensorName2) {
+      removeFromArray(invalidList, sensorName2);
+
+      return data;
+    } else if (data.sensor_name == sensorName3) {
+      removeFromArray(invalidList, sensorName3);
+
+      return data;
+    } else if (data.sensor_name == sensorName4) {
+      removeFromArray(invalidList, sensorName4);
+
+      return data;
+    } else if (data.sensor_name == sensorName5) {
+      removeFromArray(invalidList, sensorName5);
+
+      return data;
+    }
+  });
+
+  if (invalidList.length > 0) {
+    addNullData(invalidList, result, datetime);
+  }
+
+  for (let sortByData of sortBy) {
+    for (let resultData of result) {
+      if (resultData.sensor_name == sortByData) {
+        sortArr.push(resultData);
+      }
+    }
+  }
+
+  return sortArr;
+}
+
+function addNullData(invalidList, result, datetime) {
+  for (let data of invalidList) {
+    result.push({
+      sensor_name: data,
+      sensor_data_value: null,
+      sensor_data_created_at: datetime,
+    });
+  }
+}
+
+function removeFromArray(invalidList, sensorName) {
+  const idx = invalidList.indexOf(sensorName);
+
+  if (idx > -1) {
+    invalidList.splice(idx, 1);
+  }
 }
 
 module.exports = {
@@ -763,4 +900,6 @@ module.exports = {
   currentValueFsWrite,
   addCurrent,
   deviceStatus,
+  invalidInsideMainSensorData,
+  invalidOutsideMainSensorData,
 };

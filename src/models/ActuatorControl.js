@@ -386,6 +386,17 @@ class ActuatorControl {
         return { address: data.modbus_address, value: data.description };
       });
 
+      for (let i of processData) {
+        if (i.address == "560") {
+          console.log(i);
+          if (i.value == "0") {
+            fn.currentValueFsWrite("nutrient", "off");
+          } else if (i.value == "1") {
+            fn.currentValueFsWrite("nutrient", "on");
+          }
+          break;
+        }
+      }
       // DataAccess.test(processData);
       response.header = {
         resultCode: "00",

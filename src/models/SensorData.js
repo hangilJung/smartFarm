@@ -36,13 +36,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-    // logger.info(JSON.stringify(this.body));
-
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
-      const filteringData = await daFn.checkDataValidation(
+      const filteringData = daFn.checkDataValidation(
         this.body,
         getSensorDataRange,
         insertDate
@@ -55,14 +53,16 @@ class SensorData {
 
       if (await daFn.compareMainSensorData(filteringData)) {
         const data = fn.pickUpInsideData(filteringData, insertDate);
-        console.log("변한 센서 데이터들을 보냄");
+        console.log("변한 센서 데이터 실내");
         io.mainData.emit("insideSensorData", data);
 
         console.log(data);
       }
       if (await daFn.compareOutsideSensorData(filteringData)) {
         const data = fn.pickUpOutsideData(filteringData, insertDate);
+        console.log("변한 센서 데이터 실외");
         io.mainData.emit("outsideSensorData", data);
+        console.log(data);
       }
       return fn.normalService();
     } catch (error) {
@@ -72,8 +72,6 @@ class SensorData {
   }
 
   async loadLatelySensorData() {
-    // const conditionalDate = moment().format("YYYY-MM-DD HH:mm:00");
-
     try {
       const result = await DataAccess.loadLatelySensorData();
 
@@ -88,33 +86,18 @@ class SensorData {
     }
   }
 
-  async loadSensorDataAll() {
-    try {
-      const result = await DataAccess.loadSensorDataAll();
-
-      return fn.responseHeaderNormalServiceOrNotDataError(
-        fn.dataExistsOrNot(result),
-        result
-      );
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
   async mainInsideSensorData() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainInsideSensorData();
 
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const processResult = fn.invalidInsideMainSensorData(result[0]);
 
-      if (result[0] > 0) {
-      }
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result,
+        processResult,
         reqDatetime,
         resDatetime
       );
@@ -128,10 +111,11 @@ class SensorData {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainOutsideSensorData();
+
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result,
+        result[0],
         reqDatetime,
         resDatetime
       );
@@ -168,17 +152,6 @@ class SensorData {
       }
 
       return response;
-    } catch (error) {
-      console.log(error);
-      return fn.invalidRequestParameterError();
-    }
-  }
-
-  async reactFirstMainData() {
-    try {
-      const result = await this.mainSensorData();
-
-      return result.body;
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError();

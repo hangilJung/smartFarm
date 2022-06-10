@@ -43,4 +43,8 @@ module.exports = {
     resultCode: "34",
     resultMsg: "INVALID_TOKEN",
   },
+  notWorking: {
+    resultCode: "40",
+    resultMsg: "NOT_WORKING",
+  },
 };

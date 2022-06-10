@@ -18,7 +18,6 @@ const query = {
                 where
                     sensor_name = ?) 
                 , ?, ?) ;`,
-  saveDataTest: ``,
   loadSensorData: `select 
                         si.sensor_information_id,
                         si.sensor_node_id,
@@ -611,7 +610,7 @@ const query = {
                         from
                             power_consumption_data 
                         where
-                            created_at >= date_format(now(),'%Y-%m-% 00:00:00')
+                            created_at >= date_format(now(),'%Y-%m-01 00:00:00')
                         and
                             created_at < date_format(date_add(last_day(now()), interval 1 day), '%Y-%m-%d 00:00:00')
                         group by

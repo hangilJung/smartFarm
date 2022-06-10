@@ -14,6 +14,7 @@ function checkDataValidation(body, getSensorDataRange, date) {
             j.value > Number(i.sensor_maximum_value)
           ) {
             saveOriginalSensorData(j, date);
+            arr.push({ name: data.name, value: null });
             break;
           }
           arr.push({ name: j.name, value: j.value });
@@ -55,7 +56,7 @@ function saveOriginalSensorData(data, date) {
     { name: data.name, value: data.value },
     date
   );
-  logger.error("sensor data error ", data);
+  logger.error(`sensor data error ${JSON.stringify(data)}`);
   DataAccess.actuatorControlActionRecord(
     "1",
     `데이터 이상 sensor name : ${data.name}, value : ${data.value}`
