@@ -260,8 +260,20 @@ function dateChecker(start_date, end_date) {
   );
 }
 
-function addEndDate(endDate) {
-  return moment(endDate).add(1, "days").format("YYYY-MM-DD");
+function addEndDate(endDatetime) {
+  let endDate = endDatetime;
+  const putData = moment(endDate);
+  const momentDatetime = putData.format("HH:mm:ss");
+
+  if (momentDatetime == "00:00:00") {
+    return momentAddDatetime(endDate, "days");
+  } else {
+    return (endDate = putData.format("YYYY-MM-DD HH:mm:ss"));
+  }
+}
+
+function momentAddDatetime(endDate, key) {
+  return moment(endDate).add(1, key).format("YYYY-MM-DD HH:mm:ss");
 }
 
 function writeNutrientSupplyContent(matter, line) {

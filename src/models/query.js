@@ -669,7 +669,7 @@ const query = {
                         and
                             sd.sensor_data_created_at < ?
                         and
-                            sensor_information_id in (3, 4, 5, 30)
+                            sensor_information_id in (3, 4, 6, 30)
                         group by
                             year(sd.sensor_data_created_at),                        
                             month(sd.sensor_data_created_at),
@@ -739,7 +739,7 @@ const query = {
                         and
                             sd.sensor_data_created_at < ?
                         and
-                            sensor_information_id in (3, 4, 5, 30)
+                            sensor_information_id in (3, 4, 6, 30)
                         group by
                             year(sd.sensor_data_created_at),                        
                             month(sd.sensor_data_created_at),
@@ -805,7 +805,7 @@ const query = {
                         and
                             sd.sensor_data_created_at < ?
                         and
-                            sensor_information_id in (3, 4, 5, 30)
+                            sensor_information_id in (3, 4, 6, 30)
                         group by
                             year(sd.sensor_data_created_at),                        
                             month(sd.sensor_data_created_at),
@@ -868,7 +868,7 @@ const query = {
                         and
                             sd.sensor_data_created_at < ?
                         and
-                            sensor_information_id in (3, 4, 5, 30)
+                            sensor_information_id in (3, 4, 6, 30)
                         group by
                             year(sd.sensor_data_created_at),                        
                             month(sd.sensor_data_created_at),
@@ -928,7 +928,7 @@ const query = {
                         and
                             sd.sensor_data_created_at < ?
                         and
-                            sensor_information_id in (3, 4, 5, 30)
+                            sensor_information_id in (3, 4, 6, 30)
                         group by
                             year(sd.sensor_data_created_at),         
                             sd.sensor_information_id

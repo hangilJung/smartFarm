@@ -16,7 +16,7 @@ class SensorData {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result,
+        result[0],
         reqDatetime,
         resDatetime
       );
@@ -91,13 +91,11 @@ class SensorData {
     try {
       const result = await DataAccess.mainInsideSensorData();
 
-      const processResult = fn.invalidInsideMainSensorData(result[0]);
-
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        processResult,
+        result[0],
         reqDatetime,
         resDatetime
       );
@@ -403,6 +401,8 @@ class SensorData {
     const { what, startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
+    console.log(endDate);
+
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const response = {
       header: {},
@@ -691,7 +691,7 @@ class SensorData {
       } else if (what == "outside") {
         result = await DataAccess.sensorDataYearlyOutside(startDate, endDate);
       } else if (what == "bed1") {
-        result = await DataAccess.sensorDataYearlyOutside(
+        result = await DataAccess.sensorDataYearlyBed(
           startDate,
           endDate,
           "14",
@@ -700,7 +700,7 @@ class SensorData {
           "17"
         );
       } else if (what == "bed2") {
-        result = await DataAccess.sensorDataYearlyOutside(
+        result = await DataAccess.sensorDataYearlyBed(
           startDate,
           endDate,
           "22",
@@ -709,7 +709,7 @@ class SensorData {
           "25"
         );
       } else if (what == "bed3") {
-        result = await DataAccess.sensorDataYearlyOutside(
+        result = await DataAccess.sensorDataYearlyBed(
           startDate,
           endDate,
           "18",
@@ -718,7 +718,7 @@ class SensorData {
           "21"
         );
       } else if (what == "bed4") {
-        result = await DataAccess.sensorDataYearlyOutside(
+        result = await DataAccess.sensorDataYearlyBed(
           startDate,
           endDate,
           "26",
