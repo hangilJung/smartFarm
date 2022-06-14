@@ -308,8 +308,38 @@ class SensorData {
     }
   }
 
+  async statisticsConsumptionData() {
+    const { what } = this.body;
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    let result;
+
+    try {
+      if (what == "day") {
+        result = await DataAccess.dailyConsumptionData();
+      } else if (what == "month") {
+        result = await DataAccess.monthlyConsumptionData();
+      } else if (what == "year") {
+        result = await DataAccess.yearlyConsumptionData();
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError;
+    }
+  }
+
   async sensorDataMinutely() {
-    const { what, startDate } = this.body;
+    const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -317,7 +347,6 @@ class SensorData {
       header: {},
     };
 
-    let result;
     try {
       if (fn.dateChecker(startDate, endDate)) {
         response.header = {
@@ -329,47 +358,7 @@ class SensorData {
         return response;
       }
 
-      if (what == "inside") {
-        result = await DataAccess.sensorDataMinutelyInside(startDate, endDate);
-      } else if (what == "outside") {
-        result = await DataAccess.sensorDataMinutelyOutside(startDate, endDate);
-      } else if (what == "bed1") {
-        result = await DataAccess.sensorDataMinutelyBed(
-          startDate,
-          endDate,
-          "14",
-          "15",
-          "16",
-          "17"
-        );
-      } else if (what == "bed2") {
-        result = await DataAccess.sensorDataMinutelyBed(
-          startDate,
-          endDate,
-          "22",
-          "23",
-          "24",
-          "25"
-        );
-      } else if (what == "bed3") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "18",
-          "19",
-          "20",
-          "21"
-        );
-      } else if (what == "bed4") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "26",
-          "27",
-          "28",
-          "29"
-        );
-      }
+      const result = await DataAccess.sensorDataMinutely(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -398,7 +387,7 @@ class SensorData {
   }
 
   async sensorDataHourly() {
-    const { what, startDate } = this.body;
+    const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     console.log(endDate);
@@ -408,7 +397,6 @@ class SensorData {
       header: {},
     };
 
-    let result;
     try {
       if (fn.dateChecker(startDate, endDate)) {
         response.header = {
@@ -420,47 +408,7 @@ class SensorData {
         return response;
       }
 
-      if (what == "inside") {
-        result = await DataAccess.sensorDataHourlyInside(startDate, endDate);
-      } else if (what == "outside") {
-        result = await DataAccess.sensorDataHourlyOutside(startDate, endDate);
-      } else if (what == "bed1") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "14",
-          "15",
-          "16",
-          "17"
-        );
-      } else if (what == "bed2") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "22",
-          "23",
-          "24",
-          "25"
-        );
-      } else if (what == "bed3") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "18",
-          "19",
-          "20",
-          "21"
-        );
-      } else if (what == "bed4") {
-        result = await DataAccess.sensorDataHourlyBed(
-          startDate,
-          endDate,
-          "26",
-          "27",
-          "28",
-          "29"
-        );
-      }
+      const result = await DataAccess.sensorDataHourly(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -489,7 +437,7 @@ class SensorData {
   }
 
   async sensorDataDaily() {
-    const { what, startDate } = this.body;
+    const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -497,7 +445,6 @@ class SensorData {
       header: {},
     };
 
-    let result;
     try {
       if (fn.dateChecker(startDate, endDate)) {
         response.header = {
@@ -508,47 +455,7 @@ class SensorData {
         };
         return response;
       }
-      if (what == "inside") {
-        result = await DataAccess.sensorDataDailyInside(startDate, endDate);
-      } else if (what == "outside") {
-        result = await DataAccess.sensorDataDailyOutside(startDate, endDate);
-      } else if (what == "bed1") {
-        result = await DataAccess.sensorDataDailyBed(
-          startDate,
-          endDate,
-          "14",
-          "15",
-          "16",
-          "17"
-        );
-      } else if (what == "bed2") {
-        result = await DataAccess.sensorDataDailyBed(
-          startDate,
-          endDate,
-          "22",
-          "23",
-          "24",
-          "25"
-        );
-      } else if (what == "bed3") {
-        result = await DataAccess.sensorDataDailyBed(
-          startDate,
-          endDate,
-          "18",
-          "19",
-          "20",
-          "21"
-        );
-      } else if (what == "bed4") {
-        result = await DataAccess.sensorDataDailyBed(
-          startDate,
-          endDate,
-          "26",
-          "27",
-          "28",
-          "29"
-        );
-      }
+      const result = await DataAccess.sensorDataDaily(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -577,7 +484,7 @@ class SensorData {
   }
 
   async sensorDataMonthly() {
-    const { what, startDate } = this.body;
+    const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -585,7 +492,6 @@ class SensorData {
       header: {},
     };
 
-    let result;
     try {
       if (fn.dateChecker(startDate, endDate)) {
         response.header = {
@@ -597,48 +503,7 @@ class SensorData {
         return response;
       }
 
-      if (what == "inside") {
-        result = await DataAccess.sensorDataMonthlyInside(startDate, endDate);
-      } else if (what == "outside") {
-        result = await DataAccess.sensorDataMonthlyOutside(startDate, endDate);
-      } else if (what == "bed1") {
-        result = await DataAccess.sensorDataMonthlyBed(
-          startDate,
-          endDate,
-          "14",
-          "15",
-          "16",
-          "17"
-        );
-      } else if (what == "bed2") {
-        result = await DataAccess.sensorDataMonthlyBed(
-          startDate,
-          endDate,
-          "22",
-          "23",
-          "24",
-          "25"
-        );
-      } else if (what == "bed3") {
-        result = await DataAccess.sensorDataMonthlyBed(
-          startDate,
-          endDate,
-          "18",
-          "19",
-          "20",
-          "21"
-        );
-      } else if (what == "bed4") {
-        result = await DataAccess.sensorDataMonthlyBed(
-          startDate,
-          endDate,
-          "26",
-          "27",
-          "28",
-          "29"
-        );
-      }
-
+      const result = await DataAccess.sensorDataMonthly(startDate, endDate);
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       if (fn.dataExistsOrNot(result)) {
@@ -666,7 +531,7 @@ class SensorData {
   }
 
   async sensorDataYearly() {
-    const { what, startDate } = this.body;
+    const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -674,7 +539,6 @@ class SensorData {
       header: {},
     };
 
-    let result;
     try {
       if (fn.dateChecker(startDate, endDate)) {
         response.header = {
@@ -686,47 +550,8 @@ class SensorData {
         return response;
       }
 
-      if (what == "inside") {
-        result = await DataAccess.sensorDataYearlyInside(startDate, endDate);
-      } else if (what == "outside") {
-        result = await DataAccess.sensorDataYearlyOutside(startDate, endDate);
-      } else if (what == "bed1") {
-        result = await DataAccess.sensorDataYearlyBed(
-          startDate,
-          endDate,
-          "14",
-          "15",
-          "16",
-          "17"
-        );
-      } else if (what == "bed2") {
-        result = await DataAccess.sensorDataYearlyBed(
-          startDate,
-          endDate,
-          "22",
-          "23",
-          "24",
-          "25"
-        );
-      } else if (what == "bed3") {
-        result = await DataAccess.sensorDataYearlyBed(
-          startDate,
-          endDate,
-          "18",
-          "19",
-          "20",
-          "21"
-        );
-      } else if (what == "bed4") {
-        result = await DataAccess.sensorDataYearlyBed(
-          startDate,
-          endDate,
-          "26",
-          "27",
-          "28",
-          "29"
-        );
-      }
+      const result = await DataAccess.sensorDataYearly(startDate, endDate);
+
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       if (fn.dataExistsOrNot(result)) {

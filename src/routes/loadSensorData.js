@@ -14,6 +14,11 @@ router.post("/day-consum", ipAndUrl, ctrl.load.dayConsumptionData);
 router.post("/month-consum", ipAndUrl, ctrl.load.monthConsumptionData);
 router.post("/year-consum", ipAndUrl, ctrl.load.yearConsumptionData);
 router.post("/accum-consum", ipAndUrl, ctrl.load.accumulateConsumptionData);
+router.post(
+  "/statistics-consum",
+  ipAndUrl,
+  ctrl.load.statisticsConsumptionData
+);
 router.post("/minutely", ipAndUrl, ctrl.load.sensorDataMinutely);
 router.post("/hourly", ipAndUrl, ctrl.load.sensorDataHourly);
 router.post("/daily", ipAndUrl, ctrl.load.sensorDataDaily);
