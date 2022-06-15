@@ -37,7 +37,7 @@ class SensorData {
 
   async saveSensorData() {
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
-
+    logger.info(JSON.stringify(this.body));
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
       const filteringData = daFn.checkDataValidation(
@@ -195,11 +195,17 @@ class SensorData {
         DataAccess.loadHoursCo2SensorData(settingDate, id1),
         reqDatetime
       );
-    } else {
+    } else if (
+      what == "temperature" ||
+      what == "humidity" ||
+      what == "insolation"
+    ) {
       return this.#trycatch(
         DataAccess.loadHoursSensorData(settingDate, id1, id2),
         reqDatetime
       );
+    } else {
+      return fn.invalidRequestParameterError();
     }
   }
 
@@ -321,6 +327,18 @@ class SensorData {
         result = await DataAccess.monthlyConsumptionData();
       } else if (what == "year") {
         result = await DataAccess.yearlyConsumptionData();
+      } else {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const response = {
+          header: {
+            resultCode: "10",
+            resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+            reqDatetime,
+            resDatetime,
+          },
+        };
+
+        return response;
       }
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");

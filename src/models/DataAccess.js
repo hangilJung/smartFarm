@@ -358,6 +358,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async saveHourSensorData() {
+    const sql = query.saveHourSensorData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

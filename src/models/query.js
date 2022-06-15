@@ -796,6 +796,24 @@ const query = {
                     order by
                         sd.sensor_information_id,
                         sd.sensor_data_created_at;`,
+  saveHourSensorData: `
+                    insert into 
+                            hour_data
+                    select 
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
+                    from
+                        sensor_data sd 
+                    where
+                        sensor_data_created_at >= date_format(date_sub(now(), interval 1 hour), '%Y-%m-%d %H:00:00')
+                    and
+                        sensor_data_created_at < date_format(now(), '%Y-%m-%d %H:00:00')
+                    and
+                        sensor_information_id in (1,2,3,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
+                    group by
+                        hour(sensor_data_created_at),
+                        sensor_information_id;`,
 };
 
 module.exports = query;

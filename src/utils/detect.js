@@ -13,7 +13,12 @@ module.exports = () => {
 
   schedule.scheduleJob("10 00 * * * *", async () => {
     DataAccess.writeHourConsumptionData();
-    console.log("스케줄 실행");
+    console.log("소비전력 스케줄 실행");
     logger.info("소비전력 시간 단위 저장 실행");
+  });
+  schedule.scheduleJob("05 00 * * * *", async () => {
+    DataAccess.saveHourSensorData();
+    console.log("환경 스케줄 실행");
+    logger.info("환경 센서 시간단위 저장 실행");
   });
 };

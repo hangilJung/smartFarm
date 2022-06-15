@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-// const mqClient = require("./src/models/subscribe");
 const morgan = require("morgan");
 const ioEmit = require("./src/utils/ioEmit");
 const { wrongApproch } = require("./src/lib/middleware");
@@ -11,7 +10,6 @@ const detect = require("./src/utils/detect");
 
 dotenv.config();
 
-// mqClient();
 ioEmit();
 detect();
 
