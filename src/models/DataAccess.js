@@ -296,23 +296,30 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
-  static async dailyConsumptionData() {
+  static async hourlyConsumptionData(startDate, endDate) {
+    const sql = query.hourlyConsumptionData;
+    const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async dailyConsumptionData(startDate, endDate) {
     const sql = query.dailyConsumptionData;
-    const condition = [];
+    const condition = [startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }
 
-  static async monthlyConsumptionData() {
+  static async monthlyConsumptionData(startDate, endDate) {
     const sql = query.monthlyConsumptionData;
-    const condition = [];
+    const condition = [startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }
 
-  static async yearlyConsumptionData() {
+  static async yearlyConsumptionData(startDate, endDate) {
     const sql = query.yearlyConsumptionData;
-    const condition = [];
+    const condition = [startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }

@@ -315,18 +315,32 @@ class SensorData {
   }
 
   async statisticsConsumptionData() {
-    const { what } = this.body;
+    const { what, startDate } = this.body;
+    let { endDate } = this.body;
+    endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     let result;
 
     try {
-      if (what == "day") {
-        result = await DataAccess.dailyConsumptionData();
+      if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        response.header = {
+          resultCode: "10",
+          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          requestDatetime: reqDatetime,
+          responseDatetime: resDatetime,
+        };
+        return response;
+      }
+      if (what == "hour") {
+        result = await DataAccess.hourConsumptionData(startDate, endDate);
+      } else if (what == "day") {
+        result = await DataAccess.dailyConsumptionData(startDate, endDate);
       } else if (what == "month") {
-        result = await DataAccess.monthlyConsumptionData();
+        result = await DataAccess.monthlyConsumptionData(startDate, endDate);
       } else if (what == "year") {
-        result = await DataAccess.yearlyConsumptionData();
+        result = await DataAccess.yearlyConsumptionData(startDate, endDate);
       } else {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         const response = {
@@ -367,6 +381,7 @@ class SensorData {
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
@@ -417,6 +432,7 @@ class SensorData {
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
@@ -465,6 +481,7 @@ class SensorData {
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
@@ -512,6 +529,7 @@ class SensorData {
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
@@ -559,6 +577,7 @@ class SensorData {
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
