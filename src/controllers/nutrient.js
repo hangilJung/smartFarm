@@ -51,6 +51,11 @@ const nutrient = {
     const result = await actuatorControl.detailSettingTrayIsUse();
     res.json(result);
   },
+  detailSetting: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSetting();
+    res.json(result);
+  },
 };
 const socketIO = {
   nutricultureMachinePageData: async () => {

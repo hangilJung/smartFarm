@@ -641,6 +641,28 @@ class ActuatorControl {
     }
   }
 
+  async detailSetting() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const { where } = this.body;
+
+    try {
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint()
+      );
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      console.log(result.data);
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
+    } catch (error) {
+      console.log(error);
+      return fn.invalidRequestParameterError();
+    }
+  }
+
   async test() {
     try {
       const result = await DataAccess.readNutrientSupply();

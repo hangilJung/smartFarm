@@ -1591,6 +1591,462 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
       );
     }
   }
+
+  function putNutrientData(name, quotation, address, list) {
+    if (name != quotation) {
+      list.push({
+        modbus_address: address,
+        description: name,
+        property: "write",
+      });
+    }
+  }
+
+  function nutrientDetailSetting(body) {
+    const { where, hour, minute, matter, isUse, tray1, tray2, tray3, tray4 } =
+      body;
+
+    const list = [];
+    const quotation = "";
+    if (body[where] == "detail1") {
+      const addressList = [
+        "44200",
+        "44201",
+        "16",
+        "48",
+        "160",
+        "161",
+        "162",
+        "163",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail2") {
+      const addressList = [
+        "44202",
+        "44203",
+        "17",
+        "49",
+        "176",
+        "177",
+        "178",
+        "179",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail3") {
+      const addressList = [
+        "44204",
+        "44205",
+        "17",
+        "50",
+        "192",
+        "193",
+        "194",
+        "195",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail4") {
+      const addressList = [
+        "44206",
+        "44207",
+        "19",
+        "51",
+        "208",
+        "209",
+        "210",
+        "211",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail5") {
+      const addressList = [
+        "44208",
+        "44209",
+        "20",
+        "52",
+        "224",
+        "225",
+        "226",
+        "227",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail6") {
+      const addressList = [
+        "44210",
+        "44211",
+        "21",
+        "53",
+        "240",
+        "241",
+        "242",
+        "243",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail7") {
+      const addressList = [
+        "44212",
+        "44213",
+        "22",
+        "54",
+        "256",
+        "257",
+        "258",
+        "259",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail8") {
+      const addressList = [
+        "44214",
+        "44215",
+        "23",
+        "55",
+        "272",
+        "273",
+        "274",
+        "275",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail9") {
+      const addressList = [
+        "44216",
+        "44217",
+        "24",
+        "56",
+        "288",
+        "289",
+        "290",
+        "291",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail10") {
+      const addressList = [
+        "44218",
+        "44219",
+        "25",
+        "57",
+        "304",
+        "305",
+        "306",
+        "307",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail11") {
+      const addressList = [
+        "44220",
+        "44221",
+        "26",
+        "58",
+        "320",
+        "321",
+        "322",
+        "323",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail12") {
+      const addressList = [
+        "44222",
+        "44223",
+        "27",
+        "59",
+        "336",
+        "337",
+        "338",
+        "339",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail13") {
+      const addressList = [
+        "44224",
+        "44225",
+        "28",
+        "60",
+        "352",
+        "353",
+        "354",
+        "355",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail14") {
+      const addressList = [
+        "44226",
+        "44227",
+        "29",
+        "61",
+        "368",
+        "369",
+        "370",
+        "371",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail15") {
+      const addressList = [
+        "44228",
+        "44229",
+        "30",
+        "62",
+        "384",
+        "385",
+        "386",
+        "387",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail16") {
+      const addressList = [
+        "44230",
+        "44231",
+        "31",
+        "63",
+        "401",
+        "402",
+        "403",
+        "404",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail17") {
+      const addressList = [
+        "44232",
+        "44233",
+        "32",
+        "64",
+        "416",
+        "417",
+        "418",
+        "419",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail18") {
+      const addressList = [
+        "44234",
+        "44235",
+        "33",
+        "65",
+        "432",
+        "433",
+        "434",
+        "435",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail19") {
+      const addressList = [
+        "44236",
+        "44237",
+        "34",
+        "66",
+        "448",
+        "449",
+        "450",
+        "451",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail20") {
+      const addressList = [
+        "44238",
+        "44239",
+        "35",
+        "67",
+        "464",
+        "465",
+        "466",
+        "467",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail21") {
+      const addressList = [
+        "44240",
+        "44241",
+        "36",
+        "68",
+        "480",
+        "481",
+        "482",
+        "483",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail22") {
+      const addressList = [
+        "44242",
+        "44243",
+        "37",
+        "69",
+        "496",
+        "497",
+        "498",
+        "499",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    } else if (where == "detail23") {
+      const addressList = [
+        "44244",
+        "44245",
+        "38",
+        "70",
+        "512",
+        "513",
+        "514",
+        "515",
+      ];
+      putNutrientData(hour, quotation, addressList[0], list);
+      putNutrientData(minute, quotation, addressList[1], list);
+      putNutrientData(matter, quotation, addressList[2], list);
+      putNutrientData(isUse, quotation, addressList[3], list);
+      putNutrientData(tray1, quotation, addressList[4], list);
+      putNutrientData(tray2, quotation, addressList[5], list);
+      putNutrientData(tray3, quotation, addressList[6], list);
+      putNutrientData(tray4, quotation, addressList[7], list);
+    }
+  }
 }
 
 module.exports = {
