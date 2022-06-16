@@ -4,6 +4,7 @@ const fn = require("../lib/fn");
 const daFn = require("../lib/databaseAccessFn");
 const io = require("../utils/io");
 const logger = require("../config/logger");
+const axios = require("axios");
 
 class SensorData {
   constructor(body) {
@@ -36,6 +37,11 @@ class SensorData {
   }
 
   async saveSensorData() {
+    //  try {
+    //    axios.post("http://220.80.174.92:9500/save-sensor-data", this.body);
+    //  } catch (error) {
+    //    console.log(error);
+    //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     logger.info(JSON.stringify(this.body));
     try {

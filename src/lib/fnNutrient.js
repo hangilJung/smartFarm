@@ -1602,9 +1602,21 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
     }
   }
 
+  function putCollection(body, addressList, list) {
+    const { hour, minute, matter, isUse, tray1, tray2, tray3, tray4 } = body;
+
+    putNutrientData(hour, quotation, addressList[0], list);
+    putNutrientData(minute, quotation, addressList[1], list);
+    putNutrientData(matter, quotation, addressList[2], list);
+    putNutrientData(isUse, quotation, addressList[3], list);
+    putNutrientData(tray1, quotation, addressList[4], list);
+    putNutrientData(tray2, quotation, addressList[5], list);
+    putNutrientData(tray3, quotation, addressList[6], list);
+    putNutrientData(tray4, quotation, addressList[7], list);
+  }
+
   function nutrientDetailSetting(body) {
-    const { where, hour, minute, matter, isUse, tray1, tray2, tray3, tray4 } =
-      body;
+    const { where } = body;
 
     const list = [];
     const quotation = "";
@@ -1619,14 +1631,7 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
         "162",
         "163",
       ];
-      putNutrientData(hour, quotation, addressList[0], list);
-      putNutrientData(minute, quotation, addressList[1], list);
-      putNutrientData(matter, quotation, addressList[2], list);
-      putNutrientData(isUse, quotation, addressList[3], list);
-      putNutrientData(tray1, quotation, addressList[4], list);
-      putNutrientData(tray2, quotation, addressList[5], list);
-      putNutrientData(tray3, quotation, addressList[6], list);
-      putNutrientData(tray4, quotation, addressList[7], list);
+      putCollection(body, addressList, list);
     } else if (where == "detail2") {
       const addressList = [
         "44202",
@@ -2046,6 +2051,7 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
       putNutrientData(tray3, quotation, addressList[6], list);
       putNutrientData(tray4, quotation, addressList[7], list);
     }
+    return list;
   }
 }
 

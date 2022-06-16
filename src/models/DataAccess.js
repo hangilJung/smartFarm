@@ -372,6 +372,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async saveHourRainFallData() {
+    const sql = query.saveHourRainFallData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

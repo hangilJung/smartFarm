@@ -643,7 +643,6 @@ class ActuatorControl {
 
   async detailSetting() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const { where } = this.body;
 
     try {
       const result = await axios.post(

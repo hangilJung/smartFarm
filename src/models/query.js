@@ -813,6 +813,24 @@ const query = {
                     group by
                         hour(sensor_data_created_at),
                         sensor_information_id;`,
+  saveHourRainFallData: `
+                        select
+                            sensor_information_id,
+                            cast((sensor_data_value) as decimal(6, 1)) as sensor_data_value,
+                            date_format(sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
+                        from
+                            sensor_data sd2
+                        where
+                            sensor_data_created_at =( 
+                                                    select 
+                                                        max(sensor_data_created_at) as sensor_data_created_at 
+                                                    from
+                                                        sensor_data sd 
+                                                    where
+                                                        sensor_information_id =8
+                                                    )
+                        and
+                            sensor_information_id = 8;`,
 };
 
 module.exports = query;
