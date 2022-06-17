@@ -42,6 +42,7 @@ class SensorData {
     //  } catch (error) {
     //    console.log(error);
     //  }
+    console.log(this.body);
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     logger.info(JSON.stringify(this.body));
     try {

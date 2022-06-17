@@ -42,6 +42,7 @@ function fiteringName(param) {
     cFac: "cFac",
     cActCur: "cActCur",
     cReactCur: "cReactCur",
+    outPress: "outPress",
   };
 
   if (list[param] === undefined) {
