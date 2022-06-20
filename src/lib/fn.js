@@ -291,8 +291,8 @@ function emergencyContent() {
 function pickUpInsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
-    if (i["name"] === "inTemp") {
-      b.push(findName(i, "inTemp", insertDate));
+    if (i["name"] === "co2Temp") {
+      b.push(findName(i, "co2Temp", insertDate));
     } else if (i["name"] === "inHumi") {
       b.push(findName(i, "inHumi", insertDate));
     } else if (i["name"] === "inInsol") {
