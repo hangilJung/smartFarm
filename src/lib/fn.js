@@ -542,7 +542,7 @@ function hoursSensorDataFilter(what) {
 
   if (what === "temperature") {
     id1 = 1;
-    id2 = 3;
+    id2 = 31;
   } else if (what === "humidity") {
     id1 = 2;
     id2 = 4;
