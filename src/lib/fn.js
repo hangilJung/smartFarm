@@ -293,8 +293,8 @@ function pickUpInsideData(filteringData, insertDate) {
   for (let i of filteringData) {
     if (i["name"] === "co2Temp") {
       b.push(findName(i, "co2Temp", insertDate));
-    } else if (i["name"] === "inHumi") {
-      b.push(findName(i, "inHumi", insertDate));
+    } else if (i["name"] === "co2Humi") {
+      b.push(findName(i, "co2Humi", insertDate));
     } else if (i["name"] === "inInsol") {
       b.push(findName(i, "inInsol", insertDate));
     } else if (i["name"] === "co2") {
@@ -545,7 +545,7 @@ function hoursSensorDataFilter(what) {
     id2 = 31;
   } else if (what === "humidity") {
     id1 = 2;
-    id2 = 4;
+    id2 = 32;
   } else if (what === "insolation") {
     id1 = 5;
     id2 = 6;
@@ -866,6 +866,27 @@ function removeFromArray(invalidList, sensorName) {
   }
 }
 
+function isDeviceName(deviceName) {
+  const deviceNameList = [
+    "fan1",
+    "fan2",
+    "fan3",
+    "shutter1",
+    "shutter2",
+    "shutter3",
+    "shutter4",
+    "shutter5",
+    "shutter6",
+    "shutter7",
+  ];
+
+  if (deviceNameList.includes(deviceName)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 module.exports = {
   responseHeaderAndBody,
   nutrientStatusCode,
@@ -914,4 +935,5 @@ module.exports = {
   deviceStatus,
   invalidInsideMainSensorData,
   invalidOutsideMainSensorData,
+  isDeviceName,
 };

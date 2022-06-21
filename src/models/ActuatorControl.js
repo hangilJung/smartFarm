@@ -2,7 +2,6 @@ const axios = require("axios");
 const DataAccess = require("./DataAccess");
 const moment = require("moment");
 const actu = require("../utils/actuator");
-const headerStatusCode = require("../utils/headerStatusCode.js");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
@@ -37,6 +36,10 @@ class ActuatorControl {
     console.log(ctrl);
 
     if (fn.parameterIsUndefinded(actu.activeList[active])) {
+      return fn.invalidRequestParameterError();
+    }
+
+    if (fn.isDeviceName(deviceName)) {
       return fn.invalidRequestParameterError();
     }
 
@@ -76,7 +79,7 @@ class ActuatorControl {
                 requestDatetime: reqDatetime,
                 responseDatetime: resDatetime,
               };
-              response.body = [{ device: "fan" }];
+              response.body = [{ device: device }];
             } else {
               response.header = {
                 resultCode: "40",
@@ -84,7 +87,7 @@ class ActuatorControl {
                 requestDatetime: reqDatetime,
                 responseDatetime: resDatetime,
               };
-              response.body = [{ device: "fan" }];
+              response.body = [{ device: device }];
             }
           } catch (error) {
             console.log(error);
@@ -92,14 +95,14 @@ class ActuatorControl {
         }, 3000);
       }
 
-      if (result.data.header == "00" && ctrl.data[0].device == "fan") {
+      if (result.data.header == "00" && ctrl.data[0].device == device) {
         response.header = {
           resultCode: "00",
           resultMsg: "NORMAL_SERVICE",
           requestDatetime: reqDatetime,
           responseDatetime: resDatetime,
         };
-        response.body = [{ device: "fan" }];
+        response.body = [{ device: device }];
       }
 
       return response;

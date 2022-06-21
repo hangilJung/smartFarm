@@ -338,7 +338,7 @@ const query = {
                     on
                         si.sensor_information_id = sd.sensor_information_id
                     where 
-                        si.sensor_information_id in (4, 6, 30, 31)
+                        si.sensor_information_id in (6, 30, 31, 32)
                     and
                         sd.sensor_data_created_at = (
                                                     select 
@@ -723,7 +723,7 @@ const query = {
                     and
                         sd.sensor_data_created_at < ?
                     and
-                        sensor_information_id in (1,2,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
                     group by
                         year(sd.sensor_data_created_at),                        
                         month(sd.sensor_data_created_at),
@@ -742,7 +742,7 @@ const query = {
                     from
                         hour_data
                     where
-                        sensor_information_id in (1,2,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
                     and
                         sensor_data_created_at >= ?
                     and
@@ -760,7 +760,7 @@ const query = {
                     from
                         hour_data
                     where
-                        sensor_information_id in (1,2,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
                     and
                         sensor_data_created_at >= ?
                     and
@@ -778,7 +778,7 @@ const query = {
                     from
                         hour_data
                     where
-                        sensor_information_id in (1,2,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
                     and
                         sensor_data_created_at >= ?
                     and
@@ -795,7 +795,7 @@ const query = {
                     from
                         hour_data
                     where
-                        sensor_information_id in (1,2,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
                     and
                         sensor_data_created_at >= ?
                     and
