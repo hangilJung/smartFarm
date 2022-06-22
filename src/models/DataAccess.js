@@ -338,9 +338,56 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async sensorDataMinutely2(startDate, endDate, humiEndDate) {
+    const sql = query.sensorDataMinutely2;
+    const condition = [startDate, endDate, startDate, humiEndDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMinutely3(
+    startDate,
+    endDate,
+    tempEndDate,
+    humiEndDate
+  ) {
+    const sql = query.sensorDataMinutely3;
+    const condition = [
+      startDate,
+      endDate,
+      startDate,
+      tempEndDate,
+      startDate,
+      humiEndDate,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async sensorDataHourly(startDate, endDate) {
     const sql = query.sensorDataHourly;
     const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataHourly2(startDate, endDate, humiEndDate) {
+    const sql = query.sensorDataHourly2;
+    const condition = [startDate, endDate, startDate, humiEndDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataHourly3(startDate, endDate, tempEndDate, humiEndDate) {
+    const sql = query.sensorDataHourly3;
+    const condition = [
+      startDate,
+      endDate,
+      startDate,
+      tempEndDate,
+      startDate,
+      humiEndDate,
+    ];
 
     return this.#databaseAcess(sql, condition);
   }
@@ -352,6 +399,27 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async sensorDataDaily2(startDate, endDate, humiEndDate) {
+    const sql = query.sensorDataDaily2;
+    const condition = [startDate, endDate, startDate, humiEndDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataDaily3(startDate, endDate, tempEndDate, humiEndDate) {
+    const sql = query.sensorDataDaily3;
+    const condition = [
+      startDate,
+      endDate,
+      startDate,
+      tempEndDate,
+      startDate,
+      humiEndDate,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async sensorDataMonthly(startDate, endDate) {
     const sql = query.sensorDataMonthly;
     const condition = [startDate, endDate];
@@ -359,9 +427,56 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async sensorDataMonthly2(startDate, endDate, humiEndDate) {
+    const sql = query.sensorDataMonthly2;
+    const condition = [startDate, endDate, startDate, humiEndDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataMonthly3(
+    startDate,
+    endDate,
+    tempEndDate,
+    humiEndDate
+  ) {
+    const sql = query.sensorDataMonthly3;
+    const condition = [
+      startDate,
+      endDate,
+      startDate,
+      tempEndDate,
+      startDate,
+      humiEndDate,
+    ];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async sensorDataYearly(startDate, endDate) {
     const sql = query.sensorDataYearly;
     const condition = [startDate, endDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataYearly2(startDate, endDate, humiEndDate) {
+    const sql = query.sensorDataYearly2;
+    const condition = [startDate, endDate, startDate, humiEndDate];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
+  static async sensorDataYearly3(startDate, endDate, tempEndDate, humiEndDate) {
+    const sql = query.sensorDataYearly3;
+    const condition = [
+      startDate,
+      endDate,
+      startDate,
+      tempEndDate,
+      startDate,
+      humiEndDate,
+    ];
 
     return this.#databaseAcess(sql, condition);
   }

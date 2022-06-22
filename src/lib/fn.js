@@ -268,7 +268,7 @@ function addEndDate(endDatetime) {
   if (momentDatetime == "00:00:00") {
     return momentAddDatetime(endDate, "days");
   } else {
-    return (endDate = putData.format("YYYY-MM-DD HH:mm:ss"));
+    return putData.add(1, "hours").format("YYYY-MM-DD HH:mm:ss");
   }
 }
 
@@ -887,6 +887,85 @@ function isDeviceName(deviceName) {
   }
 }
 
+function choiceQuery(startDate) {
+  const startDateMomentFormat = Number(
+    moment(startDate).format("YYYYMMDDHHmmss")
+  );
+  const temperatureCriteria = 20220614120000;
+  const humidityCriteria = 20220614140000;
+
+  if (startDateMomentFormat < temperatureCriteria) {
+    console.log("온 습도 같이");
+    return "3";
+  } else if (startDateMomentFormat < humidityCriteria) {
+    console.log("습도만");
+    return "2";
+  } else {
+    console.log("3,4 없이");
+    return "1";
+  }
+}
+
+function changeSensorInformationId(id, data) {
+  return {
+    sensor_information_id: id,
+    sensor_data_value: data["sensor_data_value"],
+    sensor_data_created_at: data["sensor_data_created_at"],
+  };
+}
+
+function idDateSort(changeResult) {
+  return changeResult.sort((a, b) => {
+    const aId = a.sensor_information_id;
+    const bId = b.sensor_information_id;
+    const aDate = a.sensor_data_created_at;
+    const bDate = b.sensor_data_created_at;
+
+    if (bId < aId) return 1;
+    if (bId > aId) return -1;
+    if (bDate < aDate) return 1;
+    if (bDate > aDate) return -1;
+    return 0;
+  });
+}
+
+function idReplace(result) {
+  return result[0].map((data) => {
+    if (data["sensor_information_id"] == 3) {
+      return this.changeSensorInformationId(31, data);
+    } else if (data["sensor_information_id"] == 4) {
+      return this.changeSensorInformationId(32, data);
+    } else {
+      return data;
+    }
+  });
+}
+
+function tempEndDate(endDate) {
+  const temperatureDate = "2022-06-14 12:00:00";
+  if (Number(moment(endDate).format("YYYYMMDDHHmmss")) < 20220614120000) {
+    return endDate;
+  } else {
+    return temperatureDate;
+  }
+}
+
+function humiEndDate(endDate) {
+  const humidityDate = "2022-06-14 14:00:00";
+  if (Number(moment(endDate).format("YYYYMMDDHHmmss")) < 20220614140000) {
+    return endDate;
+  } else {
+    return humidityDate;
+  }
+}
+
+function tempHumiEndDate(endDate) {
+  return {
+    tempEndDate: this.tempEndDate(endDate),
+    humiEndDate: this.humiEndDate(endDate),
+  };
+}
+
 module.exports = {
   responseHeaderAndBody,
   nutrientStatusCode,
@@ -936,4 +1015,11 @@ module.exports = {
   invalidInsideMainSensorData,
   invalidOutsideMainSensorData,
   isDeviceName,
+  choiceQuery,
+  changeSensorInformationId,
+  idDateSort,
+  idReplace,
+  tempEndDate,
+  humiEndDate,
+  tempHumiEndDate,
 };

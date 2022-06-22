@@ -734,6 +734,112 @@ const query = {
                     order by
                         sd.sensor_information_id,
                         sd.sensor_data_created_at;`,
+  sensorDataMinutely2: `
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        sensor_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        minute(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        sensor_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        minute(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataMinutely3: `
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        sensor_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        minute(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        sensor_data
+                    where
+                        sensor_information_id = 3
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        minute(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        sensor_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        minute(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
   sensorDataHourly: `
                     select
                         sensor_information_id,
@@ -743,6 +849,107 @@ const query = {
                         hour_data
                     where
                         sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataHourly2: `
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataHourly3: `
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 3
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        hour(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        sensor_data_value,
+                        sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
                     and
                         sensor_data_created_at >= ?
                     and
@@ -777,6 +984,102 @@ const query = {
                     order by
                         sensor_information_id,
                         sensor_data_created_at;`,
+  sensorDataDaily2: `
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataDaily3: `
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 3
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
   sensorDataMonthly: `
                     select
                         sensor_information_id,
@@ -786,6 +1089,99 @@ const query = {
                         hour_data
                     where
                         sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataMonthly2: `
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        day(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataMonthly3: `
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 3
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        month(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
                     and
                         sensor_data_created_at >= ?
                     and
@@ -812,6 +1208,92 @@ const query = {
                         sensor_data_created_at < ?
                     group by
                         year(sensor_data_created_at),	
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataYearly2: `
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
+  sensorDataYearly3: `  
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 3
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
+                        sensor_information_id
+                    union
+                    select
+                        sensor_information_id,
+                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
+                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
+                    from
+                        hour_data
+                    where
+                        sensor_information_id = 4
+                    and
+                        sensor_data_created_at >= ?
+                    and
+                        sensor_data_created_at < ?
+                    group by
+                        year(sensor_data_created_at),
                         sensor_information_id
                     order by
                         sensor_information_id,
