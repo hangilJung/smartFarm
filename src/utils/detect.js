@@ -21,7 +21,7 @@ module.exports = () => {
     console.log("환경 스케줄 실행");
     logger.info("환경 센서 시간단위 저장 실행");
   });
-  schedule.scheduleJob("57 00 * * * *", async () => {
+  schedule.scheduleJob("57 59 * * * *", async () => {
     DataAccess.saveHourRainFallData();
     console.log("강우량 스케줄 실행");
     logger.info("강루량 센서 시간단위 저장 실행");

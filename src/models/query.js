@@ -822,6 +822,8 @@ const query = {
                         hour(sensor_data_created_at),
                         sensor_information_id;`,
   saveHourRainFallData: `
+                        insert into 
+                            hour_data
                         select
                             sensor_information_id,
                             cast((sensor_data_value) as decimal(6, 1)) as sensor_data_value,
