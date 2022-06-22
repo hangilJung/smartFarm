@@ -755,7 +755,7 @@ const query = {
                         sensor_information_id
                     order by
                         sensor_information_id,
-                        sensor_data_created_at;  `,
+                        sensor_data_created_at;`,
   sensorDataDaily: `
                     select
                         sensor_information_id,
@@ -773,7 +773,10 @@ const query = {
                         year(sensor_data_created_at),
                         month(sensor_data_created_at),
                         day(sensor_data_created_at),
-                        sensor_information_id;`,
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
   sensorDataMonthly: `
                     select
                         sensor_information_id,
@@ -790,7 +793,10 @@ const query = {
                     group by
                         year(sensor_data_created_at),
                         month(sensor_data_created_at),
-                        sensor_information_id;`,
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
   sensorDataYearly: `
                     select
                         sensor_information_id,
@@ -806,7 +812,10 @@ const query = {
                         sensor_data_created_at < ?
                     group by
                         year(sensor_data_created_at),	
-                        sensor_information_id;   `,
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;`,
   saveHourSensorData: `
                     insert into 
                             hour_data
