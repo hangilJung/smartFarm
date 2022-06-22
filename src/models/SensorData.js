@@ -42,9 +42,9 @@ class SensorData {
     //  } catch (error) {
     //    console.log(error);
     //  }
-    console.log(this.body);
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
-    logger.info(JSON.stringify(this.body));
+    // console.log(this.body);
+    // logger.info(JSON.stringify(this.body));
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
       const filteringData = daFn.checkDataValidation(
@@ -430,6 +430,7 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
+    console.log("startDate : ", startDate);
     console.log(endDate);
 
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -450,6 +451,13 @@ class SensorData {
       }
 
       const result = await DataAccess.sensorDataHourly(startDate, endDate);
+      // console.log(result[0]);
+      // const changeResult = result[0].map((data) => {
+      //   if (data["sensor_information_id"] == 3) {
+      //   }
+      //   if (data["sensor_information_id"] == 4) {
+      //   }
+      // });
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 

@@ -750,8 +750,12 @@ const query = {
                     group by
                         year(sensor_data_created_at),
                         month(sensor_data_created_at),
+                        day(sensor_data_created_at),
                         hour(sensor_data_created_at),
-                        sensor_information_id;  `,
+                        sensor_information_id
+                    order by
+                        sensor_information_id,
+                        sensor_data_created_at;  `,
   sensorDataDaily: `
                     select
                         sensor_information_id,
