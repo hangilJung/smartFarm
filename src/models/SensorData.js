@@ -382,71 +382,21 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const response = {
-      header: {},
-    };
-    const { tempEndDate, humiEndDate } = fn.tempHumiEndDate(endDate);
-    let result;
-    let changeResult;
-    let sortData;
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
 
-      const choiceQuery = fn.choiceQuery(startDate);
-
-      if (choiceQuery == "1") {
-        result = await DataAccess.sensorDataMinutely(startDate, endDate);
-      } else if (choiceQuery == "2") {
-        result = await DataAccess.sensorDataMinutely2(
-          startDate,
-          endDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = sortData = fn.idDateSort(changeResult);
-      } else if (choiceQuery == "3") {
-        result = await DataAccess.sensorDataMinutely3(
-          startDate,
-          endDate,
-          tempEndDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = fn.idDateSort(changeResult);
-      } else {
-        return fn.invalidRequestParameterError;
-      }
+      const result = await DataAccess.sensorDataMinutely(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      if (fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = sortData || result[0];
-      } else if (!fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "02",
-          resultMsg: "NO_DATA_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-      }
-
-      return response;
+      return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -457,74 +407,22 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const response = {
-      header: {},
-    };
-    const { tempEndDate, humiEndDate } = fn.tempHumiEndDate(endDate);
-    let result;
-    let changeResult;
-    let sortData;
+
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
-      }
-      const choiceQuery = fn.choiceQuery(startDate);
-
-      if (choiceQuery == "1") {
-        result = await DataAccess.sensorDataHourly(startDate, endDate);
-      } else if (choiceQuery == "2") {
-        result = await DataAccess.sensorDataHourly2(
-          startDate,
-          endDate,
-          humiEndDate
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
         );
-        changeResult = fn.idReplace(result);
-        sortData = sortData = fn.idDateSort(changeResult);
-      } else if (choiceQuery == "3") {
-        result = await DataAccess.sensorDataHourly3(
-          startDate,
-          endDate,
-          tempEndDate,
-          humiEndDate
-        );
-
-        changeResult = fn.idReplace(result);
-        sortData = fn.idDateSort(changeResult);
-      } else {
-        return fn.invalidRequestParameterError;
       }
 
-      console.log(changeResult);
+      const result = await DataAccess.sensorDataHourly(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      if (fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = sortData || result[0];
-      } else if (!fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "02",
-          resultMsg: "NO_DATA_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-      }
-
-      return response;
+      return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -536,76 +434,21 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const response = {
-      header: {},
-    };
-    let result;
-    let tempEndDate;
-    let humiEndDate;
-    let changeResult;
-    let sortData;
+
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
 
-      const choiceQuery = fn.choiceQuery(startDate);
-      const temperatureDate = "2022-06-14 12:00:00";
-      const humidityDate = "2022-06-14 14:00:00";
-
-      if (choiceQuery == "1") {
-        result = await DataAccess.sensorDataDaily(startDate, endDate);
-      } else if (choiceQuery == "2") {
-        humiEndDate = fn.humiEndDate(endDate, humidityDate);
-        result = await DataAccess.sensorDataDaily2(
-          startDate,
-          endDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = sortData = fn.idDateSort(changeResult);
-      } else if (choiceQuery == "3") {
-        tempEndDate = fn.tempEndDate(endDate, temperatureDate);
-        humiEndDate = fn.humiEndDate(endDate, humidityDate);
-        result = await DataAccess.sensorDataDaily3(
-          startDate,
-          endDate,
-          tempEndDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = fn.idDateSort(changeResult);
-      } else {
-        return fn.invalidRequestParameterError;
-      }
+      const result = await DataAccess.sensorDataDaily(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      if (fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = sortData || result[0];
-      } else if (!fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "02",
-          resultMsg: "NO_DATA_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-      }
-
-      return response;
+      return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -617,70 +460,21 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const response = {
-      header: {},
-    };
-    const { tempEndDate, humiEndDate } = fn.tempHumiEndDate(endDate);
-    let result;
-    let changeResult;
-    let sortData;
+
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
 
-      const choiceQuery = fn.choiceQuery(startDate);
-
-      if (choiceQuery == "1") {
-        result = await DataAccess.sensorDataMonthly(startDate, endDate);
-      } else if (choiceQuery == "2") {
-        result = await DataAccess.sensorDataMonthly2(
-          startDate,
-          endDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = sortData = fn.idDateSort(changeResult);
-      } else if (choiceQuery == "3") {
-        result = await DataAccess.sensorDataMonthly3(
-          startDate,
-          endDate,
-          tempEndDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = fn.idDateSort(changeResult);
-      } else {
-        return fn.invalidRequestParameterError;
-      }
+      const result = await DataAccess.sensorDataMonthly(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      if (fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = sortData || result[0];
-      } else if (!fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "02",
-          resultMsg: "NO_DATA_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-      }
-
-      return response;
+      return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
@@ -692,71 +486,21 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const response = {
-      header: {},
-    };
-    const { tempEndDate, humiEndDate } = fn.tempHumiEndDate(endDate);
-    let result;
-    let changeResult;
-    let sortData;
+
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
 
-      const choiceQuery = fn.choiceQuery(startDate);
-
-      if (choiceQuery == "1") {
-        result = await DataAccess.sensorDataYearly(startDate, endDate);
-      } else if (choiceQuery == "2") {
-        result = await DataAccess.sensorDataYearly2(
-          startDate,
-          endDate,
-          humiEndDate
-        );
-        changeResult = fn.idReplace(result);
-        sortData = sortData = fn.idDateSort(changeResult);
-      } else if (choiceQuery == "3") {
-        result = await DataAccess.sensorDataYearly3(
-          startDate,
-          endDate,
-          tempEndDate,
-          humiEndDate
-        );
-        console.log(result[0]);
-        changeResult = fn.idReplace(result);
-        sortData = fn.idDateSort(changeResult);
-      } else {
-        return fn.invalidRequestParameterError;
-      }
+      const result = await DataAccess.sensorDataYearly(startDate, endDate);
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      if (fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = sortData || result[0];
-      } else if (!fn.dataExistsOrNot(result)) {
-        response.header = {
-          resultCode: "02",
-          resultMsg: "NO_DATA_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-      }
-
-      return response;
+      return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       return fn.invalidRequestParameterError;
