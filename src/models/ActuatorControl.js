@@ -5,6 +5,7 @@ const actu = require("../utils/actuator");
 const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
+const logger = require("../config/logger");
 
 class ActuatorControl {
   constructor(body) {
@@ -108,6 +109,11 @@ class ActuatorControl {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function simpleActuatorControl() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.fanInvalidRequestParameterError();
     }
   }
@@ -219,6 +225,11 @@ class ActuatorControl {
 
       return response;
     } catch (error) {
+      logger.error(
+        `src/models/ActuatorControl.js function loadActuatorRecord() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -287,6 +298,11 @@ class ActuatorControl {
       // return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function start() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -348,6 +364,11 @@ class ActuatorControl {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function stop() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -412,6 +433,11 @@ class ActuatorControl {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function nutricultureMachineStatus() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -460,6 +486,11 @@ class ActuatorControl {
       return;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function sendToFrontNutrienNewtData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return error;
     }
   }
@@ -497,6 +528,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function easySelection() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -522,6 +558,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSelection() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -543,6 +584,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function easySetting() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -566,6 +612,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSettingTime() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -590,6 +641,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSettingMatter() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -613,6 +669,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSettingIsUse() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -640,6 +701,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSettingTrayIsUse() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -661,6 +727,11 @@ class ActuatorControl {
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSetting() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }

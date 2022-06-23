@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const { multipleConditions, nutrientMultipleConditions } = require("../lib/fn");
 const query = require("./query");
+const logger = require("../config/logger");
 
 class DataAccess {
   static async #databaseAcess(sql, condition) {
@@ -10,6 +11,11 @@ class DataAccess {
       return result;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/DataAccess.js function #databaseAcess() ${
+          error ?? "not load error contents"
+        }`
+      );
       return error;
     }
   }
@@ -38,6 +44,11 @@ class DataAccess {
       return "success";
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/DataAccess.js function saveSensorData() ${
+          error ?? "not load error contents"
+        }`
+      );
       return error;
     }
   }

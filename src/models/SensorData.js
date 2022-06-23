@@ -23,7 +23,11 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
-
+      logger.error(
+        `src/models/SensorData.js function trycatch() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -38,13 +42,13 @@ class SensorData {
 
   async saveSensorData() {
     //  try {
-    //    axios.post("http://220.80.174.92:9500/save-sensor-data", this.body);
+    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
     //  } catch (error) {
     //    console.log(error);
     //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
-    // logger.info(JSON.stringify(this.body));
+    logger.info(JSON.stringify(this.body));
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
       const filteringData = daFn.checkDataValidation(
@@ -74,6 +78,11 @@ class SensorData {
       return fn.normalService();
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function saveSensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -88,7 +97,11 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
-
+      logger.error(
+        `src/models/SensorData.js function loadLatelySensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -108,6 +121,11 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function mainInsideSensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -126,6 +144,11 @@ class SensorData {
       );
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function mainOutsideSensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -159,6 +182,11 @@ class SensorData {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function readBedData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -175,7 +203,11 @@ class SensorData {
       return fn.hasItbeenUpdated(result);
     } catch (error) {
       console.log(error);
-
+      logger.error(
+        `src/models/SensorData.js function updateSensorSettingValue() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError();
     }
   }
@@ -251,6 +283,11 @@ class SensorData {
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function hourConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -266,6 +303,11 @@ class SensorData {
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function dayConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -281,6 +323,11 @@ class SensorData {
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function monthConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -296,6 +343,11 @@ class SensorData {
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function yearConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -317,6 +369,11 @@ class SensorData {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function accumulateConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -373,6 +430,11 @@ class SensorData {
       return response;
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function statisticsConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -399,6 +461,11 @@ class SensorData {
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function sensorDataMinutely() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -425,6 +492,11 @@ class SensorData {
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function sensorDataHourly() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -451,6 +523,11 @@ class SensorData {
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function sensorDataDaily() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -477,6 +554,11 @@ class SensorData {
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function sensorDataMonthly() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
@@ -503,6 +585,11 @@ class SensorData {
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
+      logger.error(
+        `src/models/SensorData.js function sensorDataYearly() error : ${
+          error ?? "not load error contents"
+        }`
+      );
       return fn.invalidRequestParameterError;
     }
   }
