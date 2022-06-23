@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "dev": "cross-env NODE_ENV=dev nodemon bin/www.js",
-    "start": "pm2 start bin/www.js --name=LOCAL"
+    "start": "pm2 start ./ecosystem.config.js"
   },
   "author": "",
   "license": "ISC",
