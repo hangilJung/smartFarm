@@ -48,7 +48,7 @@ class SensorData {
     //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
-    logger.info(JSON.stringify(this.body));
+    // logger.info(JSON.stringify(this.body));
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
       const filteringData = daFn.checkDataValidation(
@@ -389,13 +389,10 @@ class SensorData {
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
       if (what == "hour") {
         result = await DataAccess.hourlyConsumptionData(startDate, endDate);

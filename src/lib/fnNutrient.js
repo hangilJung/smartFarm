@@ -422,14 +422,14 @@ function easySetting(body) {
   if (easyEcSetting !== par) {
     list.push({
       modbus_address: "44105",
-      description: easyEcSetting,
+      description: String(Number(easyEcSetting * 1000)),
       property: "write",
     });
   }
   if (easyPhSetting !== par) {
     list.push({
       modbus_address: "44106",
-      description: easyPhSetting,
+      description: String(Number(easyPhSetting) * 1000),
       property: "write",
     });
   }
@@ -491,6 +491,78 @@ function easySetting(body) {
   }
 
   return list;
+}
+
+function invalidEasySetting(body) {
+  const {
+    easyStartHour,
+    easyStartMinute,
+    easyRepeatHour,
+    easyRepeatMinute,
+    easyRepeatCycle,
+    easyEcSetting,
+    easyPhSetting,
+    easySupplyTray1Minute,
+    easySupplyTray1Second,
+    easySupplyTray2Minute,
+    easySupplyTray2Second,
+    easySupplyTray3Minute,
+    easySupplyTray3Second,
+    easySupplyTray4Minute,
+    easySupplyTray4Second,
+  } = body;
+  console.log(body);
+
+  if (Number(easyStartHour) > 23 || Number(easyStartHour) < 0) {
+    return true;
+  }
+  if (Number(easyStartMinute) > 59 || Number(easyStartMinute) < 0) {
+    return true;
+  }
+  if (Number(easyRepeatHour) > 23 || Number(easyRepeatHour) < 0) {
+    return true;
+  }
+  if (Number(easyRepeatMinute) > 59 || Number(easyRepeatMinute) < 0) {
+    return true;
+  }
+  if (Number(easyRepeatCycle) > 99 || Number(easyRepeatCycle) < 0) {
+    return true;
+  }
+  if (Number(easyEcSetting) * 1000 > 5000 || Number(easyEcSetting) * 1000 < 0) {
+    return true;
+  }
+  if (
+    Number(easyPhSetting) * 1000 > 14000 ||
+    Number(easyPhSetting) * 1000 < 0
+  ) {
+    return true;
+  }
+  if (Number(easySupplyTray1Minute) > 99 || Number(easySupplyTray1Minute) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray1Second) > 59 || Number(easySupplyTray1Second) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray2Minute) > 99 || Number(easySupplyTray2Minute) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray2Second) > 59 || Number(easySupplyTray2Second) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray3Minute) > 99 || Number(easySupplyTray3Minute) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray3Second) > 59 || Number(easySupplyTray3Second) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray4Minute) > 99 || Number(easySupplyTray4Minute) < 0) {
+    return true;
+  }
+  if (Number(easySupplyTray4Second) > 59 || Number(easySupplyTray4Second) < 0) {
+    return true;
+  }
+
+  return false;
 }
 
 function detailIsUse(where, isUse) {
@@ -2055,6 +2127,55 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
   }
 }
 
+function invalidWhere(where) {
+  const list = [
+    "detail1",
+    "detail2",
+    "detail3",
+    "detail4",
+    "detail5",
+    "detail6",
+    "detail7",
+    "detail8",
+    "detail9",
+    "detail10",
+    "detail11",
+    "detail12",
+    "detail13",
+    "detail14",
+    "detail15",
+    "detail16",
+    "detail17",
+    "detail18",
+    "detail19",
+    "detail20",
+    "detail21",
+    "detail22",
+    "detail23",
+  ];
+
+  return !list.includes(where);
+}
+
+function invalidHourMinute(hour, minute) {
+  return (
+    Number(hour) < 0 ||
+    Number(hour) > 23 ||
+    Number(minute) < 0 ||
+    Number(minute) > 59
+  );
+}
+
+function invalidBinary(data) {
+  const list = ["0", "1"];
+  return !list.includes(data);
+}
+
+function invalidTray(data) {
+  const list = ["tray1", "tray2", "tray3", "tray4"];
+  return !list.includes(data);
+}
+
 module.exports = {
   detailHourMinute,
   easySetting,
@@ -2064,4 +2185,9 @@ module.exports = {
   nutricultureMachineList,
   whatDetailNumber,
   sendToNutricultureMachinePageSocket,
+  invalidEasySetting,
+  invalidWhere,
+  invalidHourMinute,
+  invalidBinary,
+  invalidTray,
 };

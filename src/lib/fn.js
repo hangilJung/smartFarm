@@ -252,24 +252,23 @@ function findSensorInformationId(filteringData) {
 }
 
 function dateChecker(start_date, end_date) {
+  const regex = RegExp(
+    /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\s\d{2}:\d{2}:\d{2}/
+  );
   return (
-    moment(start_date).format("YYYYMMDD") === "Invalid date" ||
-    moment(end_date).format("YYYYMMDD") === "Invalid date" ||
-    Number(moment(start_date).format("YYYYMMDD")) >
-      Number(moment(end_date).format("YYYYMMDD"))
+    moment(start_date).format("YYYYMMDDHHmmss") === "Invalid date" ||
+    moment(end_date).format("YYYYMMDDHHmmss") === "Invalid date" ||
+    Number(moment(start_date).format("YYYYMMDDHHmmss")) >
+      Number(moment(end_date).format("YYYYMMDDHHmmss")) ||
+    !regex.test(start_date) ||
+    !regex.test(end_date)
   );
 }
 
 function addEndDate(endDatetime) {
   let endDate = endDatetime;
-  const putData = moment(endDate);
-  const momentDatetime = putData.format("HH:mm:ss");
 
-  if (momentDatetime == "00:00:00") {
-    return momentAddDatetime(endDate, "days");
-  } else {
-    return putData.add(1, "hours").format("YYYY-MM-DD HH:mm:ss");
-  }
+  return momentAddDatetime(endDate, "seconds");
 }
 
 function momentAddDatetime(endDate, key) {
@@ -880,11 +879,12 @@ function isDeviceName(deviceName) {
     "shutter7",
   ];
 
-  if (deviceNameList.includes(deviceName)) {
-    return false;
-  } else {
-    return true;
-  }
+  return !deviceNameList.includes(deviceName);
+}
+
+function invalidActive(active) {
+  const list = ["on", "stop", "open", "close"];
+  return !list.includes(active);
 }
 
 function statisticsStatusCode(result, reqDatetime, resDatetime) {
@@ -979,4 +979,5 @@ module.exports = {
   isDeviceName,
   statisticsStatusCode,
   statisticsStatusCodeInvalidRequestPararmeterError,
+  invalidActive,
 };

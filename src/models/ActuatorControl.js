@@ -36,11 +36,11 @@ class ActuatorControl {
 
     console.log(ctrl);
 
-    if (fn.parameterIsUndefinded(actu.activeList[active])) {
-      return fn.invalidRequestParameterError();
-    }
-
-    if (fn.isDeviceName(deviceName)) {
+    if (
+      fn.parameterIsUndefinded(actu.activeList[active]) ||
+      fn.isDeviceName(deviceName) ||
+      fn.invalidActive(active)
+    ) {
       return fn.invalidRequestParameterError();
     }
 
@@ -48,7 +48,7 @@ class ActuatorControl {
       const content = fn.createCharacter(deviceName, active);
       console.log(content);
       DataAccess.actuatorControlActionRecord(deviceName, content);
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
       if (result.data === undefined) {
@@ -570,6 +570,13 @@ class ActuatorControl {
   async easySetting() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
+      if (nt.invalidEasySetting(this.body)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       console.log(nt.easySetting(this.body));
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
@@ -597,6 +604,13 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, hour, minute } = this.body;
     try {
+      if (nt.invalidWhere(where) || nt.invalidHourMinute(hour, minute)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       const changeData = nt.detailHourMinute(where, hour, minute);
       dbfn.dbUpdate(changeData);
       const result = await axios.post(
@@ -625,6 +639,13 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, matter } = this.body;
     try {
+      if (nt.invalidWhere(where) || nt.invalidBinary(matter)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       const changeData = nt.detailMatter(where, matter);
 
       dbfn.dbUpdate(changeData);
@@ -654,6 +675,13 @@ class ActuatorControl {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { where, isUse } = this.body;
     try {
+      if (nt.invalidWhere(where) || nt.invalidBinary(isUse)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       const changeData = nt.detailIsUse(where, isUse);
       dbfn.dbUpdate(changeData);
 
@@ -684,6 +712,17 @@ class ActuatorControl {
     console.log(this.body);
 
     try {
+      if (
+        nt.invalidWhere(where) ||
+        nt.invalidTray(tray) ||
+        nt.invalidBinary(isUse)
+      ) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       const changeData = nt.detailTrayIsUse(where, tray, isUse);
 
       dbfn.dbUpdate(changeData);

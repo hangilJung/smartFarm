@@ -607,7 +607,7 @@ const query = {
 
   monthConsumptionData: `
                         select
-                            sum(hour_value) as month_value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as month_value,
                             date_format(created_at, '%Y-%m') as created_at
                         from
                             power_consumption_data 
@@ -620,7 +620,7 @@ const query = {
                             month(created_at);`,
   yearConsumptionData: `
                         select
-                            sum(hour_value) as year_value,
+                            cast((sum(hour_value)/1000000 ) as decimal(8,1)) as year_value,
                             date_format(created_at, '%Y') as created_at
                         from
                             power_consumption_data 
@@ -644,7 +644,7 @@ const query = {
                         limit 1;`,
   accumulateConsumptionData: `
                             select
-                                sensor_data_value as accumulation_value
+                                cast((sum(sensor_data_value)/1000000) as decimal(8,1))  as accumulation_value
                             from
                                 sensor_data sd 
                             where
