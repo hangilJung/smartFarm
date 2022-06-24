@@ -398,7 +398,7 @@ class SensorData {
         return response;
       }
       if (what == "hour") {
-        result = await DataAccess.hourConsumptionData(startDate, endDate);
+        result = await DataAccess.hourlyConsumptionData(startDate, endDate);
       } else if (what == "day") {
         result = await DataAccess.dailyConsumptionData(startDate, endDate);
       } else if (what == "month") {
