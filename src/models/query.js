@@ -587,7 +587,9 @@ const query = {
                         from 
                             power_consumption_data
                         where
-                            created_at >= date_format(date_sub(date_sub(now(), interval 1 day), interval 1 hour),'%Y-%m-%d %T');`,
+                            created_at >= date_format(date_sub(date_sub(now(), interval 1 day), interval 1 hour),'%Y-%m-%d %T')
+                        order by 
+                            created_at;`,
   dayConsumptionData: `
                         select
                             sum(hour_value) as day_value,
@@ -671,7 +673,9 @@ const query = {
                             year(created_at),
                             month(created_at),
                             day(created_at),
-                            hour(created_at);`,
+                            hour(created_at)
+                        order by
+                            created_at;`,
   dailyConsumptionData: `
                         select
                             sum(hour_value) as value,
