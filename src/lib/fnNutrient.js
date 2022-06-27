@@ -2280,14 +2280,14 @@ function EcPhSetting(tray, ec, ph) {
     if (ec != par) {
       list.push({
         modbus_address: "44360",
-        description: ec,
+        description: String(Number(ec) * 1000),
         property: "write",
       });
     }
     if (ph != par) {
       list.push({
         modbus_address: "44380",
-        description: ph,
+        description: String(Number(ph) * 1000),
         property: "write",
       });
     }
@@ -2295,14 +2295,14 @@ function EcPhSetting(tray, ec, ph) {
     if (ec != par) {
       list.push({
         modbus_address: "44361",
-        description: ec,
+        description: String(Number(ec) * 1000),
         property: "write",
       });
     }
     if (ph != par) {
       list.push({
         modbus_address: "44381",
-        description: ph,
+        description: String(Number(ph) * 1000),
         property: "write",
       });
     }
@@ -2310,14 +2310,14 @@ function EcPhSetting(tray, ec, ph) {
     if (ec != par) {
       list.push({
         modbus_address: "44362",
-        description: ec,
+        description: String(Number(ec) * 1000),
         property: "write",
       });
     }
     if (ph != par) {
       list.push({
         modbus_address: "44382",
-        description: ph,
+        description: String(Number(ph) * 1000),
         property: "write",
       });
     }
@@ -2325,14 +2325,14 @@ function EcPhSetting(tray, ec, ph) {
     if (ec != par) {
       list.push({
         modbus_address: "44363",
-        description: ec,
+        description: String(Number(ec) * 1000),
         property: "write",
       });
     }
     if (ph != par) {
       list.push({
         modbus_address: "44383",
-        description: ph,
+        description: String(Number(ph) * 1000),
         property: "write",
       });
     }
