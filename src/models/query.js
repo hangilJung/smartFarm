@@ -592,7 +592,7 @@ const query = {
                             created_at;`,
   dayConsumptionData: `
                         select
-                            sum(hour_value) as day_value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as day_value,
                             date_format(created_at, '%Y-%m-%d') as created_at
                         from
                             power_consumption_data 
@@ -678,7 +678,7 @@ const query = {
                             created_at;`,
   dailyConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as day_value,
                             date_format(created_at, '%Y-%m-%d') as created_at
                         from 
                             power_consumption_data pcd
@@ -692,7 +692,7 @@ const query = {
                             day(created_at);`,
   monthlyConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as day_value,
                             date_format(created_at, '%Y-%m') as created_at
                         from 
                             power_consumption_data pcd
@@ -705,7 +705,7 @@ const query = {
                             month(created_at);`,
   yearlyConsumptionData: `
                         select
-                            sum(hour_value) as value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
                             date_format(created_at, '%Y') as created_at
                         from 
                             power_consumption_data pcd
