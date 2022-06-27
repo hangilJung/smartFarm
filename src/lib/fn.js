@@ -865,26 +865,30 @@ function removeFromArray(invalidList, sensorName) {
   }
 }
 
-function isDeviceName(deviceName) {
-  const deviceNameList = [
-    "fan1",
-    "fan2",
-    "fan3",
-    "shutter1",
-    "shutter2",
-    "shutter3",
-    "shutter4",
-    "shutter5",
-    "shutter6",
-    "shutter7",
-  ];
-
-  return !deviceNameList.includes(deviceName);
-}
-
-function invalidActive(active) {
-  const list = ["on", "stop", "open", "close"];
-  return !list.includes(active);
+function isDeviceNameAndActive(deviceName, active) {
+  if (deviceName == "fan1" || deviceName == "fan2" || deviceName == "fan3") {
+    if (active == "on" || active == "stop") {
+      return false;
+    } else {
+      return true;
+    }
+  } else if (
+    deviceName == "shutter1" ||
+    deviceName == "shutter2" ||
+    deviceName == "shutter3" ||
+    deviceName == "shutter4" ||
+    deviceName == "shutter5" ||
+    deviceName == "shutter6" ||
+    deviceName == "shutter7"
+  ) {
+    if (active == "open" || active == "close" || active == "stop") {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
+  }
 }
 
 function statisticsStatusCode(result, reqDatetime, resDatetime) {
@@ -976,8 +980,7 @@ module.exports = {
   deviceStatus,
   invalidInsideMainSensorData,
   invalidOutsideMainSensorData,
-  isDeviceName,
   statisticsStatusCode,
   statisticsStatusCodeInvalidRequestPararmeterError,
-  invalidActive,
+  isDeviceNameAndActive,
 };

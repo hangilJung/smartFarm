@@ -404,16 +404,11 @@ class SensorData {
         result = await DataAccess.yearlyConsumptionData(startDate, endDate);
       } else {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-        const response = {
-          header: {
-            resultCode: "10",
-            resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
-            reqDatetime,
-            resDatetime,
-          },
-        };
 
-        return response;
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
       }
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");

@@ -38,8 +38,7 @@ class ActuatorControl {
 
     if (
       fn.parameterIsUndefinded(actu.activeList[active]) ||
-      fn.isDeviceName(deviceName) ||
-      fn.invalidActive(active)
+      fn.isDeviceNameAndActive(deviceName, active)
     ) {
       return fn.invalidRequestParameterError();
     }
