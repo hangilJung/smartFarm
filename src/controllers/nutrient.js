@@ -51,9 +51,14 @@ const nutrient = {
     const result = await actuatorControl.detailSettingTrayIsUse();
     res.json(result);
   },
-  detailSetting: async (req, res) => {
+  detailSupplySetting: async (req, res) => {
     const actuatorControl = new ActuatorControl(req.body);
-    const result = await actuatorControl.detailSetting();
+    const result = await actuatorControl.detailSupplySetting();
+    res.json(result);
+  },
+  ecPhSetting: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.ecPhSetting();
     res.json(result);
   },
 };

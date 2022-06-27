@@ -661,7 +661,7 @@ const query = {
                                 sensor_information_id = 40;`,
   hourlyConsumptionData: `
                         select
-                            hour_value as value,
+                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
                             created_at
                         from 
                             power_consumption_data pcd

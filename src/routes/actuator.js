@@ -22,6 +22,7 @@ router.post("/detail-setting-time", nt.nutrient.detailSettingTime);
 router.post("/detail-setting-matter", nt.nutrient.detailSettingMatter);
 router.post("/detail-setting-is-use", nt.nutrient.detailSettingIsUse);
 router.post("/detail-setting-tray-is-use", nt.nutrient.detailSettingTrayIsUse);
-router.post("/detail-setting");
+router.post("/detail-supply-setting", nt.nutrient.detailSupplySetting);
+router.post("/ec-ph-setting", nt.nutrient.ecPhSetting);
 
 module.exports = router;

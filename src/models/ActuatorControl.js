@@ -95,17 +95,18 @@ class ActuatorControl {
         }, 3000);
       }
 
-      if (result.data.header == "00" && ctrl.data[0].device == device) {
-        response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
-          requestDatetime: reqDatetime,
-          responseDatetime: resDatetime,
-        };
-        response.body = [{ device: device }];
-      }
+      // if (result.data.header == "00" && ctrl.data[0].device == device) {
+      //   response.header = {
+      //     resultCode: "00",
+      //     resultMsg: "NORMAL_SERVICE",
+      //     requestDatetime: reqDatetime,
+      //     responseDatetime: resDatetime,
+      //   };
+      //   response.body = [{ device: device }];
+      // }
 
-      return response;
+      // return response;
+      return "success";
     } catch (error) {
       console.log(error);
       logger.error(
@@ -411,7 +412,6 @@ class ActuatorControl {
 
       for (let i of processData) {
         if (i.address == "560") {
-          console.log(i);
           if (i.value == "0") {
             fn.currentValueFsWrite("nutrient", "off");
           } else if (i.value == "1") {
@@ -420,6 +420,7 @@ class ActuatorControl {
           break;
         }
       }
+      //양액기 페이지 상태 값 insert 문
       // DataAccess.test(processData);
       response.header = {
         resultCode: "00",
@@ -452,7 +453,7 @@ class ActuatorControl {
           dbData[0]
         );
 
-      if (compareResult.list.length > 0) {
+      if (compareResult.list?.length ?? -1 > 0) {
         nt.sendToNutricultureMachinePageSocket(
           nt.whatDetailNumber(compareResult.list),
           bodyData
@@ -748,13 +749,24 @@ class ActuatorControl {
     }
   }
 
-  async detailSetting() {
+  async detailSupplySetting() {
+    const { tray, minute, second } = this.body;
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
+      if (
+        nt.invalidTray(tray) ||
+        nt.invalidSupplyMinuteSecond(minute, second)
+      ) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint()
+        fn.writeNutreint(nt.detailSupplySetting(tray, minute, second))
       );
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
@@ -766,7 +778,41 @@ class ActuatorControl {
     } catch (error) {
       console.log(error);
       logger.error(
-        `src/models/ActuatorControl.js function detailSetting() error : ${
+        `src/models/ActuatorControl.js function detailSupplySetting() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async ecPhSetting() {
+    const { tray, ec, ph } = this.body;
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      if (nt.invalidTray(tray) || nt.invalidEcPh(ec, ph)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(nt.EcPhSetting(tray, ec, ph))
+      );
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      console.log(result.data);
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
+
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function ecPhSetting() error : ${
           error ?? "not load error contents"
         }`
       );

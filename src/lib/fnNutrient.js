@@ -786,6 +786,9 @@ function whatDetailNumber(data) {
   let detail23 = true;
   let controlMode = true;
   let todaySupply = true;
+  let run = true;
+  let detailSupplySetting = true;
+  let ecPh = true;
 
   for (let list of data) {
     if (
@@ -1202,9 +1205,36 @@ function whatDetailNumber(data) {
       }
     } else if (list["address"] == "560") {
       console.log("1회 관수");
-      if (todaySupply) {
+      if (run) {
         console.log("담다");
         arr.push("run");
+      }
+    } else if (
+      list["address"] == "44300" ||
+      list["address"] == "44301" ||
+      list["address"] == "44302" ||
+      list["address"] == "44303" ||
+      list["address"] == "44304" ||
+      list["address"] == "44305" ||
+      list["address"] == "44306" ||
+      list["address"] == "44307"
+    ) {
+      console.log("상세 공급량 분초 설정");
+      if (detailSupplySetting) {
+        arr.push("detailSupplySetting");
+      }
+    } else if (
+      list["address"] == "44360" ||
+      list["address"] == "44361" ||
+      list["address"] == "44362" ||
+      list["address"] == "44363" ||
+      list["address"] == "44380" ||
+      list["address"] == "44381" ||
+      list["address"] == "44382" ||
+      list["address"] == "44383"
+    ) {
+      if (ecPh) {
+        arr.push("ecPhSetting");
       }
     }
   }
@@ -1660,6 +1690,36 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
       socketEmit(
         "todaySupply",
         choiceDetailSettingChangeData(nutrientData, todaySupply)
+      );
+    } else if (data == "detailSupplySetting") {
+      const detailSupplySetting = [
+        "44300",
+        "44301",
+        "44302",
+        "44303",
+        "44304",
+        "44305",
+        "44306",
+        "44307",
+      ];
+      socketEmit(
+        "detailSupplySetting",
+        choiceDetailSettingChangeData(nutrientData, detailSupplySetting)
+      );
+    } else if (data == "ecPhSetting") {
+      const ecPh = [
+        "44360",
+        "44361",
+        "44362",
+        "44363",
+        "44380",
+        "44381",
+        "44382",
+        "44383",
+      ];
+      socketEmit(
+        "ecPhSetting",
+        choiceDetailSettingChangeData(nutrientData, ecPh)
       );
     }
   }
@@ -2176,6 +2236,113 @@ function invalidTray(data) {
   return !list.includes(data);
 }
 
+function invalidSupplyMinuteSecond(minute, second) {
+  return (
+    Number(minute) < 0 ||
+    Number(minute) > 99 ||
+    Number(second) < 0 ||
+    Number(second) > 59
+  );
+}
+
+function detailSupplySetting(tray, minute, second) {
+  const list = {
+    tray1: [
+      { modbus_address: "44300", description: minute, property: "write" },
+      { modbus_address: "44301", description: second, property: "write" },
+    ],
+    tray2: [
+      { modbus_address: "44302", description: minute, property: "write" },
+      { modbus_address: "44303", description: second, property: "write" },
+    ],
+    tray3: [
+      { modbus_address: "44304", description: minute, property: "write" },
+      { modbus_address: "44305", description: second, property: "write" },
+    ],
+    tray4: [
+      { modbus_address: "44306", description: minute, property: "write" },
+      { modbus_address: "44307", description: second, property: "write" },
+    ],
+  };
+
+  return list[tray];
+}
+
+function invalidEcPh(ec, ph) {
+  return Number(ec) < 0 || Number(ec) > 5 || Number(ph) < 0 || Number(ph) > 14;
+}
+
+function EcPhSetting(tray, ec, ph) {
+  const par = "";
+  const list = [];
+
+  if (tray == "tray1") {
+    if (ec != par) {
+      list.push({
+        modbus_address: "44360",
+        description: ec,
+        property: "write",
+      });
+    }
+    if (ph != par) {
+      list.push({
+        modbus_address: "44380",
+        description: ph,
+        property: "write",
+      });
+    }
+  } else if (tray == "tray2") {
+    if (ec != par) {
+      list.push({
+        modbus_address: "44361",
+        description: ec,
+        property: "write",
+      });
+    }
+    if (ph != par) {
+      list.push({
+        modbus_address: "44381",
+        description: ph,
+        property: "write",
+      });
+    }
+  } else if (tray == "tray3") {
+    if (ec != par) {
+      list.push({
+        modbus_address: "44362",
+        description: ec,
+        property: "write",
+      });
+    }
+    if (ph != par) {
+      list.push({
+        modbus_address: "44382",
+        description: ph,
+        property: "write",
+      });
+    }
+  } else if (tray == "tray4") {
+    if (ec != par) {
+      list.push({
+        modbus_address: "44363",
+        description: ec,
+        property: "write",
+      });
+    }
+    if (ph != par) {
+      list.push({
+        modbus_address: "44383",
+        description: ph,
+        property: "write",
+      });
+    }
+  }
+
+  console.log(list);
+
+  return list;
+}
+
 module.exports = {
   detailHourMinute,
   easySetting,
@@ -2190,4 +2357,8 @@ module.exports = {
   invalidHourMinute,
   invalidBinary,
   invalidTray,
+  invalidSupplyMinuteSecond,
+  detailSupplySetting,
+  invalidEcPh,
+  EcPhSetting,
 };
