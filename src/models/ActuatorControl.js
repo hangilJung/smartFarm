@@ -787,11 +787,11 @@ class ActuatorControl {
   }
 
   async ecPhSetting() {
-    const { tray, ec, ph } = this.body;
+    const { tray, what, value } = this.body;
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
-      if (nt.invalidTray(tray) || nt.invalidEcPh(ec, ph)) {
+      if (nt.invalidTray(tray) || nt.invalidEcPh(what, value)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
@@ -800,7 +800,7 @@ class ActuatorControl {
       }
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.EcPhSetting(tray, ec, ph))
+        fn.writeNutreint(nt.EcPhSetting(tray, what, value))
       );
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);

@@ -2268,71 +2268,72 @@ function detailSupplySetting(tray, minute, second) {
   return list[tray];
 }
 
-function invalidEcPh(ec, ph) {
-  return Number(ec) < 0 || Number(ec) > 5 || Number(ph) < 0 || Number(ph) > 14;
+function invalidEcPh(what, value) {
+  if (what == "ec") {
+    return Number(value) < 0 || Number(value) > 5;
+  } else if (what == "ph") {
+    return Number(value) < 0 || Number(value) > 14;
+  } else {
+    return true;
+  }
 }
 
-function EcPhSetting(tray, ec, ph) {
-  const par = "";
+function EcPhSetting(tray, what, value) {
   const list = [];
 
   if (tray == "tray1") {
-    if (ec != par) {
+    if (what == "ec") {
       list.push({
         modbus_address: "44360",
-        description: String(Number(ec) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
-    }
-    if (ph != par) {
+    } else if (what == "ph") {
       list.push({
         modbus_address: "44380",
-        description: String(Number(ph) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
     }
   } else if (tray == "tray2") {
-    if (ec != par) {
+    if (what == "ec") {
       list.push({
         modbus_address: "44361",
-        description: String(Number(ec) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
-    }
-    if (ph != par) {
+    } else if (what == "ph") {
       list.push({
         modbus_address: "44381",
-        description: String(Number(ph) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
     }
   } else if (tray == "tray3") {
-    if (ec != par) {
+    if (what == "ec") {
       list.push({
         modbus_address: "44362",
-        description: String(Number(ec) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
-    }
-    if (ph != par) {
+    } else if (what == "ph") {
       list.push({
         modbus_address: "44382",
-        description: String(Number(ph) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
     }
   } else if (tray == "tray4") {
-    if (ec != par) {
+    if (what == "ec") {
       list.push({
         modbus_address: "44363",
-        description: String(Number(ec) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
-    }
-    if (ph != par) {
+    } else if (what == "ph") {
       list.push({
         modbus_address: "44383",
-        description: String(Number(ph) * 1000),
+        description: String(Number(value) * 1000),
         property: "write",
       });
     }
