@@ -122,7 +122,8 @@ const query = {
                         where 
                             sensor_name = ?), ?, ?)`,
   aFewMinutesAgo: `
-                select 
+                select
+                    sd.sensor_information_id,
                     si.sensor_name,
                     sd.sensor_data_value,
                     sd.sensor_data_created_at 
@@ -144,6 +145,7 @@ const query = {
                     )
                 union 
                 select 
+                    sd.sensor_information_id,
                     si.sensor_name,
                     sd.sensor_data_value,
                     sd.sensor_data_created_at 

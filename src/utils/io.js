@@ -1,17 +1,11 @@
 const { io } = require("socket.io-client");
 const url = require("../config/url");
-const accessToken = require("./accessToken.json");
 const { reissuanceToken } = require("../lib/fn");
 const ctrl = require("../controllers/loadSensorData");
 const ntctrl = require("../controllers/nutrient");
 
 const socket = io(url.SOCKETIO_SERVER_HOST, {
   transports: ["websocket"],
-  auth: {
-    // account: process.env.SOCKETIO_SECRET_KEY,
-    key: accessToken.accessToken,
-    user: "local", // 계정의 아이디를 넣을 예정
-  },
 });
 
 socket.on("connect", () => {

@@ -6,6 +6,7 @@ const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
 const logger = require("../config/logger");
+const socketNt = require("../controllers/nutrient");
 
 class ActuatorControl {
   constructor(body) {
@@ -59,54 +60,53 @@ class ActuatorControl {
         fn.currentValueFsWrite(deviceName, "off");
       }
 
-      if (
-        // result.data.header.resultCode == "00"
-        true
-      ) {
-        setTimeout(async () => {
-          try {
-            const result = await DataAccess.currentAmountOfChange();
-            console.log(result[0][0]["sensor_data_value"]);
-            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      // if (
+      //   // result.data.header.resultCode == "00"
+      //   true
+      // ) {
+      //   setTimeout(async () => {
+      //     try {
+      //       const result = await DataAccess.currentAmountOfChange();
+      //       console.log(result[0][0]["sensor_data_value"]);
+      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-            if (
-              result[0][0]["sensor_data_value"] >
-              fn.addCurrent(fn.deviceStatus())
-            ) {
-              response.header = {
-                resultCode: "00",
-                resultMsg: "NORMAL_SERVICE",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: device }];
-            } else {
-              response.header = {
-                resultCode: "40",
-                resultMsg: "NOT_WORKING",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: device }];
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }, 3000);
-      }
-
-      // if (result.data.header == "00" && ctrl.data[0].device == device) {
-      //   response.header = {
-      //     resultCode: "00",
-      //     resultMsg: "NORMAL_SERVICE",
-      //     requestDatetime: reqDatetime,
-      //     responseDatetime: resDatetime,
-      //   };
-      //   response.body = [{ device: device }];
+      //       if (
+      //         result[0][0]["sensor_data_value"] >
+      //         fn.addCurrent(fn.deviceStatus())
+      //       ) {
+      //         response.header = {
+      //           resultCode: "00",
+      //           resultMsg: "NORMAL_SERVICE",
+      //           requestDatetime: reqDatetime,
+      //           responseDatetime: resDatetime,
+      //         };
+      //         response.body = [{ device: device }];
+      //       } else {
+      //         response.header = {
+      //           resultCode: "40",
+      //           resultMsg: "NOT_WORKING",
+      //           requestDatetime: reqDatetime,
+      //           responseDatetime: resDatetime,
+      //         };
+      //         response.body = [{ device: device }];
+      //       }
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //   }, 3000);
       // }
 
-      // return response;
-      return "success";
+      // if (result.data.header == "00" && ctrl.data[0].device == device) {
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+      response.body = [{ device: device }];
+      // }
+
+      return response;
     } catch (error) {
       console.log(error);
       logger.error(
@@ -249,53 +249,52 @@ class ActuatorControl {
       // }
       // return result.data;
 
-      fn.currentValueFsWrite("nutrient", "on");
+      // fn.currentValueFsWrite("nutrient", "on");
 
-      if (
-        // result.data.header.resultCode == "00"
-        true
-      ) {
-        setTimeout(async () => {
-          try {
-            const result = await DataAccess.currentAmountOfChange();
-            console.log(result[0][0]["sensor_data_value"]);
-            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-            if (
-              result[0][0]["sensor_data_value"] >
-              fn.addCurrent(fn.deviceStatus())
-            ) {
-              DataAccess.actuatorControlActionRecord(
-                "nutrient",
-                "양액기가 공급을 시작합니다."
-              );
-              response.header = {
-                resultCode: "00",
-                resultMsg: "NORMAL_SERVICE",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: "nutrient" }];
-            } else {
-              DataAccess.actuatorControlActionRecord(
-                "nutrient",
-                "양액기 작동 명령에도 작동하지 않습니다."
-              );
-              response.header = {
-                resultCode: "40",
-                resultMsg: "NOT_WORKING",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: "nutrient" }];
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }, 1500);
-      }
+      // if (
+      // result.data.header.resultCode == "00"
+      true;
+      // ) {
+      // setTimeout(async () => {
+      //     try {
+      //       const result = await DataAccess.currentAmountOfChange();
+      //       console.log(result[0][0]["sensor_data_value"]);
+      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      //       if (
+      //         result[0][0]["sensor_data_value"] >
+      //         fn.addCurrent(fn.deviceStatus())
+      //       ) {
+      //         DataAccess.actuatorControlActionRecord(
+      //           "nutrient",
+      //           "양액기가 공급을 시작합니다."
+      //         );
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+      response.body = [{ device: "nutrient" }];
+      //       } else {
+      //         DataAccess.actuatorControlActionRecord(
+      //           "nutrient",
+      //           "양액기 작동 명령에도 작동하지 않습니다."
+      //         );
+      //         response.header = {
+      //           resultCode: "40",
+      //           resultMsg: "NOT_WORKING",
+      //           requestDatetime: reqDatetime,
+      //           responseDatetime: resDatetime,
+      //         };
+      //         response.body = [{ device: "nutrient" }];
+      //       }
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //   }, 1500);
+      // }
 
-      return "1회 관수 성공";
-      // return response;
+      return response;
     } catch (error) {
       console.log(error);
       logger.error(
@@ -316,51 +315,50 @@ class ActuatorControl {
       // }
       // return result.data;
 
-      fn.currentValueFsWrite("nutrient", "off");
-      if (
-        // result.data.header.resultCode == "00"
-        true
-      ) {
-        setTimeout(async () => {
-          try {
-            const result = await DataAccess.currentAmountOfChange();
-            console.log(result[0][0]["sensor_data_value"]);
-            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-            if (
-              result[0][0]["sensor_data_value"] <
-              fn.addCurrent(fn.deviceStatus())
-            ) {
-              DataAccess.actuatorControlActionRecord(
-                "nutrient",
-                "양액기가 공급을 중지합니다."
-              );
-              response.header = {
-                resultCode: "00",
-                resultMsg: "NORMAL_SERVICE",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: "nutrient" }];
-            } else {
-              DataAccess.actuatorControlActionRecord(
-                "nutrient",
-                "양액기 중지명령에도 중지하지 않습니다."
-              );
-              response.header = {
-                resultCode: "40",
-                resultMsg: "NOT_WORKING",
-                requestDatetime: reqDatetime,
-                responseDatetime: resDatetime,
-              };
-              response.body = [{ device: "nutrient" }];
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }, 1500);
-      }
+      // fn.currentValueFsWrite("nutrient", "off");
+      // if (
+      // result.data.header.resultCode == "00"
+      // true
+      // ) {
+      //   setTimeout(async () => {
+      //     try {
+      //       const result = await DataAccess.currentAmountOfChange();
+      //       console.log(result[0][0]["sensor_data_value"]);
+      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      //       if (
+      //         result[0][0]["sensor_data_value"] <
+      //         fn.addCurrent(fn.deviceStatus())
+      //       ) {
+      //         DataAccess.actuatorControlActionRecord(
+      //           "nutrient",
+      //           "양액기가 공급을 중지합니다."
+      //         );
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+      response.body = [{ device: "nutrient" }];
+      //       } else {
+      //         DataAccess.actuatorControlActionRecord(
+      //           "nutrient",
+      //           "양액기 중지명령에도 중지하지 않습니다."
+      //         );
+      //         response.header = {
+      //           resultCode: "40",
+      //           resultMsg: "NOT_WORKING",
+      //           requestDatetime: reqDatetime,
+      //           responseDatetime: resDatetime,
+      //         };
+      //         response.body = [{ device: "nutrient" }];
+      //       }
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //   }, 1500);
+      // }
 
-      return "정지 성공";
       return response;
     } catch (error) {
       console.log(error);
@@ -463,26 +461,6 @@ class ActuatorControl {
         );
       }
 
-      // if (compareResult.result) {
-      //   if (bodyData != undefined || bodyData.length == 0) {
-      //     const response = {
-      //       header: {
-      //         resultCode: "00",
-      //         resultMsg: "NORMAL_SERVICE",
-      //         requestDatetime: reqDatetime,
-      //         responseDatetime: resDatetime,
-      //       },
-      //       body: bodyData,
-      //     };
-      //     nutrient.emit("getNutrientData", response);
-      //   } else {
-      //     nutrient.emit(
-      //       "getNutrientData",
-      //       "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}"
-      //     );
-      //   }
-      // }
-
       return;
     } catch (error) {
       console.log(error);
@@ -519,11 +497,12 @@ class ActuatorControl {
         ])
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
-      console.log(result.data);
 
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
 
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
@@ -555,6 +534,8 @@ class ActuatorControl {
         return fn.communicationError("nutrient");
       }
 
+      this.sendToFrontNutrienNewtData();
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
@@ -577,7 +558,7 @@ class ActuatorControl {
           resDatetime
         );
       }
-      console.log(nt.easySetting(this.body));
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.easySetting(this.body))
@@ -588,6 +569,9 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
@@ -611,8 +595,7 @@ class ActuatorControl {
           resDatetime
         );
       }
-      const changeData = nt.detailHourMinute(where, hour, minute);
-      dbfn.dbUpdate(changeData);
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(nt.detailHourMinute(where, hour, minute))
@@ -622,6 +605,8 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
 
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
@@ -646,9 +631,6 @@ class ActuatorControl {
           resDatetime
         );
       }
-      const changeData = nt.detailMatter(where, matter);
-
-      dbfn.dbUpdate(changeData);
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
@@ -659,6 +641,9 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
@@ -682,8 +667,6 @@ class ActuatorControl {
           resDatetime
         );
       }
-      const changeData = nt.detailIsUse(where, isUse);
-      dbfn.dbUpdate(changeData);
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
@@ -694,6 +677,9 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
@@ -723,9 +709,6 @@ class ActuatorControl {
           resDatetime
         );
       }
-      const changeData = nt.detailTrayIsUse(where, tray, isUse);
-
-      dbfn.dbUpdate(changeData);
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
@@ -736,6 +719,8 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
 
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
@@ -774,6 +759,8 @@ class ActuatorControl {
         return fn.communicationError("nutrient");
       }
 
+      this.sendToFrontNutrienNewtData();
+
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
@@ -807,6 +794,8 @@ class ActuatorControl {
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
+
+      this.sendToFrontNutrienNewtData();
 
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {

@@ -114,10 +114,17 @@ const load = {
 };
 
 const socketIO = {
-  reactFirstMainSensorData: async () => {
+  consumptionHourData: async () => {
     const sensorData = new SensorData();
-    const result = await sensorData.mainInsideSensorData();
-    return result.body;
+    sensorData.socketConsumptionHourData();
+  },
+  consumptionAccumulatedDayData: async () => {
+    const sensorData = new SensorData();
+    sensorData.socketConsumptionAccumulatedDayData();
+  },
+  bedData: async () => {
+    const sensorData = new SensorData();
+    sensorData.socketBedData();
   },
 };
 

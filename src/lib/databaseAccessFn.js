@@ -85,8 +85,7 @@ async function compareSensorData(filteringData) {
   return compare;
 }
 
-async function compareMainSensorData(filteringData) {
-  const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
+async function compareMainSensorData(filteringData, agoSensorData) {
   let compare = false;
 
   if (agoSensorData[0].length > 0) {
@@ -107,8 +106,7 @@ async function compareMainSensorData(filteringData) {
   return compare;
 }
 
-async function compareOutsideSensorData(filteringData) {
-  const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
+async function compareOutsideSensorData(filteringData, agoSensorData) {
   let compare = false;
 
   if (agoSensorData[0].length > 0) {

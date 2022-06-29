@@ -62,19 +62,37 @@ class SensorData {
 
       const result = await DataAccess.saveSensorData(filteringData, insertDate);
 
-      if (await daFn.compareMainSensorData(filteringData)) {
+      const agoSensorData = await DataAccess.loadAFewMinutesAgoSensorData();
+
+      if (await daFn.compareMainSensorData(filteringData, agoSensorData)) {
         const data = fn.pickUpInsideData(filteringData, insertDate);
         console.log("변한 센서 데이터 실내");
-        io.mainData.emit("insideSensorData", data);
+        const response = {
+          header: {
+            resultCode: "00",
+            resultMsg: "NORMAL_SERVICE",
+          },
+          body: data,
+        };
+        io.mainData.emit("insideSensorData", response);
 
         console.log(data);
       }
-      if (await daFn.compareOutsideSensorData(filteringData)) {
+
+      if (await daFn.compareOutsideSensorData(filteringData, agoSensorData)) {
         const data = fn.pickUpOutsideData(filteringData, insertDate);
         console.log("변한 센서 데이터 실외");
-        io.mainData.emit("outsideSensorData", data);
+        const response = {
+          header: {
+            resultCode: "00",
+            resultMsg: "NORMAL_SERVICE",
+          },
+          body: data,
+        };
+        io.mainData.emit("outsideSensorData", response);
         console.log(data);
       }
+
       return fn.normalService();
     } catch (error) {
       console.log(error);
@@ -83,6 +101,7 @@ class SensorData {
           error ?? "not load error contents"
         }`
       );
+
       return fn.invalidRequestParameterError();
     }
   }
@@ -113,9 +132,11 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
+      const transResult = fn.transDecimalAndIntegerMainInsideSensorData(result);
+
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result[0],
+        transResult,
         reqDatetime,
         resDatetime
       );
@@ -135,10 +156,13 @@ class SensorData {
     try {
       const result = await DataAccess.mainOutsideSensorData();
 
+      const transResult =
+        fn.transDecimalAndIntegerMainOutsideSensorData(result);
+
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
-        result[0],
+        transResult,
         reqDatetime,
         resDatetime
       );
@@ -583,6 +607,69 @@ class SensorData {
         }`
       );
       return fn.invalidRequestParameterError;
+    }
+  }
+
+  async socketConsumptionHourData() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const today = moment();
+    const startDate = today.format("YYYY-MM-DD 00:00:00");
+    const endDate = today.format("YYYY-MM-DD 23:59:59");
+    try {
+      const result = await DataAccess.hourlyConsumptionData(startDate, endDate);
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const response = fn.normalServiceIncludBody(
+        result,
+        reqDatetime,
+        resDatetime
+      );
+      io.mainData.emit("consumptionHourData", response);
+
+      return;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function socketConsumptionHourData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      return;
+    }
+  }
+
+  async socketConsumptionAccumulatedDayData() {
+    try {
+      const result = await this.dayConsumptionData();
+
+      io.mainData.emit("consumptionAccumulatedDayData", result);
+
+      return;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function socketConsumptionDayData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      return;
+    }
+  }
+
+  async socketBedData() {
+    try {
+      const result = await this.readBedData();
+
+      io.mainData.emit("bedData", result);
+      return;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function socketBedData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      return;
     }
   }
 }

@@ -291,7 +291,12 @@ function pickUpInsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
     if (i["name"] === "co2Temp") {
-      b.push(findName(i, "co2Temp", insertDate));
+      const value = Number(i["value"]);
+      b.push({
+        sensor_name: "co2Temp",
+        sensor_data_value: value.toFixed(1),
+        sensor_data_created_at: insertDate,
+      });
     } else if (i["name"] === "co2Humi") {
       b.push(findName(i, "co2Humi", insertDate));
     } else if (i["name"] === "inInsol") {
@@ -308,25 +313,49 @@ function pickUpOutsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
     if (i["name"] === "outTemp") {
-      b.push(findName(i, "outTemp", insertDate));
+      const value = Number(i["value"]);
+      b.push({
+        sensor_name: "outTemp",
+        sensor_data_value: value.toFixed(1),
+        sensor_data_created_at: insertDate,
+      });
     } else if (i["name"] === "outHumi") {
       b.push(findName(i, "outHumi", insertDate));
     } else if (i["name"] === "outInsol") {
       b.push(findName(i, "outInsol", insertDate));
     } else if (i["name"] === "ws") {
-      b.push(findName(i, "ws", insertDate));
+      const value = Number(i["value"]);
+      b.push({
+        sensor_name: "ws",
+        sensor_data_value: value.toFixed(1),
+        sensor_data_created_at: insertDate,
+      });
     } else if (i["name"] === "rf") {
-      b.push(findName(i, "rf", insertDate));
+      const value = Number(i["value"]);
+      b.push({
+        sensor_name: "rf",
+        sensor_data_value: value.toFixed(1),
+        sensor_data_created_at: insertDate,
+      });
     }
   }
 
   return b;
 }
 
+function pickUpEcPhData(filteringData, insertDate) {
+  let b = [];
+  for (let i of filteringData) {
+    if (i["name"] === "soilEc1") {
+    }
+  }
+}
+
 function findName(i, name, insertDate) {
+  const value = Number(i["value"]);
   return {
     sensor_name: name,
-    sensor_data_value: i["value"],
+    sensor_data_value: value.toFixed(0),
     sensor_data_created_at: insertDate,
   };
 }
@@ -932,6 +961,48 @@ function statisticsStatusCodeInvalidRequestPararmeterError(
   return response;
 }
 
+function transDecimalAndIntegerMainOutsideSensorData(result) {
+  const transResult = result[0].map((data) => {
+    if (
+      data["sensor_name"] == "outTemp" ||
+      data["sensor_name"] == "ws" ||
+      data["sensor_name"] == "rf"
+    ) {
+      return {
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(1),
+        sensor_data_created_at: data["sensor_data_created_at"],
+      };
+    } else {
+      return {
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(0),
+        sensor_data_created_at: data["sensor_data_created_at"],
+      };
+    }
+  });
+  return transResult;
+}
+
+function transDecimalAndIntegerMainInsideSensorData(result) {
+  const transResult = result[0].map((data) => {
+    if (data["sensor_name"] == "co2Temp") {
+      return {
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(1),
+        sensor_data_created_at: data["sensor_data_created_at"],
+      };
+    } else {
+      return {
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(0),
+        sensor_data_created_at: data["sensor_data_created_at"],
+      };
+    }
+  });
+  return transResult;
+}
+
 module.exports = {
   responseHeaderAndBody,
   nutrientStatusCode,
@@ -983,4 +1054,6 @@ module.exports = {
   statisticsStatusCode,
   statisticsStatusCodeInvalidRequestPararmeterError,
   isDeviceNameAndActive,
+  transDecimalAndIntegerMainOutsideSensorData,
+  transDecimalAndIntegerMainInsideSensorData,
 };
