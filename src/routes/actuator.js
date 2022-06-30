@@ -18,6 +18,8 @@ router.post(
 router.post("/control-mode-easy", nt.nutrient.easySelection);
 router.post("/control-mode-detail", nt.nutrient.detailSelection);
 router.post("/easy-setting", nt.nutrient.easySetting);
+router.post("/detail-setting", nt.nutrient.detailSetting);
+
 router.post("/detail-setting-time", nt.nutrient.detailSettingTime);
 router.post("/detail-setting-matter", nt.nutrient.detailSettingMatter);
 router.post("/detail-setting-is-use", nt.nutrient.detailSettingIsUse);

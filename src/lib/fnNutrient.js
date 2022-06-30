@@ -1,4 +1,20 @@
 const { io } = require("socket.io-client");
+const url = require("../config/url");
+
+const mainData = io(url.SOCKETIO_MAIN_DATA_SERVER_HOST, {
+  transports: ["websocket"],
+});
+
+mainData.on("connect", () => {
+  console.log(mainData.id);
+  console.log(mainData.connected);
+});
+
+mainData.on("connect_error", (reason) => {
+  // socketio 서버가 닫히면 에러 발생 or new Error 객체로 에러 발생
+  console.log(reason);
+  reissuanceToken();
+});
 
 const nutricultureMachinePage = io(
   process.env.SOCKETIO_NUTRICULTURE_MACHINE_PAGE,
@@ -2344,6 +2360,14 @@ function EcPhSetting(tray, what, value) {
   return list;
 }
 
+function socketActionRecord(data) {
+  try {
+    mainData.emit("actionRecord", data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   detailHourMinute,
   easySetting,
@@ -2362,4 +2386,5 @@ module.exports = {
   detailSupplySetting,
   invalidEcPh,
   EcPhSetting,
+  socketActionRecord,
 };

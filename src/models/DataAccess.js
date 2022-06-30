@@ -91,7 +91,7 @@ class DataAccess {
   static actuatorControlActionRecord(deviceName, content) {
     const sql = query.actionRecord;
     const condition = [deviceName, content];
-
+    console.log("기록 데이터베이스 접근쪽");
     return this.#databaseAcess(sql, condition);
   }
 

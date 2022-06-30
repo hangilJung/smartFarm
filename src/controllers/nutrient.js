@@ -61,6 +61,11 @@ const nutrient = {
     const result = await actuatorControl.ecPhSetting();
     res.json(result);
   },
+  detailSetting: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.detailSetting();
+    res.json(result);
+  },
 };
 const socketIO = {
   nutricultureMachinePageData: async () => {
@@ -75,8 +80,14 @@ const socketIO = {
   },
   detectNutrientData: async () => {
     const actuatorControl = new ActuatorControl();
-    await actuatorControl.sendToFrontNutrienNewtData();
+    actuatorControl.sendToFrontNutrienNewtData();
   },
+  //테스트 시작
+  actionRecord: async () => {
+    const actuatorControl = new ActuatorControl();
+    actuatorControl.loadActuatorRecord();
+  },
+  //테스트 끝
 };
 
 module.exports = { nutrient, socketIO };

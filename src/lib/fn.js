@@ -1003,6 +1003,15 @@ function transDecimalAndIntegerMainInsideSensorData(result) {
   return transResult;
 }
 
+function timeOutError() {
+  return {
+    header: {
+      resultCode: "04",
+      resultMsg: "TIME_OUT_ERROR",
+    },
+  };
+}
+
 module.exports = {
   responseHeaderAndBody,
   nutrientStatusCode,
@@ -1056,4 +1065,5 @@ module.exports = {
   isDeviceNameAndActive,
   transDecimalAndIntegerMainOutsideSensorData,
   transDecimalAndIntegerMainInsideSensorData,
+  timeOutError,
 };

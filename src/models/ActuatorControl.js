@@ -6,7 +6,8 @@ const fn = require("../lib/fn");
 const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
 const logger = require("../config/logger");
-const socketNt = require("../controllers/nutrient");
+const ds = require("../lib/detailSettingFunction");
+const timeoutSettingValue = 3000;
 
 class ActuatorControl {
   constructor(body) {
@@ -48,12 +49,14 @@ class ActuatorControl {
       const content = fn.createCharacter(deviceName, active);
       console.log(content);
       DataAccess.actuatorControlActionRecord(deviceName, content);
+
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
-      if (result.data === undefined) {
-        return fn.communicationError("fan");
-      }
+      // if (result.data === undefined) {
+      //   return fn.communicationError("fan");
+      // }
+
       if (active == "on") {
         fn.currentValueFsWrite(deviceName, "on");
       } else {
@@ -114,6 +117,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.fanInvalidRequestParameterError();
     }
   }
@@ -128,7 +134,9 @@ class ActuatorControl {
     try {
       const content = fn.writeNutrientStopContent();
 
-      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat);
+      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat, {
+        timeout: timeoutSettingValue,
+      });
       DataAccess.actuatorControlActionRecord(
         dataFormat.data[0]["deviceName"],
         content
@@ -223,6 +231,8 @@ class ActuatorControl {
         };
       }
 
+      nt.socketActionRecord(response);
+
       return response;
     } catch (error) {
       logger.error(
@@ -230,6 +240,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -264,10 +277,11 @@ class ActuatorControl {
       //         result[0][0]["sensor_data_value"] >
       //         fn.addCurrent(fn.deviceStatus())
       //       ) {
-      //         DataAccess.actuatorControlActionRecord(
+      //         await DataAccess.actuatorControlActionRecord(
       //           "nutrient",
       //           "양액기가 공급을 시작합니다."
       //         );
+
       response.header = {
         resultCode: "00",
         resultMsg: "NORMAL_SERVICE",
@@ -276,10 +290,11 @@ class ActuatorControl {
       };
       response.body = [{ device: "nutrient" }];
       //       } else {
-      //         DataAccess.actuatorControlActionRecord(
+      //        await  DataAccess.actuatorControlActionRecord(
       //           "nutrient",
       //           "양액기 작동 명령에도 작동하지 않습니다."
       //         );
+
       //         response.header = {
       //           resultCode: "40",
       //           resultMsg: "NOT_WORKING",
@@ -302,6 +317,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -329,10 +347,11 @@ class ActuatorControl {
       //         result[0][0]["sensor_data_value"] <
       //         fn.addCurrent(fn.deviceStatus())
       //       ) {
-      //         DataAccess.actuatorControlActionRecord(
+      //        await DataAccess.actuatorControlActionRecord(
       //           "nutrient",
       //           "양액기가 공급을 중지합니다."
       //         );
+
       response.header = {
         resultCode: "00",
         resultMsg: "NORMAL_SERVICE",
@@ -341,10 +360,11 @@ class ActuatorControl {
       };
       response.body = [{ device: "nutrient" }];
       //       } else {
-      //         DataAccess.actuatorControlActionRecord(
+      //        await DataAccess.actuatorControlActionRecord(
       //           "nutrient",
       //           "양액기 중지명령에도 중지하지 않습니다."
       //         );
+
       //         response.header = {
       //           resultCode: "40",
       //           resultMsg: "NOT_WORKING",
@@ -367,6 +387,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -382,8 +405,12 @@ class ActuatorControl {
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"], { timeout: 3000 })
+        fn.readNutreint(actu.nutricultureMachine["list"]),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
+      console.log(result);
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
@@ -405,7 +432,25 @@ class ActuatorControl {
       const getData = await result.data.body["data"][0]["dev_data"];
 
       const processData = getData.map((data) => {
-        return { address: data.modbus_address, value: data.description };
+        if (
+          data["modbus_address"] == "44105" ||
+          data["modbus_address"] == "44106" ||
+          data["modbus_address"] == "44360" ||
+          data["modbus_address"] == "44361" ||
+          data["modbus_address"] == "44362" ||
+          data["modbus_address"] == "44363" ||
+          data["modbus_address"] == "44380" ||
+          data["modbus_address"] == "44381" ||
+          data["modbus_address"] == "44382" ||
+          data["modbus_address"] == "44383"
+        ) {
+          return {
+            address: data.modbus_address,
+            value: Number(data.description) / 1000,
+          };
+        } else {
+          return { address: data.modbus_address, value: data.description };
+        }
       });
 
       for (let i of processData) {
@@ -436,6 +481,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -469,6 +517,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return error;
     }
   }
@@ -494,7 +545,10 @@ class ActuatorControl {
             description: "0",
             property: "write",
           },
-        ])
+        ]),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
@@ -512,6 +566,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -527,7 +584,10 @@ class ActuatorControl {
             description: "1",
             property: "write",
           },
-        ])
+        ]),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       if (result.data === undefined) {
@@ -544,6 +604,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -561,7 +624,10 @@ class ActuatorControl {
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.easySetting(this.body))
+        fn.writeNutreint(nt.easySetting(this.body)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
 
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
@@ -580,6 +646,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -598,7 +667,10 @@ class ActuatorControl {
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.detailHourMinute(where, hour, minute))
+        fn.writeNutreint(nt.detailHourMinute(where, hour, minute)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
@@ -616,6 +688,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -634,7 +709,10 @@ class ActuatorControl {
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.detailMatter(where, matter))
+        fn.writeNutreint(nt.detailMatter(where, matter)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
@@ -670,7 +748,10 @@ class ActuatorControl {
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.detailIsUse(where, isUse))
+        fn.writeNutreint(nt.detailIsUse(where, isUse)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
@@ -688,6 +769,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -712,7 +796,10 @@ class ActuatorControl {
 
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.detailTrayIsUse(where, tray, isUse))
+        fn.writeNutreint(nt.detailTrayIsUse(where, tray, isUse)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
@@ -730,6 +817,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -751,7 +841,10 @@ class ActuatorControl {
       }
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.detailSupplySetting(tray, minute, second))
+        fn.writeNutreint(nt.detailSupplySetting(tray, minute, second)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
@@ -769,6 +862,9 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }
@@ -787,7 +883,10 @@ class ActuatorControl {
       }
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(nt.EcPhSetting(tray, what, value))
+        fn.writeNutreint(nt.EcPhSetting(tray, what, value)),
+        {
+          timeout: timeoutSettingValue,
+        }
       );
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
@@ -805,6 +904,46 @@ class ActuatorControl {
           error ?? "not load error contents"
         }`
       );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
+      return fn.invalidRequestParameterError();
+    }
+  }
+
+  async detailSetting() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    try {
+      if (ds.invalidDetailSettingData(this.body)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
+
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(ds.filteringDetailSettingData(this.body)),
+        {
+          timeout: timeoutSettingValue,
+        }
+      );
+
+      this.sendToFrontNutrienNewtData();
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function detailSetting() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
       return fn.invalidRequestParameterError();
     }
   }

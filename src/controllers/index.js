@@ -52,6 +52,8 @@ const process = {
   },
 };
 
+const socketIO = {};
+
 const test = {
   loadSensorDataAll: async (req, res) => {
     const sensorData = new SensorData();
@@ -68,4 +70,5 @@ const test = {
 module.exports = {
   process,
   test,
+  socketIO,
 };
