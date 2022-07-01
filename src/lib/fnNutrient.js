@@ -13,7 +13,7 @@ mainData.on("connect", () => {
 mainData.on("connect_error", (reason) => {
   // socketio 서버가 닫히면 에러 발생 or new Error 객체로 에러 발생
   console.log(reason);
-  reissuanceToken();
+
 });
 
 const nutricultureMachinePage = io(

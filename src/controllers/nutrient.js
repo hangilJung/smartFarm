@@ -80,12 +80,12 @@ const socketIO = {
   },
   detectNutrientData: async () => {
     const actuatorControl = new ActuatorControl();
-    actuatorControl.sendToFrontNutrienNewtData();
+    await actuatorControl.sendToFrontNutrienNewtData();
   },
   //테스트 시작
   actionRecord: async () => {
     const actuatorControl = new ActuatorControl();
-    actuatorControl.loadActuatorRecord();
+    await actuatorControl.loadActuatorRecord();
   },
   //테스트 끝
 };

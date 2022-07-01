@@ -116,15 +116,15 @@ const load = {
 const socketIO = {
   consumptionHourData: async () => {
     const sensorData = new SensorData();
-    sensorData.socketConsumptionHourData();
+    await sensorData.socketConsumptionHourData();
   },
   consumptionAccumulatedDayData: async () => {
     const sensorData = new SensorData();
-    sensorData.socketConsumptionAccumulatedDayData();
+    await sensorData.socketConsumptionAccumulatedDayData();
   },
   bedData: async () => {
     const sensorData = new SensorData();
-    sensorData.socketBedData();
+    await sensorData.socketBedData();
   },
 };
 

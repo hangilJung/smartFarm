@@ -7,7 +7,7 @@ const nt = require("../lib/fnNutrient");
 const dbfn = require("../lib/databaseAccessFn");
 const logger = require("../config/logger");
 const ds = require("../lib/detailSettingFunction");
-const timeoutSettingValue = 3000;
+const timeoutSettingValue = 5000;
 
 class ActuatorControl {
   constructor(body) {
@@ -134,9 +134,9 @@ class ActuatorControl {
     try {
       const content = fn.writeNutrientStopContent();
 
-      const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat, {
-        timeout: timeoutSettingValue,
-      });
+      // const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat, {
+      //   timeout: timeoutSettingValue,
+      // });
       DataAccess.actuatorControlActionRecord(
         dataFormat.data[0]["deviceName"],
         content
@@ -266,7 +266,7 @@ class ActuatorControl {
 
       // if (
       // result.data.header.resultCode == "00"
-      true;
+      // true
       // ) {
       // setTimeout(async () => {
       //     try {
@@ -410,14 +410,13 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      console.log(result);
+
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
       }
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      console.log("양액기로부터 받은 데이터 ", result.data);
       if (result["resultCode"] == "10" || result === undefined) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
           resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
@@ -465,6 +464,7 @@ class ActuatorControl {
       }
       //양액기 페이지 상태 값 insert 문
       // DataAccess.test(processData);
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       response.header = {
         resultCode: "00",
         resultMsg: "NORMAL_SERVICE",

@@ -5,12 +5,12 @@ const DataAccess = require("../models/DataAccess");
 const logger = require("../config/logger");
 
 module.exports = () => {
-  // setInterval(() => {
-  //   nt.socketIO.detectNutrientData();
-  //   console.log("nutrient detect");
-  // }, 10 * 1000);
-  // nt.socketIO.detectNutrientData();
-  // console.log("detecting");
+  setInterval(() => {
+    nt.socketIO.detectNutrientData();
+    console.log("nutrient detect");
+  }, 10 * 1000);
+  nt.socketIO.detectNutrientData();
+  console.log("detecting");
 
   schedule.scheduleJob("10 00 * * * *", async () => {
     DataAccess.writeHourConsumptionData();
@@ -29,7 +29,7 @@ module.exports = () => {
   });
   //테스트로 매 00초 마다 데이터 전송되게 해둠.
   schedule.scheduleJob("00 * * * * *", async () => {
-    console.log("소비전력 소켓통신 실행");
+    console.log("test 소켓통신 실행");
     ctl.socketIO.consumptionHourData();
     ctl.socketIO.consumptionAccumulatedDayData();
     ctl.socketIO.bedData();
