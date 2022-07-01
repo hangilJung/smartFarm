@@ -272,7 +272,7 @@ class ActuatorControl {
       //     try {
       //       const result = await DataAccess.currentAmountOfChange();
       //       console.log(result[0][0]["sensor_data_value"]);
-      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       //       if (
       //         result[0][0]["sensor_data_value"] >
       //         fn.addCurrent(fn.deviceStatus())
@@ -342,7 +342,7 @@ class ActuatorControl {
       //     try {
       //       const result = await DataAccess.currentAmountOfChange();
       //       console.log(result[0][0]["sensor_data_value"]);
-      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       //       if (
       //         result[0][0]["sensor_data_value"] <
       //         fn.addCurrent(fn.deviceStatus())
@@ -445,7 +445,7 @@ class ActuatorControl {
         ) {
           return {
             address: data.modbus_address,
-            value: Number(data.description) / 1000,
+            value: String(Number(data.description) / 1000),
           };
         } else {
           return { address: data.modbus_address, value: data.description };
