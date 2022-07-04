@@ -48,7 +48,7 @@ class SensorData {
     //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
-    // logger.info(JSON.stringify(this.body));
+    logger.debug(JSON.stringify(this.body));
     try {
       const getSensorDataRange = await DataAccess.getSensorDataRange();
       const filteringData = daFn.checkDataValidation(

@@ -73,7 +73,7 @@ const socketIO = {
     const result = await actuatorControl.nutricultureMachineStatus();
 
     if (result == undefined) {
-      return "{resultCode: 05, resultMsg: SERVICE_TIME_OUT}";
+      return "{resultCode: 04, resultMsg: SERVICE_TIME_OUT}";
     } else {
       return result;
     }

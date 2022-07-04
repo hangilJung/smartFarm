@@ -47,10 +47,17 @@ const opts = {
     maxFiles: 30,
     format: printLogFormat.file,
   }),
+  debugDaily: new winstonDaily({
+    filename: "%DATE%.debug.log",
+    dirname: "./logs",
+    level: "debug",
+    maxFiles: 7,
+    format: printLogFormat.file,
+  }),
 };
 
 const logger = createLogger({
-  transports: [opts.infoDaily, opts.errorDaily],
+  transports: [opts.infoDaily, opts.errorDaily, opts.debugDaily],
 });
 
 if (process.env.NODE_ENV !== "production") {

@@ -5,12 +5,12 @@ const DataAccess = require("../models/DataAccess");
 const logger = require("../config/logger");
 
 module.exports = () => {
-  setInterval(() => {
-    nt.socketIO.detectNutrientData();
-    console.log("nutrient detect");
-  }, 10 * 1000);
-  nt.socketIO.detectNutrientData();
-  console.log("detecting");
+  // setInterval(async () => {
+  //   await nt.socketIO.detectNutrientData();
+  //   console.log("nutrient detect");
+  // }, 10 * 1000);
+  // await nt.socketIO.detectNutrientData();
+  // console.log("detecting");
 
   schedule.scheduleJob("10 00 * * * *", async () => {
     DataAccess.writeHourConsumptionData();

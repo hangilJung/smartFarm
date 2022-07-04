@@ -1,12 +1,12 @@
-const axios = require("axios");
-const DataAccess = require("./DataAccess");
-const moment = require("moment");
-const actu = require("../utils/actuator");
-const fn = require("../lib/fn");
-const nt = require("../lib/fnNutrient");
-const dbfn = require("../lib/databaseAccessFn");
-const logger = require("../config/logger");
-const ds = require("../lib/detailSettingFunction");
+const axios = require('axios');
+const DataAccess = require('./DataAccess');
+const moment = require('moment');
+const actu = require('../utils/actuator');
+const fn = require('../lib/fn');
+const nt = require('../lib/fnNutrient');
+const dbfn = require('../lib/databaseAccessFn');
+const logger = require('../config/logger');
+const ds = require('../lib/detailSettingFunction');
 const timeoutSettingValue = 5000;
 
 class ActuatorControl {
@@ -16,7 +16,7 @@ class ActuatorControl {
 
   async simpleActuatorControl() {
     const { deviceName, active } = this.body;
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const device = actu.deviceList[deviceName];
     const response = {
       header: {},
@@ -31,7 +31,7 @@ class ActuatorControl {
           active,
           device_name: deviceName,
           dev_data: [],
-          datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+          datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
         },
       ],
     };
@@ -51,16 +51,16 @@ class ActuatorControl {
       DataAccess.actuatorControlActionRecord(deviceName, content);
 
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
 
       // if (result.data === undefined) {
       //   return fn.communicationError("fan");
       // }
 
-      if (active == "on") {
-        fn.currentValueFsWrite(deviceName, "on");
+      if (active == 'on') {
+        fn.currentValueFsWrite(deviceName, 'on');
       } else {
-        fn.currentValueFsWrite(deviceName, "off");
+        fn.currentValueFsWrite(deviceName, 'off');
       }
 
       // if (
@@ -101,8 +101,8 @@ class ActuatorControl {
 
       // if (result.data.header == "00" && ctrl.data[0].device == device) {
       response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
+        resultCode: '00',
+        resultMsg: 'NORMAL_SERVICE',
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
@@ -114,10 +114,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function simpleActuatorControl() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.fanInvalidRequestParameterError();
@@ -126,7 +126,7 @@ class ActuatorControl {
 
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
-    const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
     let latelyTotalSupply;
     let line;
     let data;
@@ -138,15 +138,15 @@ class ActuatorControl {
       //   timeout: timeoutSettingValue,
       // });
       DataAccess.actuatorControlActionRecord(
-        dataFormat.data[0]["deviceName"],
+        dataFormat.data[0]['deviceName'],
         content
       );
       const nutrientLineSupplyResult = await DataAccess.nutrientLineSupply();
 
       for (let i of nutrientLineSupplyResult[0]) {
-        if (i["total_supply"] !== null) {
-          latelyTotalSupply = i["total_supply"];
-          line = i["line"];
+        if (i['total_supply'] !== null) {
+          latelyTotalSupply = i['total_supply'];
+          line = i['line'];
         }
       }
 
@@ -205,27 +205,27 @@ class ActuatorControl {
   }
 
   async loadActuatorRecord() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
     const response = {
       header: {},
     };
     try {
       const result = await DataAccess.loadActionRecord();
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
       if (result[0].length > 0) {
         response.header = {
-          resultCode: "00",
-          resultMsg: "NORMAL_SERVICE",
+          resultCode: '00',
+          resultMsg: 'NORMAL_SERVICE',
           requestDatetime: reqDatetime,
           responseDatetime: resDatetime,
         };
         response.body = result[0];
       } else {
         response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          resultCode: '10',
+          resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
           requestDatetime: reqDatetime,
           responseDatetime: resDatetime,
         };
@@ -237,10 +237,10 @@ class ActuatorControl {
     } catch (error) {
       logger.error(
         `src/models/ActuatorControl.js function loadActuatorRecord() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -248,7 +248,7 @@ class ActuatorControl {
   }
 
   async start() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const response = {
       header: {},
     };
@@ -272,7 +272,7 @@ class ActuatorControl {
       //     try {
       //       const result = await DataAccess.currentAmountOfChange();
       //       console.log(result[0][0]["sensor_data_value"]);
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       //       if (
       //         result[0][0]["sensor_data_value"] >
       //         fn.addCurrent(fn.deviceStatus())
@@ -283,12 +283,12 @@ class ActuatorControl {
       //         );
 
       response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
+        resultCode: '00',
+        resultMsg: 'NORMAL_SERVICE',
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
-      response.body = [{ device: "nutrient" }];
+      response.body = [{ device: 'nutrient' }];
       //       } else {
       //        await  DataAccess.actuatorControlActionRecord(
       //           "nutrient",
@@ -314,10 +314,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function start() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -325,7 +325,7 @@ class ActuatorControl {
   }
 
   async stop() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     try {
       // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       // if (result.data === undefined) {
@@ -342,7 +342,7 @@ class ActuatorControl {
       //     try {
       //       const result = await DataAccess.currentAmountOfChange();
       //       console.log(result[0][0]["sensor_data_value"]);
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       //       if (
       //         result[0][0]["sensor_data_value"] <
       //         fn.addCurrent(fn.deviceStatus())
@@ -353,12 +353,12 @@ class ActuatorControl {
       //         );
 
       response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
+        resultCode: '00',
+        resultMsg: 'NORMAL_SERVICE',
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
-      response.body = [{ device: "nutrient" }];
+      response.body = [{ device: 'nutrient' }];
       //       } else {
       //        await DataAccess.actuatorControlActionRecord(
       //           "nutrient",
@@ -384,10 +384,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function stop() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -396,7 +396,7 @@ class ActuatorControl {
 
   //nutricultureMachine 페이지 상태값들
   async nutricultureMachineStatus() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
     const response = {
       header: {},
@@ -405,43 +405,42 @@ class ActuatorControl {
     try {
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.readNutreint(actu.nutricultureMachine["list"]),
-        {
-          timeout: timeoutSettingValue,
-        }
+        fn.readNutreint(actu.nutricultureMachine['list']),
+        { timeout: timeoutSettingValue }
       );
+      console.log(result);
 
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
-      if (result["resultCode"] == "10" || result === undefined) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      if (result['resultCode'] == '10' || result === undefined) {
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         response.header = {
-          resultCode: "10",
-          resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
+          resultCode: '10',
+          resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
           requestDatetime: reqDatetime,
           responseDatetime: resDatetime,
         };
-        response.body = [{ device: "nutrient" }];
+        response.body = [{ device: 'nutrient' }];
 
         return response;
       }
 
-      const getData = await result.data.body["data"][0]["dev_data"];
+      const getData = await result.data?.body['data'][0]['dev_data'];
 
       const processData = getData.map((data) => {
         if (
-          data["modbus_address"] == "44105" ||
-          data["modbus_address"] == "44106" ||
-          data["modbus_address"] == "44360" ||
-          data["modbus_address"] == "44361" ||
-          data["modbus_address"] == "44362" ||
-          data["modbus_address"] == "44363" ||
-          data["modbus_address"] == "44380" ||
-          data["modbus_address"] == "44381" ||
-          data["modbus_address"] == "44382" ||
-          data["modbus_address"] == "44383"
+          data['modbus_address'] == '44105' ||
+          data['modbus_address'] == '44106' ||
+          data['modbus_address'] == '44360' ||
+          data['modbus_address'] == '44361' ||
+          data['modbus_address'] == '44362' ||
+          data['modbus_address'] == '44363' ||
+          data['modbus_address'] == '44380' ||
+          data['modbus_address'] == '44381' ||
+          data['modbus_address'] == '44382' ||
+          data['modbus_address'] == '44383'
         ) {
           return {
             address: data.modbus_address,
@@ -453,35 +452,34 @@ class ActuatorControl {
       });
 
       for (let i of processData) {
-        if (i.address == "560") {
-          if (i.value == "0") {
-            fn.currentValueFsWrite("nutrient", "off");
-          } else if (i.value == "1") {
-            fn.currentValueFsWrite("nutrient", "on");
+        if (i.address == '560') {
+          if (i.value == '0') {
+            fn.currentValueFsWrite('nutrient', 'off');
+          } else if (i.value == '1') {
+            fn.currentValueFsWrite('nutrient', 'on');
           }
           break;
         }
       }
       //양액기 페이지 상태 값 insert 문
       // DataAccess.test(processData);
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
+        resultCode: '00',
+        resultMsg: 'NORMAL_SERVICE',
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
       response.body = processData;
-
       return response;
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function nutricultureMachineStatus() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -491,8 +489,9 @@ class ActuatorControl {
   async sendToFrontNutrienNewtData() {
     try {
       const nutrientData = await this.nutricultureMachineStatus();
+
       const dbData = await DataAccess.nutricultureMachinePageStatusValue();
-      const bodyData = await nutrientData["body"];
+      const bodyData = await nutrientData['body'];
       const compareResult =
         await dbfn.compareNutricultureMachinePageStatusValue(
           bodyData,
@@ -514,10 +513,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function sendToFrontNutrienNewtData() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return error;
@@ -527,33 +526,33 @@ class ActuatorControl {
   async controlMode() {
     const { what } = this.body;
 
-    if (what == "easy") {
+    if (what == 'easy') {
       return this.easySelection();
-    } else if (what == "detail") {
+    } else if (what == 'detail') {
       return this.detailSelection();
     }
   }
 
   async easySelection() {
     try {
-      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint([
           {
-            modbus_address: "44400",
-            description: "0",
-            property: "write",
+            modbus_address: '44400',
+            description: '0',
+            property: 'write',
           },
         ]),
         {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
 
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -563,10 +562,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function easySelection() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -575,23 +574,23 @@ class ActuatorControl {
 
   async detailSelection() {
     try {
-      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint([
           {
-            modbus_address: "44400",
-            description: "1",
-            property: "write",
+            modbus_address: '44400',
+            description: '1',
+            property: 'write',
           },
         ]),
         {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -601,10 +600,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSelection() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -612,10 +611,10 @@ class ActuatorControl {
   }
 
   async easySetting() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     try {
       if (nt.invalidEasySetting(this.body)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -630,10 +629,10 @@ class ActuatorControl {
         }
       );
 
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -643,10 +642,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function easySetting() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -654,11 +653,11 @@ class ActuatorControl {
   }
 
   async detailSettingTime() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const { where, hour, minute } = this.body;
     try {
       if (nt.invalidWhere(where) || nt.invalidHourMinute(hour, minute)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -672,10 +671,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -685,10 +684,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSettingTime() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -696,11 +695,11 @@ class ActuatorControl {
   }
 
   async detailSettingMatter() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const { where, matter } = this.body;
     try {
       if (nt.invalidWhere(where) || nt.invalidBinary(matter)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -714,10 +713,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -727,7 +726,7 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSettingMatter() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
       return fn.invalidRequestParameterError();
@@ -735,11 +734,11 @@ class ActuatorControl {
   }
 
   async detailSettingIsUse() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const { where, isUse } = this.body;
     try {
       if (nt.invalidWhere(where) || nt.invalidBinary(isUse)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -753,10 +752,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD  HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -766,10 +765,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSettingIsUse() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -777,7 +776,7 @@ class ActuatorControl {
   }
 
   async detailSettingTrayIsUse() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const { where, tray, isUse } = this.body;
     console.log(this.body);
 
@@ -787,7 +786,7 @@ class ActuatorControl {
         nt.invalidTray(tray) ||
         nt.invalidBinary(isUse)
       ) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -801,10 +800,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -814,10 +813,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSettingTrayIsUse() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -826,14 +825,14 @@ class ActuatorControl {
 
   async detailSupplySetting() {
     const { tray, minute, second } = this.body;
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
     try {
       if (
         nt.invalidTray(tray) ||
         nt.invalidSupplyMinuteSecond(minute, second)
       ) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -846,10 +845,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -859,10 +858,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSupplySetting() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -871,11 +870,11 @@ class ActuatorControl {
 
   async ecPhSetting() {
     const { tray, what, value } = this.body;
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
     try {
       if (nt.invalidTray(tray) || nt.invalidEcPh(what, value)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -888,10 +887,10 @@ class ActuatorControl {
           timeout: timeoutSettingValue,
         }
       );
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        return fn.communicationError('nutrient');
       }
 
       this.sendToFrontNutrienNewtData();
@@ -901,10 +900,10 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function ecPhSetting() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -912,16 +911,22 @@ class ActuatorControl {
   }
 
   async detailSetting() {
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
     try {
       if (ds.invalidDetailSettingData(this.body)) {
-        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
         );
       }
 
+      //테스트
+      logger.info(`상세 설정 파라미터 : ${JSON.stringify(this.body)}`);
+      logger.info(
+        `상세 설정 ${JSON.stringify(ds.filteringDetailSettingData(this.body))}`
+      );
+      //테스트
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
         fn.writeNutreint(ds.filteringDetailSettingData(this.body)),
@@ -931,17 +936,17 @@ class ActuatorControl {
       );
 
       this.sendToFrontNutrienNewtData();
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
 
       return fn.nutrientStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function detailSetting() error : ${
-          error ?? "not load error contents"
+          error ?? 'not load error contents'
         }`
       );
-      if (error?.code === "ECONNABORTED") {
+      if (error?.code === 'ECONNABORTED') {
         return fn.timeOutError();
       }
       return fn.invalidRequestParameterError();
@@ -959,28 +964,28 @@ class ActuatorControl {
 
       console.log(startSupplyDatetime, endSupplyDatetime);
 
-      if (startSupplyDatetime.format("HH") === endSupplyDatetime.format("HH")) {
-        console.log("시간은 ", startSupplyDatetime.format("HH"));
+      if (startSupplyDatetime.format('HH') === endSupplyDatetime.format('HH')) {
+        console.log('시간은 ', startSupplyDatetime.format('HH'));
         console.log(
-          "분은 ",
-          endSupplyDatetime.diff(startSupplyDatetime, "minutes")
+          '분은 ',
+          endSupplyDatetime.diff(startSupplyDatetime, 'minutes')
         );
 
         console.log(
-          "12312312",
-          endSupplyDatetime.diff(moment(startSupplyDatetime), "minutes")
+          '12312312',
+          endSupplyDatetime.diff(moment(startSupplyDatetime), 'minutes')
         );
       } else {
         console.log(
-          moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")).diff(
+          moment(endSupplyDatetime.format('YYYY-MM-DD HH:00:00')).diff(
             startSupplyDatetime,
-            "minutes"
+            'minutes'
           )
         );
         console.log(
           endSupplyDatetime.diff(
-            moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")),
-            "minutes"
+            moment(endSupplyDatetime.format('YYYY-MM-DD HH:00:00')),
+            'minutes'
           )
         );
       }

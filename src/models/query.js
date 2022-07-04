@@ -741,87 +741,13 @@ const query = {
                         sd.sensor_information_id,
                         sd.sensor_data_created_at;`,
   sensorDataHourly: `
-                    select
-                        sensor_information_id,
-                        sensor_data_value,
-                        sensor_data_created_at
-                    from
-                        hour_data
-                    where
-                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
-                    and
-                        sensor_data_created_at >= ?
-                    and
-                        sensor_data_created_at < ?
-                    group by
-                        year(sensor_data_created_at),
-                        month(sensor_data_created_at),
-                        day(sensor_data_created_at),
-                        hour(sensor_data_created_at),
-                        sensor_information_id
-                    order by
-                        sensor_information_id,
-                        sensor_data_created_at;`,
+                    call sdh(?,?)`,
   sensorDataDaily: `
-                    select
-                        sensor_information_id,
-                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
-                        date_format(sensor_data_created_at, '%Y-%m-%d') as sensor_data_created_at
-                    from
-                        hour_data
-                    where
-                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
-                    and
-                        sensor_data_created_at >= ?
-                    and
-                        sensor_data_created_at < ?
-                    group by
-                        year(sensor_data_created_at),
-                        month(sensor_data_created_at),
-                        day(sensor_data_created_at),
-                        sensor_information_id
-                    order by
-                        sensor_information_id,
-                        sensor_data_created_at;`,
+                    call sdd(?,?)`,
   sensorDataMonthly: `
-                    select
-                        sensor_information_id,
-                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
-                        date_format(sensor_data_created_at, '%Y-%m') as sensor_data_created_at
-                    from
-                        hour_data
-                    where
-                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
-                    and
-                        sensor_data_created_at >= ?
-                    and
-                        sensor_data_created_at < ?
-                    group by
-                        year(sensor_data_created_at),
-                        month(sensor_data_created_at),
-                        sensor_information_id
-                    order by
-                        sensor_information_id,
-                        sensor_data_created_at;`,
+                    call sdm(?,?)`,
   sensorDataYearly: `
-                    select
-                        sensor_information_id,
-                        cast((avg(sensor_data_value)) as decimal(6, 1)) as sensor_data_value,
-                        date_format(sensor_data_created_at, '%Y') as sensor_data_created_at
-                    from
-                        hour_data
-                    where
-                        sensor_information_id in (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32)
-                    and
-                        sensor_data_created_at >= ?
-                    and
-                        sensor_data_created_at < ?
-                    group by
-                        year(sensor_data_created_at),	
-                        sensor_information_id
-                    order by
-                        sensor_information_id,
-                        sensor_data_created_at;`,
+                    call sdy(?,?)`,
   saveHourSensorData: `
                     insert into 
                             hour_data
