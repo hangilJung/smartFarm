@@ -351,21 +351,21 @@ class DataAccess {
 
   static async sensorDataHourly(startDate, endDate) {
     const sql = query.sensorDataHourly;
-    const condition = [startDate, endDate];
+    const condition = [startDate, startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }
 
   static async sensorDataDaily(startDate, endDate) {
     const sql = query.sensorDataDaily;
-    const condition = [startDate, endDate];
+    const condition = [startDate, startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }
 
   static async sensorDataMonthly(startDate, endDate) {
     const sql = query.sensorDataMonthly;
-    const condition = [startDate, endDate];
+    const condition = [startDate, startDate, endDate];
 
     return this.#databaseAcess(sql, condition);
   }

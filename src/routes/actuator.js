@@ -13,7 +13,7 @@ router.post("/stop", ipAndUrl, nt.nutrient.stop);
 router.post(
   "/nutriculture-machine-status",
   ipAndUrl,
-  nt.nutrient.nutricultureMachineStatus
+  nt.nutrient.databaseNutriculureMachineStatus
 );
 router.post("/control-mode-easy", nt.nutrient.easySelection);
 router.post("/control-mode-detail", nt.nutrient.detailSelection);

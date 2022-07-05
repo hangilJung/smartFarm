@@ -4,6 +4,8 @@ const logger = require("../config/logger");
 
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
+  const sensorList = [];
+  const consumptionList = [];
 
   for (let j of body["data"]) {
     if (fiteringName(j["name"])) {

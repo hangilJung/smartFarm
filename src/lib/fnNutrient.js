@@ -13,7 +13,6 @@ mainData.on("connect", () => {
 mainData.on("connect_error", (reason) => {
   // socketio 서버가 닫히면 에러 발생 or new Error 객체로 에러 발생
   console.log(reason);
-
 });
 
 const nutricultureMachinePage = io(
@@ -529,52 +528,124 @@ function invalidEasySetting(body) {
   } = body;
   console.log(body);
 
-  if (Number(easyStartHour) > 23 || Number(easyStartHour) < 0) {
+  if (
+    Number(easyStartHour) > 23 ||
+    Number(easyStartHour) < 0 ||
+    easyStartHour === undefined ||
+    easyStartHour === null
+  ) {
     return true;
   }
-  if (Number(easyStartMinute) > 59 || Number(easyStartMinute) < 0) {
+  if (
+    Number(easyStartMinute) > 59 ||
+    Number(easyStartMinute) < 0 ||
+    easyStartMinute === undefined ||
+    easyStartMinute === null
+  ) {
     return true;
   }
-  if (Number(easyRepeatHour) > 23 || Number(easyRepeatHour) < 0) {
+  if (
+    Number(easyRepeatHour) > 23 ||
+    Number(easyRepeatHour) < 0 ||
+    easyRepeatHour === undefined ||
+    easyRepeatHour === null
+  ) {
     return true;
   }
-  if (Number(easyRepeatMinute) > 59 || Number(easyRepeatMinute) < 0) {
+  if (
+    Number(easyRepeatMinute) > 59 ||
+    Number(easyRepeatMinute) < 0 ||
+    easyRepeatMinute === undefined ||
+    easyRepeatMinute === null
+  ) {
     return true;
   }
-  if (Number(easyRepeatCycle) > 99 || Number(easyRepeatCycle) < 0) {
+  if (
+    Number(easyRepeatCycle) > 99 ||
+    Number(easyRepeatCycle) < 0 ||
+    easyRepeatCycle === undefined ||
+    easyRepeatCycle === null
+  ) {
     return true;
   }
-  if (Number(easyEcSetting) * 1000 > 5000 || Number(easyEcSetting) * 1000 < 0) {
+  if (
+    Number(easyEcSetting) * 1000 > 5000 ||
+    Number(easyEcSetting) * 1000 < 0 ||
+    easyEcSetting === undefined ||
+    easyEcSetting === null
+  ) {
     return true;
   }
   if (
     Number(easyPhSetting) * 1000 > 14000 ||
-    Number(easyPhSetting) * 1000 < 0
+    Number(easyPhSetting) * 1000 < 0 ||
+    easyPhSetting === undefined ||
+    easyPhSetting === null
   ) {
     return true;
   }
-  if (Number(easySupplyTray1Minute) > 99 || Number(easySupplyTray1Minute) < 0) {
+  if (
+    Number(easySupplyTray1Minute) > 99 ||
+    Number(easySupplyTray1Minute) < 0 ||
+    easySupplyTray1Minute === undefined ||
+    easySupplyTray1Minute === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray1Second) > 59 || Number(easySupplyTray1Second) < 0) {
+  if (
+    Number(easySupplyTray1Second) > 59 ||
+    Number(easySupplyTray1Second) < 0 ||
+    easySupplyTray1Second === undefined ||
+    easySupplyTray1Second === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray2Minute) > 99 || Number(easySupplyTray2Minute) < 0) {
+  if (
+    Number(easySupplyTray2Minute) > 99 ||
+    Number(easySupplyTray2Minute) < 0 ||
+    easySupplyTray2Minute === undefined ||
+    easySupplyTray2Minute === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray2Second) > 59 || Number(easySupplyTray2Second) < 0) {
+  if (
+    Number(easySupplyTray2Second) > 59 ||
+    Number(easySupplyTray2Second) < 0 ||
+    easySupplyTray2Second === undefined ||
+    easySupplyTray2Second === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray3Minute) > 99 || Number(easySupplyTray3Minute) < 0) {
+  if (
+    Number(easySupplyTray3Minute) > 99 ||
+    Number(easySupplyTray3Minute) < 0 ||
+    easySupplyTray3Minute === undefined ||
+    easySupplyTray3Minute === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray3Second) > 59 || Number(easySupplyTray3Second) < 0) {
+  if (
+    Number(easySupplyTray3Second) > 59 ||
+    Number(easySupplyTray3Second) < 0 ||
+    easySupplyTray3Second === undefined ||
+    easySupplyTray3Second === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray4Minute) > 99 || Number(easySupplyTray4Minute) < 0) {
+  if (
+    Number(easySupplyTray4Minute) > 99 ||
+    Number(easySupplyTray4Minute) < 0 ||
+    easySupplyTray4Minute === undefined ||
+    easySupplyTray4Minute === null
+  ) {
     return true;
   }
-  if (Number(easySupplyTray4Second) > 59 || Number(easySupplyTray4Second) < 0) {
+  if (
+    Number(easySupplyTray4Second) > 59 ||
+    Number(easySupplyTray4Second) < 0 ||
+    easySupplyTray4Second === undefined ||
+    easySupplyTray4Second === null
+  ) {
     return true;
   }
 

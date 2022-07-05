@@ -2323,7 +2323,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44360",
-      description: tray1EcSetting,
+      description: String(Number(tray1EcSetting) * 1000),
       property: "write",
     });
   }
@@ -2334,7 +2334,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44361",
-      description: tray2EcSetting,
+      description: String(Number(tray2EcSetting) * 1000),
       property: "write",
     });
   }
@@ -2345,7 +2345,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44362",
-      description: tray3EcSetting,
+      description: String(Number(tray3EcSetting) * 1000),
       property: "write",
     });
   }
@@ -2356,7 +2356,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44363",
-      description: tray4EcSetting,
+      description: String(Number(tray4EcSetting) * 1000),
       property: "write",
     });
   }
@@ -2367,7 +2367,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44380",
-      description: tray1PhSetting,
+      description: String(Number(tray1PhSetting) * 1000),
       property: "write",
     });
   }
@@ -2378,7 +2378,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44381",
-      description: tray2PhSetting,
+      description: String(Number(tray2PhSetting) * 1000),
       property: "write",
     });
   }
@@ -2389,7 +2389,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44382",
-      description: tray3PhSetting,
+      description: String(Number(tray3PhSetting) * 1000),
       property: "write",
     });
   }
@@ -2400,7 +2400,7 @@ function filteringDetailSettingData(body) {
   ) {
     list.push({
       modbus_address: "44383",
-      description: tray4PhSetting,
+      description: String(Number(tray4PhSetting) * 1000),
       property: "write",
     });
   }

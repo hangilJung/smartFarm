@@ -1,15 +1,15 @@
-const headerStatusCode = require('../utils/headerStatusCode.js');
-const fs = require('fs');
-const Token = require('../models/Token');
-const actu = require('../utils/actuator');
-const moment = require('moment');
+const headerStatusCode = require("../utils/headerStatusCode.js");
+const fs = require("fs");
+const Token = require("../models/Token");
+const actu = require("../utils/actuator");
+const moment = require("moment");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
 }
 
 function convertBufferDataToJsonFormat(data) {
-  return data['data'];
+  return data["data"];
 }
 
 function convertJsonInArrayToJson(columns) {
@@ -21,7 +21,7 @@ function convertJsonInArrayToJson(columns) {
 }
 
 function multipleConditions(i, convertData, insertDate) {
-  let condition = [convertData[i]['name'], convertData[i]['value'], insertDate];
+  let condition = [convertData[i]["name"], convertData[i]["value"], insertDate];
   return condition;
 }
 
@@ -38,8 +38,8 @@ function responseHeaderNormalServiceOrNotDataError(
   if (trueAndFalse) {
     const response = {
       header: {
-        resultCode: '00',
-        resultMsg: 'NORMAL_SERVICE',
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       },
@@ -50,24 +50,24 @@ function responseHeaderNormalServiceOrNotDataError(
   } else if (!trueAndFalse) {
     const response = {
       header: {
-        resultCode: '02',
-        resultMsg: 'NO_DATA_ERROR',
+        resultCode: "02",
+        resultMsg: "NO_DATA_ERROR",
         reqDatetime,
         resDatetime,
       },
-      body: [{ device: 'sensor' }],
+      body: [{ device: "sensor" }],
     };
 
     return response;
   } else {
     const response = {
       header: {
-        resultCode: '10',
-        resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
+        resultCode: "10",
+        resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
         reqDatetime,
         resDatetime,
       },
-      body: [{ device: 'sensor' }],
+      body: [{ device: "sensor" }],
     };
 
     return response;
@@ -77,8 +77,8 @@ function responseHeaderNormalServiceOrNotDataError(
 const requestWithToken = async (url, body) => {
   try {
     let dataBuffer = fs.readFileSync(
-      __dirname + '/../accessToken.json',
-      'utf8'
+      __dirname + "/../accessToken.json",
+      "utf8"
     );
     let data = JSON.parse(dataBuffer);
     const result = await axios.post(url, body, {
@@ -90,19 +90,19 @@ const requestWithToken = async (url, body) => {
     return result;
   } catch (error) {
     try {
-      const getAccessToken = await axios.post(ipAddress + '/token/v1', null, {
+      const getAccessToken = await axios.post(ipAddress + "/token/v1", null, {
         headers: {
           authorization: refresh,
         },
       });
       let dataBuffer = fs.readFileSync(
-        __dirname + '/../accessToken.json',
-        'utf8'
+        __dirname + "/../accessToken.json",
+        "utf8"
       );
       let token = await JSON.parse(dataBuffer);
       token.accessToken = await getAccessToken.data.body.accessToken;
       dataJSON = JSON.stringify(token);
-      fs.writeFileSync(__dirname + '/../accessToken.json', dataJSON);
+      fs.writeFileSync(__dirname + "/../accessToken.json", dataJSON);
       console.log(__dirname);
       const access = await axios.post(url, body, {
         headers: {
@@ -125,9 +125,9 @@ function reissuanceToken() {
 
 function tokenFsWrite(issuedToken) {
   const token = tokenFsRead();
-  token['accessToken'] = issuedToken;
+  token["accessToken"] = issuedToken;
   fs.writeFileSync(
-    __dirname + '/../utils/accessToken.json',
+    __dirname + "/../utils/accessToken.json",
     JSON.stringify(token)
   );
   return __dirname;
@@ -135,12 +135,12 @@ function tokenFsWrite(issuedToken) {
 
 function tokenFsRead() {
   return JSON.parse(
-    fs.readFileSync(__dirname + '/../utils/accessToken.json', 'utf8')
+    fs.readFileSync(__dirname + "/../utils/accessToken.json", "utf8")
   );
 }
 
 function takeOutData(data) {
-  return data['data'];
+  return data["data"];
 }
 
 function parameterIsUndefinded(a) {
@@ -149,13 +149,13 @@ function parameterIsUndefinded(a) {
 
 function stopNutrientCommand(actu) {
   let commandList = [
-    actu.nutrient.act['stop'],
-    actu.nutrient.notUseLine['line_1'],
-    actu.nutrient.notUseLine['line_2'],
-    actu.nutrient.notUseLine['line_3'],
-    actu.nutrient.notUseLine['line_4'],
-    actu.nutrient.notUse['notUseDetail_1'],
-    actu.nutrient.notUse['notUseDetail_2'],
+    actu.nutrient.act["stop"],
+    actu.nutrient.notUseLine["line_1"],
+    actu.nutrient.notUseLine["line_2"],
+    actu.nutrient.notUseLine["line_3"],
+    actu.nutrient.notUseLine["line_4"],
+    actu.nutrient.notUse["notUseDetail_1"],
+    actu.nutrient.notUse["notUseDetail_2"],
   ];
 
   return commandList;
@@ -164,7 +164,7 @@ function stopNutrientCommand(actu) {
 function whereToSupply(matter, line) {
   let commandList = [];
 
-  if (matter === 'water') {
+  if (matter === "water") {
     commandList.push(actu.nutrient.use.useDetail_1);
     if (line === 1) {
       commandList.push(actu.nutrient.useLine.line_1);
@@ -194,16 +194,16 @@ function whereToSupply(matter, line) {
 }
 
 function createCharacter(deviceName, active) {
-  let content = deviceName + ' 을(를)';
+  let content = deviceName + " 을(를)";
 
-  if (active === 'open') {
-    content += ' 열었습니다.';
-  } else if (active === 'close') {
-    content += ' 닫았습니다.';
-  } else if (active === 'on') {
-    content += ' 작동하였습니다.';
-  } else if (active === 'stop') {
-    content += ' 중지하였습니다.';
+  if (active === "open") {
+    content += " 열었습니다.";
+  } else if (active === "close") {
+    content += " 닫았습니다.";
+  } else if (active === "on") {
+    content += " 작동하였습니다.";
+  } else if (active === "stop") {
+    content += " 중지하였습니다.";
   }
 
   return content;
@@ -218,7 +218,7 @@ function isNutrientSupplyFnParamsAValid(matter, line) {
 }
 
 function isMatterAValid(matter) {
-  if (matter === 'water' || matter === 'fertilizer') {
+  if (matter === "water" || matter === "fertilizer") {
     return true;
   } else {
     return false;
@@ -243,9 +243,9 @@ function isUndefinedParams(matter, line) {
 
 function findSensorInformationId(filteringData) {
   for (let i of filteringData) {
-    if (i.name === 'outTemp') {
+    if (i.name === "outTemp") {
       return 1;
-    } else if (i.name === 'actPow') {
+    } else if (i.name === "actPow") {
       return 40;
     }
   }
@@ -256,10 +256,10 @@ function dateChecker(start_date, end_date) {
     /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\s\d{2}:\d{2}:\d{2}/
   );
   return (
-    moment(start_date).format('YYYYMMDDHHmmss') === 'Invalid date' ||
-    moment(end_date).format('YYYYMMDDHHmmss') === 'Invalid date' ||
-    Number(moment(start_date).format('YYYYMMDDHHmmss')) >
-      Number(moment(end_date).format('YYYYMMDDHHmmss')) ||
+    moment(start_date).format("YYYYMMDDHHmmss") === "Invalid date" ||
+    moment(end_date).format("YYYYMMDDHHmmss") === "Invalid date" ||
+    Number(moment(start_date).format("YYYYMMDDHHmmss")) >
+      Number(moment(end_date).format("YYYYMMDDHHmmss")) ||
     !regex.test(start_date) ||
     !regex.test(end_date)
   );
@@ -267,12 +267,17 @@ function dateChecker(start_date, end_date) {
 
 function addEndDate(endDatetime) {
   let endDate = endDatetime;
-
-  return momentAddDatetime(endDate, 'seconds');
+  const nowDate = moment().format("YYYYMMDDHHmmss");
+  const nowDay = moment().format("YYYY-MM-DD");
+  const nowTime = moment().subtract(1, "hours").format("HH:00:00");
+  if (Number(moment(endDate).format("YYYYMMDDHHmmss")) > Number(nowDate)) {
+    return moment(nowDay + " " + nowTime).format("YYYY-MM-DD HH:mm:ss");
+  }
+  return momentAddDatetime(endDate, "seconds");
 }
 
 function momentAddDatetime(endDate, key) {
-  return moment(endDate).add(1, key).format('YYYY-MM-DD HH:mm:ss');
+  return moment(endDate).add(1, key).format("YYYY-MM-DD HH:mm:ss");
 }
 
 function writeNutrientSupplyContent(matter, line) {
@@ -284,25 +289,25 @@ function writeNutrientStopContent() {
 }
 
 function emergencyContent() {
-  return '비상정지했습니다.';
+  return "비상정지했습니다.";
 }
 
 function pickUpInsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
-    if (i['name'] === 'co2Temp') {
-      const value = Number(i['value']);
+    if (i["name"] === "co2Temp") {
+      const value = Number(i["value"]);
       b.push({
-        sensor_name: 'co2Temp',
+        sensor_name: "co2Temp",
         sensor_data_value: value.toFixed(1),
         sensor_data_created_at: insertDate,
       });
-    } else if (i['name'] === 'co2Humi') {
-      b.push(findName(i, 'co2Humi', insertDate));
-    } else if (i['name'] === 'inInsol') {
-      b.push(findName(i, 'inInsol', insertDate));
-    } else if (i['name'] === 'co2') {
-      b.push(findName(i, 'co2', insertDate));
+    } else if (i["name"] === "co2Humi") {
+      b.push(findName(i, "co2Humi", insertDate));
+    } else if (i["name"] === "inInsol") {
+      b.push(findName(i, "inInsol", insertDate));
+    } else if (i["name"] === "co2") {
+      b.push(findName(i, "co2", insertDate));
     }
   }
 
@@ -312,28 +317,28 @@ function pickUpInsideData(filteringData, insertDate) {
 function pickUpOutsideData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
-    if (i['name'] === 'outTemp') {
-      const value = Number(i['value']);
+    if (i["name"] === "outTemp") {
+      const value = Number(i["value"]);
       b.push({
-        sensor_name: 'outTemp',
+        sensor_name: "outTemp",
         sensor_data_value: value.toFixed(1),
         sensor_data_created_at: insertDate,
       });
-    } else if (i['name'] === 'outHumi') {
-      b.push(findName(i, 'outHumi', insertDate));
-    } else if (i['name'] === 'outInsol') {
-      b.push(findName(i, 'outInsol', insertDate));
-    } else if (i['name'] === 'ws') {
-      const value = Number(i['value']);
+    } else if (i["name"] === "outHumi") {
+      b.push(findName(i, "outHumi", insertDate));
+    } else if (i["name"] === "outInsol") {
+      b.push(findName(i, "outInsol", insertDate));
+    } else if (i["name"] === "ws") {
+      const value = Number(i["value"]);
       b.push({
-        sensor_name: 'ws',
+        sensor_name: "ws",
         sensor_data_value: value.toFixed(1),
         sensor_data_created_at: insertDate,
       });
-    } else if (i['name'] === 'rf') {
-      const value = Number(i['value']);
+    } else if (i["name"] === "rf") {
+      const value = Number(i["value"]);
       b.push({
-        sensor_name: 'rf',
+        sensor_name: "rf",
         sensor_data_value: value.toFixed(1),
         sensor_data_created_at: insertDate,
       });
@@ -346,13 +351,13 @@ function pickUpOutsideData(filteringData, insertDate) {
 function pickUpEcPhData(filteringData, insertDate) {
   let b = [];
   for (let i of filteringData) {
-    if (i['name'] === 'soilEc1') {
+    if (i["name"] === "soilEc1") {
     }
   }
 }
 
 function findName(i, name, insertDate) {
-  const value = Number(i['value']);
+  const value = Number(i["value"]);
   return {
     sensor_name: name,
     sensor_data_value: value.toFixed(0),
@@ -383,17 +388,17 @@ function invalidRequestParameterError() {
 }
 
 function fanInvalidRequestParameterError() {
-  const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
-  const resDatetime = moment().format('YYYY-MM-DD T HH:mm:ss');
+  const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+  const resDatetime = moment().format("YYYY-MM-DD T HH:mm:ss");
 
   const response = {
     header: {
-      resultCode: '10',
-      resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
+      resultCode: "10",
+      resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     },
-    body: [{ device: 'fan' }],
+    body: [{ device: "fan" }],
   };
 
   return response;
@@ -419,11 +424,11 @@ function deliverDataFormatWrite(actu) {
     data: [
       {
         bedId: 5,
-        device: 'nuctrl',
-        active: 'nctrl_write',
-        deviceName: 'nutrient',
+        device: "nuctrl",
+        active: "nctrl_write",
+        deviceName: "nutrient",
         dev_data: stopNutrientCommand(actu),
-        datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
       },
     ],
   };
@@ -438,10 +443,10 @@ function deliverDataFormatRead(wantData) {
     data: [
       {
         bedId: 5,
-        device: 'nuctrl',
-        active: 'nuctrl_read',
-        deviceName: 'nutrient',
-        datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
+        device: "nuctrl",
+        active: "nuctrl_read",
+        deviceName: "nutrient",
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
         dev_data: dataFormat,
       },
     ],
@@ -462,13 +467,13 @@ function responseHeaderAndBody(data) {
 function whatLine(line) {
   let command;
   if (line === 1) {
-    command = actu.supply.list['line_1'];
+    command = actu.supply.list["line_1"];
   } else if (line === 2) {
-    command = actu.supply.list['line_2'];
+    command = actu.supply.list["line_2"];
   } else if (line === 3) {
-    command = actu.supply.list['line_3'];
+    command = actu.supply.list["line_3"];
   } else if (line === 4) {
-    command = actu.supply.list['line_4'];
+    command = actu.supply.list["line_4"];
   }
 
   const ctl = {
@@ -476,11 +481,11 @@ function whatLine(line) {
     data: [
       {
         bedId: 5,
-        device: 'nuctrl',
-        active: 'nctrl_read',
-        deviceName: 'nutrient',
+        device: "nuctrl",
+        active: "nctrl_read",
+        deviceName: "nutrient",
         dev_data: [command],
-        datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
       },
     ],
   };
@@ -490,10 +495,10 @@ function whatLine(line) {
 
 function arrayCondition(i, data) {
   return [
-    data[i]['matter'],
-    data[i]['line'],
-    data[i]['supplyDatetime'],
-    data[i]['supply'],
+    data[i]["matter"],
+    data[i]["line"],
+    data[i]["supplyDatetime"],
+    data[i]["supply"],
   ];
 }
 
@@ -508,21 +513,21 @@ function twoHourData(
     {
       matter: matter,
       line: line,
-      supply_date_time: startSupplyDatetime.format('YYYY-MM-DD HH'),
+      supply_date_time: startSupplyDatetime.format("YYYY-MM-DD HH"),
       supply:
-        moment(endSupplyDatetime.format('YYYY-MM-DD HH:00:00')).diff(
+        moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")).diff(
           startSupplyDatetime,
-          'minutes'
+          "minutes"
         ) * minutePerLitter,
     },
     {
       matter: matter,
       line: line,
-      supply_date_time: endSupplyDatetime.format('YYYY-MM-DD HH'),
+      supply_date_time: endSupplyDatetime.format("YYYY-MM-DD HH"),
       supply:
-        moment(endSupplyDatetime.format('YYYY-MM-DD HH:00:00')).diff(
+        moment(endSupplyDatetime.format("YYYY-MM-DD HH:00:00")).diff(
           endSupplyDatetime,
-          'minutes'
+          "minutes"
         ) * minutePerLitter,
     },
   ];
@@ -534,10 +539,10 @@ function readNutreint(params) {
     data: [
       {
         bed_id: 5,
-        device: 'nuctrl',
-        active: 'nuctrl_read',
-        device_name: 'nutrient',
-        datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
+        device: "nuctrl",
+        active: "nuctrl_read",
+        device_name: "nutrient",
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
         dev_data: params,
       },
     ],
@@ -552,10 +557,10 @@ function writeNutreint(params) {
     data: [
       {
         bed_id: 5,
-        device: 'nuctrl',
-        active: 'nuctrl_write',
-        device_name: 'nutrient',
-        datetime: moment().format('YYYY-MM-DD T HH:mm:ss'),
+        device: "nuctrl",
+        active: "nuctrl_write",
+        device_name: "nutrient",
+        datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
         dev_data: params,
       },
     ],
@@ -568,16 +573,16 @@ function hoursSensorDataFilter(what) {
   let id1;
   let id2;
 
-  if (what === 'temperature') {
+  if (what === "temperature") {
     id1 = 1;
     id2 = 31;
-  } else if (what === 'humidity') {
+  } else if (what === "humidity") {
     id1 = 2;
     id2 = 32;
-  } else if (what === 'insolation') {
+  } else if (what === "insolation") {
     id1 = 5;
     id2 = 6;
-  } else if (what === 'co2') {
+  } else if (what === "co2") {
     id1 = 30;
   }
 
@@ -585,7 +590,7 @@ function hoursSensorDataFilter(what) {
 }
 
 function nutrientMultipleConditions(i, data) {
-  let condition = [data[i]['value'], data[i]['address']];
+  let condition = [data[i]["value"], data[i]["address"]];
   return condition;
 }
 
@@ -594,22 +599,22 @@ function nutrientStatusCode(result, reqDatetime, resDatetime) {
     header: {},
   };
 
-  if (result.data.header.resultCode == '00') {
+  if (result.data.header.resultCode == "00") {
     response.header = {
-      resultCode: '00',
-      resultMsg: 'NORMAL_SERVICE',
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
-    response.body = [{ device: 'nutrient' }];
+    response.body = [{ device: "nutrient" }];
   } else {
     response.header = {
-      resultCode: '10',
-      resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
+      resultCode: "10",
+      resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
-    response.body = [{ device: 'nutrient' }];
+    response.body = [{ device: "nutrient" }];
   }
 
   return response;
@@ -621,8 +626,8 @@ function communicationError(device) {
   };
 
   response.header = {
-    resultCode: '11',
-    resultMsg: 'COMMUNICATION_ERROR',
+    resultCode: "11",
+    resultMsg: "COMMUNICATION_ERROR",
     requestDatetime: reqDatetime,
     responseDatetime: resDatetime,
   };
@@ -633,8 +638,8 @@ function communicationError(device) {
 function normalServiceIncludBody(result, reqDatetime, resDatetime) {
   const response = {
     header: {
-      resultCode: '00',
-      resultMsg: 'NORMAL_SERVICE',
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     },
@@ -647,8 +652,8 @@ function normalServiceAndNoDataError(result, reqDatetime, resDatetime) {
   if (result[0].length > 0) {
     const response = {
       header: {
-        resultCode: '00',
-        resultMsg: 'NORMAL_SERVICE',
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       },
@@ -658,8 +663,8 @@ function normalServiceAndNoDataError(result, reqDatetime, resDatetime) {
   } else if (result[0] == 0) {
     const response = {
       header: {
-        resultCode: '02',
-        resultMsg: 'NO_DATA_ERROR',
+        resultCode: "02",
+        resultMsg: "NO_DATA_ERROR",
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       },
@@ -670,15 +675,15 @@ function normalServiceAndNoDataError(result, reqDatetime, resDatetime) {
 
 function currentValueFsRead() {
   return JSON.parse(
-    fs.readFileSync(__dirname + '/../utils/currentValue.json', 'utf8')
+    fs.readFileSync(__dirname + "/../utils/currentValue.json", "utf8")
   );
 }
 
 function currentValueFsWrite(what, status) {
   const currentFile = currentValueFsRead();
-  currentFile[what]['status'] = status;
+  currentFile[what]["status"] = status;
   fs.writeFileSync(
-    __dirname + '/../utils/currentValue.json',
+    __dirname + "/../utils/currentValue.json",
     JSON.stringify(currentFile)
   );
 }
@@ -687,21 +692,21 @@ function deviceStatus() {
   const result = fsRead();
   const onList = [];
 
-  if (result.fan1.status == 'on') {
-    console.log('fan1은 on이다');
-    onList.push('fan1');
+  if (result.fan1.status == "on") {
+    console.log("fan1은 on이다");
+    onList.push("fan1");
   }
-  if (result.fan2.status == 'on') {
-    console.log('fan2은 on이다');
-    onList.push('fan2');
+  if (result.fan2.status == "on") {
+    console.log("fan2은 on이다");
+    onList.push("fan2");
   }
-  if (result.fan3.status == 'on') {
-    console.log('fan3은 on이다');
-    onList.push('fan3');
+  if (result.fan3.status == "on") {
+    console.log("fan3은 on이다");
+    onList.push("fan3");
   }
-  if (result.nutrient.status == 'on') {
-    console.log('nutrient은 on이다');
-    onList.push('nutrient');
+  if (result.nutrient.status == "on") {
+    console.log("nutrient은 on이다");
+    onList.push("nutrient");
   }
 
   return onList;
@@ -714,39 +719,39 @@ function addCurrent(onList) {
   const threeFanValue = 1.1;
   const nutrientValue = 5;
 
-  if (onList.includes('fan1')) {
+  if (onList.includes("fan1")) {
     curr += oneFanValue;
-    if (onList.includes('fan2')) {
+    if (onList.includes("fan2")) {
       curr += twoFanValue;
-      if (onList.includes('fan3')) {
+      if (onList.includes("fan3")) {
         curr += threeFanValue;
       }
-    } else if (onList.includes('fan3')) {
+    } else if (onList.includes("fan3")) {
       curr += twoFanValue;
     }
-  } else if (onList.includes('fan2')) {
+  } else if (onList.includes("fan2")) {
     curr += oneFanValue;
-    if (onList.includes('fan1')) {
+    if (onList.includes("fan1")) {
       curr += twoFanValue;
-      if (onList.includes('fan3')) {
+      if (onList.includes("fan3")) {
         curr += threeFanValue;
       }
-    } else if (onList.includes('fan3')) {
+    } else if (onList.includes("fan3")) {
       curr += twoFanValue;
     }
-  } else if (onList.includes('fan3')) {
+  } else if (onList.includes("fan3")) {
     curr += oneFanValue;
-    if (onList.includes('fan2')) {
+    if (onList.includes("fan2")) {
       curr += twoFanValue;
-      if (onList.includes('fan1')) {
+      if (onList.includes("fan1")) {
         curr += threeFanValue;
       }
-    } else if (onList.includes('fan1')) {
+    } else if (onList.includes("fan1")) {
       curr += twoFanValue;
     }
   }
 
-  if (onList.includes('nutrient')) {
+  if (onList.includes("nutrient")) {
     curr += nutrientValue;
   }
 
@@ -755,10 +760,10 @@ function addCurrent(onList) {
 
 function invalidInsideMainSensorData(list) {
   try {
-    const inTemp = 'inTemp';
-    const inHumi = 'inHumi';
-    const inInsol = 'inInsol';
-    const co2 = 'co2';
+    const inTemp = "inTemp";
+    const inHumi = "inHumi";
+    const inInsol = "inInsol";
+    const co2 = "co2";
     const invalidList = [inTemp, inHumi, inInsol, co2];
     const sortBy = [inTemp, inHumi, inInsol, co2];
     const sortArr = [];
@@ -809,11 +814,11 @@ function invalidInsideMainSensorData(list) {
 }
 
 function invalidOutsideMainSensorData(list) {
-  const sensorName1 = 'outTemp';
-  const sensorName2 = 'outHumi';
-  const sensorName3 = 'rf';
-  const sensorName4 = 'outInsol';
-  const sensorName5 = 'ws';
+  const sensorName1 = "outTemp";
+  const sensorName2 = "outHumi";
+  const sensorName3 = "rf";
+  const sensorName4 = "outInsol";
+  const sensorName5 = "ws";
   const invalidList = [
     sensorName1,
     sensorName2,
@@ -895,22 +900,22 @@ function removeFromArray(invalidList, sensorName) {
 }
 
 function isDeviceNameAndActive(deviceName, active) {
-  if (deviceName == 'fan1' || deviceName == 'fan2' || deviceName == 'fan3') {
-    if (active == 'on' || active == 'stop') {
+  if (deviceName == "fan1" || deviceName == "fan2" || deviceName == "fan3") {
+    if (active == "on" || active == "stop") {
       return false;
     } else {
       return true;
     }
   } else if (
-    deviceName == 'shutter1' ||
-    deviceName == 'shutter2' ||
-    deviceName == 'shutter3' ||
-    deviceName == 'shutter4' ||
-    deviceName == 'shutter5' ||
-    deviceName == 'shutter6' ||
-    deviceName == 'shutter7'
+    deviceName == "shutter1" ||
+    deviceName == "shutter2" ||
+    deviceName == "shutter3" ||
+    deviceName == "shutter4" ||
+    deviceName == "shutter5" ||
+    deviceName == "shutter6" ||
+    deviceName == "shutter7"
   ) {
-    if (active == 'open' || active == 'close' || active == 'stop') {
+    if (active == "open" || active == "close" || active == "stop") {
       return false;
     } else {
       return true;
@@ -926,16 +931,16 @@ function statisticsStatusCode(result, reqDatetime, resDatetime) {
   };
   if (this.dataExistsOrNot(result)) {
     response.header = {
-      resultCode: '00',
-      resultMsg: 'NORMAL_SERVICE',
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
     response.body = result[0];
   } else if (!this.dataExistsOrNot(result)) {
     response.header = {
-      resultCode: '02',
-      resultMsg: 'NO_DATA_ERROR',
+      resultCode: "02",
+      resultMsg: "NO_DATA_ERROR",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
@@ -950,16 +955,16 @@ function procedureResultStatusCode(result, reqDatetime, resDatetime) {
   };
   if (this.dataExistsOrNot(result)) {
     response.header = {
-      resultCode: '00',
-      resultMsg: 'NORMAL_SERVICE',
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
-    response.body = result[0][0];
+    response.body = result[0];
   } else if (!this.dataExistsOrNot(result)) {
     response.header = {
-      resultCode: '02',
-      resultMsg: 'NO_DATA_ERROR',
+      resultCode: "02",
+      resultMsg: "NO_DATA_ERROR",
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
@@ -976,8 +981,8 @@ function statisticsStatusCodeInvalidRequestPararmeterError(
     header: {},
   };
   response.header = {
-    resultCode: '10',
-    resultMsg: 'INVALID_REQUEST_PARAMETER_ERROR',
+    resultCode: "10",
+    resultMsg: "INVALID_REQUEST_PARAMETER_ERROR",
     requestDatetime: reqDatetime,
     responseDatetime: resDatetime,
   };
@@ -988,20 +993,20 @@ function statisticsStatusCodeInvalidRequestPararmeterError(
 function transDecimalAndIntegerMainOutsideSensorData(result) {
   const transResult = result[0].map((data) => {
     if (
-      data['sensor_name'] == 'outTemp' ||
-      data['sensor_name'] == 'ws' ||
-      data['sensor_name'] == 'rf'
+      data["sensor_name"] == "outTemp" ||
+      data["sensor_name"] == "ws" ||
+      data["sensor_name"] == "rf"
     ) {
       return {
-        sensor_name: data['sensor_name'],
-        sensor_data_value: Number(data['sensor_data_value']).toFixed(1),
-        sensor_data_created_at: data['sensor_data_created_at'],
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(1),
+        sensor_data_created_at: data["sensor_data_created_at"],
       };
     } else {
       return {
-        sensor_name: data['sensor_name'],
-        sensor_data_value: Number(data['sensor_data_value']).toFixed(0),
-        sensor_data_created_at: data['sensor_data_created_at'],
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(0),
+        sensor_data_created_at: data["sensor_data_created_at"],
       };
     }
   });
@@ -1010,17 +1015,17 @@ function transDecimalAndIntegerMainOutsideSensorData(result) {
 
 function transDecimalAndIntegerMainInsideSensorData(result) {
   const transResult = result[0].map((data) => {
-    if (data['sensor_name'] == 'co2Temp') {
+    if (data["sensor_name"] == "co2Temp") {
       return {
-        sensor_name: data['sensor_name'],
-        sensor_data_value: Number(data['sensor_data_value']).toFixed(1),
-        sensor_data_created_at: data['sensor_data_created_at'],
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(1),
+        sensor_data_created_at: data["sensor_data_created_at"],
       };
     } else {
       return {
-        sensor_name: data['sensor_name'],
-        sensor_data_value: Number(data['sensor_data_value']).toFixed(0),
-        sensor_data_created_at: data['sensor_data_created_at'],
+        sensor_name: data["sensor_name"],
+        sensor_data_value: Number(data["sensor_data_value"]).toFixed(0),
+        sensor_data_created_at: data["sensor_data_created_at"],
       };
     }
   });
@@ -1030,8 +1035,8 @@ function transDecimalAndIntegerMainInsideSensorData(result) {
 function timeOutError() {
   return {
     header: {
-      resultCode: '04',
-      resultMsg: 'TIME_OUT_ERROR',
+      resultCode: "04",
+      resultMsg: "TIME_OUT_ERROR",
     },
   };
 }

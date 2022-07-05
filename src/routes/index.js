@@ -5,6 +5,7 @@ const { verifyToken } = require("../lib/middleware");
 const loadSensorData = require("./loadSensorData");
 const actuator = require("./actuator");
 const { ipAndUrl } = require("../lib/middleware");
+const nt = require("../controllers/nutrient");
 
 router.use("/load-sensor-data", loadSensorData);
 router.use("/operate-actuator", actuator);
@@ -19,5 +20,6 @@ router.post(
   ctrl.process.updateSensorSettingValue
 );
 router.post("/token-v1", ipAndUrl, verifyToken, ctrl.process.tokenV1);
+router.post("/test", nt.nutrient.test);
 
 module.exports = router;

@@ -1,10 +1,10 @@
-const DataAccess = require('./DataAccess');
-const moment = require('moment');
-const fn = require('../lib/fn');
-const daFn = require('../lib/databaseAccessFn');
-const io = require('../utils/io');
-const logger = require('../config/logger');
-const axios = require('axios');
+const DataAccess = require("./DataAccess");
+const moment = require("moment");
+const fn = require("../lib/fn");
+const daFn = require("../lib/databaseAccessFn");
+const io = require("../utils/io");
+const logger = require("../config/logger");
+const axios = require("axios");
 
 class SensorData {
   constructor(body) {
@@ -14,7 +14,7 @@ class SensorData {
   async #trycatch(a, reqDatetime) {
     try {
       const result = await a;
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
         result[0],
@@ -25,7 +25,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function trycatch() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -46,7 +46,7 @@ class SensorData {
     //  } catch (error) {
     //    console.log(error);
     //  }
-    const insertDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));
     try {
@@ -66,30 +66,30 @@ class SensorData {
 
       if (await daFn.compareMainSensorData(filteringData, agoSensorData)) {
         const data = fn.pickUpInsideData(filteringData, insertDate);
-        console.log('변한 센서 데이터 실내');
+        console.log("변한 센서 데이터 실내");
         const response = {
           header: {
-            resultCode: '00',
-            resultMsg: 'NORMAL_SERVICE',
+            resultCode: "00",
+            resultMsg: "NORMAL_SERVICE",
           },
           body: data,
         };
-        io.mainData.emit('insideSensorData', response);
+        io.mainData.emit("insideSensorData", response);
 
         console.log(data);
       }
 
       if (await daFn.compareOutsideSensorData(filteringData, agoSensorData)) {
         const data = fn.pickUpOutsideData(filteringData, insertDate);
-        console.log('변한 센서 데이터 실외');
+        console.log("변한 센서 데이터 실외");
         const response = {
           header: {
-            resultCode: '00',
-            resultMsg: 'NORMAL_SERVICE',
+            resultCode: "00",
+            resultMsg: "NORMAL_SERVICE",
           },
           body: data,
         };
-        io.mainData.emit('outsideSensorData', response);
+        io.mainData.emit("outsideSensorData", response);
         console.log(data);
       }
 
@@ -98,7 +98,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function saveSensorData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
 
@@ -118,7 +118,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function loadLatelySensorData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -126,11 +126,11 @@ class SensorData {
   }
 
   async mainInsideSensorData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainInsideSensorData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const transResult = fn.transDecimalAndIntegerMainInsideSensorData(result);
 
@@ -144,7 +144,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function mainInsideSensorData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -152,14 +152,14 @@ class SensorData {
   }
 
   async mainOutsideSensorData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.mainOutsideSensorData();
 
       const transResult =
         fn.transDecimalAndIntegerMainOutsideSensorData(result);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       return fn.responseHeaderNormalServiceOrNotDataError(
         fn.dataExistsOrNot(result),
         transResult,
@@ -170,7 +170,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function mainOutsideSensorData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -181,23 +181,23 @@ class SensorData {
     const response = {
       header: {},
     };
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
       const result = await DataAccess.readBedData();
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       if (fn.dataExistsOrNot(result)) {
         response.header = {
-          resultCode: '00',
-          resultMsg: 'NORMAL_SERVICE',
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
           reqDatetime,
           resDatetime,
         };
         response.body = result[0];
       } else if (!fn.dataExistsOrNot(result)) {
         response.header = {
-          resultCode: '02',
-          resultMsg: 'NO_DATA_ERROR',
+          resultCode: "02",
+          resultMsg: "NO_DATA_ERROR",
           reqDatetime,
           resDatetime,
         };
@@ -208,7 +208,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function readBedData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -229,7 +229,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function updateSensorSettingValue() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError();
@@ -238,7 +238,7 @@ class SensorData {
 
   async loadMinutesSensorData() {
     const { startDate, endDate } = this.#getDate();
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     return this.#trycatch(
       DataAccess.loadMinutesSensorData(startDate, endDate),
       reqDatetime
@@ -248,20 +248,20 @@ class SensorData {
   async loadHoursSensorData() {
     const { what } = this.body;
     const settingDate = moment()
-      .subtract(5, 'hours')
-      .format('YYYY-MM-DD HH:mm:ss');
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      .subtract(5, "hours")
+      .format("YYYY-MM-DD HH:mm:ss");
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const { id1, id2 } = fn.hoursSensorDataFilter(what);
 
-    if (what === 'co2') {
+    if (what === "co2") {
       return this.#trycatch(
         DataAccess.loadHoursCo2SensorData(settingDate, id1),
         reqDatetime
       );
     } else if (
-      what == 'temperature' ||
-      what == 'humidity' ||
-      what == 'insolation'
+      what == "temperature" ||
+      what == "humidity" ||
+      what == "insolation"
     ) {
       return this.#trycatch(
         DataAccess.loadHoursSensorData(settingDate, id1, id2),
@@ -274,7 +274,7 @@ class SensorData {
 
   async loadDaysSensorData() {
     const { startDate, endDate } = this.#getDate();
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     return this.#trycatch(
       DataAccess.loadDaysSensorData(startDate, endDate, reqDatetime)
     );
@@ -282,7 +282,7 @@ class SensorData {
 
   async loadMonthsSensorData() {
     const { startDate, endDate } = this.#getDate();
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     return this.#trycatch(
       DataAccess.loadMonthsSensorData(startDate, endDate, reqDatetime)
     );
@@ -290,26 +290,26 @@ class SensorData {
 
   async loadYearsSensorData() {
     const { startDate, endDate } = this.#getDate();
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     return this.#trycatch(
       DataAccess.loadYearsSensorData(startDate, endDate, reqDatetime)
     );
   }
 
   async hourConsumptionData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const result = await DataAccess.hourConsumptionData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function hourConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -317,19 +317,19 @@ class SensorData {
   }
 
   async dayConsumptionData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const result = await DataAccess.dayConsumptionData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function dayConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -337,19 +337,19 @@ class SensorData {
   }
 
   async monthConsumptionData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const result = await DataAccess.monthConsumptionData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function monthConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -357,19 +357,19 @@ class SensorData {
   }
 
   async yearConsumptionData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const result = await DataAccess.yearConsumptionData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function yearConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -377,12 +377,12 @@ class SensorData {
   }
 
   async accumulateConsumptionData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       const result = await DataAccess.accumulateConsumptionData();
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const response = fn.normalServiceIncludBody(
         result,
@@ -395,7 +395,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function accumulateConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -406,28 +406,28 @@ class SensorData {
     const { what, startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     let result;
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
         );
       }
-      if (what == 'hour') {
+      if (what == "hour") {
         result = await DataAccess.hourlyConsumptionData(startDate, endDate);
-      } else if (what == 'day') {
+      } else if (what == "day") {
         result = await DataAccess.dailyConsumptionData(startDate, endDate);
-      } else if (what == 'month') {
+      } else if (what == "month") {
         result = await DataAccess.monthlyConsumptionData(startDate, endDate);
-      } else if (what == 'year') {
+      } else if (what == "year") {
         result = await DataAccess.yearlyConsumptionData(startDate, endDate);
       } else {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
@@ -435,7 +435,7 @@ class SensorData {
         );
       }
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const response = fn.normalServiceIncludBody(
         result,
@@ -448,7 +448,7 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function statisticsConsumptionData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -459,11 +459,11 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -472,14 +472,14 @@ class SensorData {
 
       const result = await DataAccess.sensorDataMinutely(startDate, endDate);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.statisticsStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function sensorDataMinutely() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -490,11 +490,13 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
-
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    console.log(startDate, endDate);
     try {
+      console.log("#@#@#@$@$@$@$@");
+      console.log(fn.dateChecker(startDate, endDate));
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -502,15 +504,15 @@ class SensorData {
       }
 
       const result = await DataAccess.sensorDataHourly(startDate, endDate);
-      console.log(result);
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.procedureResultStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function sensorDataHourly() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -521,11 +523,11 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -534,14 +536,14 @@ class SensorData {
 
       const result = await DataAccess.sensorDataDaily(startDate, endDate);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.procedureResultStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function sensorDataDaily() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -552,11 +554,11 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -565,14 +567,14 @@ class SensorData {
 
       const result = await DataAccess.sensorDataMonthly(startDate, endDate);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.procedureResultStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function sensorDataMonthly() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -583,11 +585,11 @@ class SensorData {
     const { startDate } = this.body;
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
     try {
       if (fn.dateChecker(startDate, endDate)) {
-        const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
           reqDatetime,
           resDatetime
@@ -596,14 +598,14 @@ class SensorData {
 
       const result = await DataAccess.sensorDataYearly(startDate, endDate);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       return fn.procedureResultStatusCode(result, reqDatetime, resDatetime);
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function sensorDataYearly() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return fn.invalidRequestParameterError;
@@ -611,27 +613,27 @@ class SensorData {
   }
 
   async socketConsumptionHourData() {
-    const reqDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const today = moment();
-    const startDate = today.format('YYYY-MM-DD 00:00:00');
-    const endDate = today.format('YYYY-MM-DD 23:59:59');
+    const startDate = today.format("YYYY-MM-DD 00:00:00");
+    const endDate = today.format("YYYY-MM-DD 23:59:59");
     try {
       const result = await DataAccess.hourlyConsumptionData(startDate, endDate);
 
-      const resDatetime = moment().format('YYYY-MM-DD HH:mm:ss');
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       const response = fn.normalServiceIncludBody(
         result,
         reqDatetime,
         resDatetime
       );
-      io.mainData.emit('consumptionHourData', response);
+      io.mainData.emit("consumptionHourData", response);
 
       return;
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function socketConsumptionHourData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return;
@@ -642,14 +644,14 @@ class SensorData {
     try {
       const result = await this.dayConsumptionData();
 
-      io.mainData.emit('consumptionAccumulatedDayData', result);
+      io.mainData.emit("consumptionAccumulatedDayData", result);
 
       return;
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function socketConsumptionDayData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return;
@@ -660,13 +662,13 @@ class SensorData {
     try {
       const result = await this.readBedData();
 
-      io.mainData.emit('bedData', result);
+      io.mainData.emit("bedData", result);
       return;
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function socketBedData() error : ${
-          error ?? 'not load error contents'
+          error ?? "not load error contents"
         }`
       );
       return;

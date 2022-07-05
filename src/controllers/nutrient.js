@@ -11,9 +11,9 @@ const nutrient = {
     const result = await actuatorControl.stop();
     res.json(result);
   },
-  nutricultureMachineStatus: async (req, res) => {
+  databaseNutriculureMachineStatus: async (req, res) => {
     const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.nutricultureMachineStatus();
+    const result = await actuatorControl.databaseNutriculureMachineStatus();
     res.json(result);
   },
   easySelection: async (req, res) => {
@@ -64,6 +64,11 @@ const nutrient = {
   detailSetting: async (req, res) => {
     const actuatorControl = new ActuatorControl(req.body);
     const result = await actuatorControl.detailSetting();
+    res.json(result);
+  },
+  test: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.databaseNutriculureMachineStatus();
     res.json(result);
   },
 };
