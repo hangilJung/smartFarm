@@ -491,10 +491,8 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    console.log(startDate, endDate);
+
     try {
-      console.log("#@#@#@$@$@$@$@");
-      console.log(fn.dateChecker(startDate, endDate));
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(

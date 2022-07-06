@@ -960,7 +960,7 @@ function procedureResultStatusCode(result, reqDatetime, resDatetime) {
       requestDatetime: reqDatetime,
       responseDatetime: resDatetime,
     };
-    response.body = result[0];
+    response.body = result[0][0];
   } else if (!this.dataExistsOrNot(result)) {
     response.header = {
       resultCode: "02",
