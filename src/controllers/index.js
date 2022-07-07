@@ -60,10 +60,10 @@ const test = {
     const result = await sensorData.loadSensorDataAll();
     res.json(result);
   },
-  test: async (req, res) => {
-    const actuatorControl = new ActuatorControl();
-    const result = await actuatorControl.test();
-    res.json(result);
+  test: async () => {
+    const sensorData = new SensorData();
+    const result = await sensorData.detectSensorData();
+    return result;
   },
 };
 

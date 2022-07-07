@@ -672,6 +672,22 @@ class SensorData {
       return;
     }
   }
+
+  async detectSensorData() {
+    try {
+      const result = await DataAccess.detectSensorData();
+      logger.info(JSON.stringify(fn.insertNull(fn.noId(result[0]))));
+
+      return result[0];
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function detectSensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
 }
 
 module.exports = SensorData;

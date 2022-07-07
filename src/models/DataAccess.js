@@ -390,6 +390,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async detectSensorData() {
+    const sql = query.detectSaveSensorData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

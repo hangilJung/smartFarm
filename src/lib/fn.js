@@ -1041,6 +1041,137 @@ function timeOutError() {
   };
 }
 
+function noId(readData) {
+  const list = readData;
+  let id = [
+    1, 2, 5, 6, 7, 8, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+    28, 29, 30, 31, 32,
+  ];
+
+  for (let i of list) {
+    if (i["sensor_information_id"] === 1) {
+      id = id.filter((data) => {
+        return data !== 1;
+      });
+    } else if (i["sensor_information_id"] === 2) {
+      id = id.filter((data) => {
+        return data !== 2;
+      });
+    } else if (i["sensor_information_id"] === 5) {
+      id = id.filter((data) => {
+        return data !== 5;
+      });
+    } else if (i["sensor_information_id"] === 6) {
+      id = id.filter((data) => {
+        return data !== 6;
+      });
+    } else if (i["sensor_information_id"] === 7) {
+      id = id.filter((data) => {
+        return data !== 7;
+      });
+    } else if (i["sensor_information_id"] === 8) {
+      id = id.filter((data) => {
+        return data !== 8;
+      });
+    } else if (i["sensor_information_id"] === 14) {
+      id = id.filter((data) => {
+        return data !== 14;
+      });
+    } else if (i["sensor_information_id"] === 15) {
+      id = id.filter((data) => {
+        return data !== 15;
+      });
+    } else if (i["sensor_information_id"] === 16) {
+      id = id.filter((data) => {
+        return data !== 16;
+      });
+    } else if (i["sensor_information_id"] === 17) {
+      id = id.filter((data) => {
+        return data !== 17;
+      });
+    } else if (i["sensor_information_id"] === 18) {
+      id = id.filter((data) => {
+        return data !== 18;
+      });
+    } else if (i["sensor_information_id"] === 19) {
+      id = id.filter((data) => {
+        return data !== 19;
+      });
+    } else if (i["sensor_information_id"] === 20) {
+      id = id.filter((data) => {
+        return data !== 20;
+      });
+    } else if (i["sensor_information_id"] === 21) {
+      id = id.filter((data) => {
+        return data !== 21;
+      });
+    } else if (i["sensor_information_id"] === 22) {
+      id = id.filter((data) => {
+        return data !== 22;
+      });
+    } else if (i["sensor_information_id"] === 23) {
+      id = id.filter((data) => {
+        return data !== 23;
+      });
+    } else if (i["sensor_information_id"] === 24) {
+      id = id.filter((data) => {
+        return data !== 24;
+      });
+    } else if (i["sensor_information_id"] === 25) {
+      id = id.filter((data) => {
+        return data !== 25;
+      });
+    } else if (i["sensor_information_id"] === 26) {
+      id = id.filter((data) => {
+        return data !== 26;
+      });
+    } else if (i["sensor_information_id"] === 27) {
+      id = id.filter((data) => {
+        return data !== 27;
+      });
+    } else if (i["sensor_information_id"] === 28) {
+      id = id.filter((data) => {
+        return data !== 28;
+      });
+    } else if (i["sensor_information_id"] === 29) {
+      id = id.filter((data) => {
+        return data !== 29;
+      });
+    } else if (i["sensor_information_id"] === 30) {
+      id = id.filter((data) => {
+        return data !== 30;
+      });
+    } else if (i["sensor_information_id"] === 31) {
+      id = id.filter((data) => {
+        return data !== 31;
+      });
+    } else if (i["sensor_information_id"] === 32) {
+      id = id.filter((data) => {
+        return data !== 32;
+      });
+    }
+  }
+
+  return id;
+}
+
+function insertNull(id) {
+  let saveDataList = [];
+  if (id.length > 0) {
+    for (let j of id) {
+      saveDataList.push({
+        sensor_information_id: j,
+        sensor_data_value: null,
+        sensor_data_created_at: moment()
+          .subtract(1, "minutes")
+          .format("YYYY-MM-DD HH:mm:ss"),
+      });
+    }
+  }
+
+  return saveDataList;
+}
+
 module.exports = {
   responseHeaderAndBody,
   nutrientStatusCode,
@@ -1096,4 +1227,6 @@ module.exports = {
   transDecimalAndIntegerMainInsideSensorData,
   timeOutError,
   procedureResultStatusCode,
+  insertNull,
+  noId,
 };

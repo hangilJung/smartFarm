@@ -20,6 +20,6 @@ router.post(
   ctrl.process.updateSensorSettingValue
 );
 router.post("/token-v1", ipAndUrl, verifyToken, ctrl.process.tokenV1);
-router.post("/test", nt.nutrient.test);
+router.post("/test", ctrl.test.test);
 
 module.exports = router;
