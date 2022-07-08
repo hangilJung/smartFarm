@@ -1,5 +1,9 @@
 const pool = require("../config/db");
-const { multipleConditions, nutrientMultipleConditions } = require("../lib/fn");
+const {
+  multipleConditions,
+  nutrientMultipleConditions,
+  multipleConditionId,
+} = require("../lib/fn");
 const query = require("./query");
 const logger = require("../config/logger");
 
@@ -29,16 +33,10 @@ class DataAccess {
 
   static async saveSensorData(convertData, insertDate) {
     const sql = query.saveData;
-    let result;
-    let ctn = 0;
 
     try {
       for (let i = 0; i < convertData.length; i++) {
         pool.query(sql, multipleConditions(i, convertData, insertDate));
-
-        // if (result[0].affectedRows > 0) {
-        //   ctn += 1;
-        // }
       }
 
       return "success";
@@ -46,6 +44,26 @@ class DataAccess {
       console.log(error);
       logger.error(
         `src/models/DataAccess.js function saveSensorData() ${
+          error ?? "not load error contents"
+        }`
+      );
+      return error;
+    }
+  }
+
+  static async saveSensorDataSensorInformationId(convertData, insertDate) {
+    const sql = query.saveDataId;
+
+    try {
+      for (let i = 0; i < convertData.length; i++) {
+        pool.query(sql, multipleConditionId(i, convertData, insertDate));
+      }
+
+      return "success";
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/DataAccess.js function saveSensorDataSensorInformationId() ${
           error ?? "not load error contents"
         }`
       );

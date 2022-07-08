@@ -4,46 +4,6 @@ const logger = require("../config/logger");
 
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
-  const sensorList = [
-    "soilTemp1",
-    "soilHumi1",
-    "soilEc1",
-    "soilPh1",
-    "soilTemp2",
-    "soilHumi2",
-    "soilEc2",
-    "soilPh2",
-    "soilTemp3",
-    "soilHumi3",
-    "soilEc3",
-    "soilPh3",
-    "soilTemp4",
-    "soilHumi4",
-    "soilEc4",
-    "soilPh4",
-    "inTemp",
-    "inHumi",
-    "inPress",
-    "inInsol",
-    "co2",
-    "co2Temp",
-    "co2Humi",
-    "outTemp",
-    "outHumi",
-    "outPress",
-    "outInsol",
-    "ws",
-    "rf",
-  ];
-  const consumptionList = [
-    "actPow",
-    "reactPow",
-    "aVol",
-    "aCur",
-    "aVolCurAng",
-    "aFac",
-    "totActPow",
-  ];
 
   for (let j of body["data"]) {
     if (fiteringName(j["name"])) {

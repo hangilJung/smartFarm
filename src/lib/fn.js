@@ -25,6 +25,11 @@ function multipleConditions(i, convertData, insertDate) {
   return condition;
 }
 
+function multipleConditionId(i, convertData, insertDate) {
+  let condition = [convertData[i]["id"], convertData[i]["value"], insertDate];
+  return condition;
+}
+
 function dataExistsOrNot(result) {
   return result[0].length > 0;
 }
@@ -268,10 +273,13 @@ function dateChecker(start_date, end_date) {
 function addEndDate(endDatetime) {
   let endDate = endDatetime;
   const nowDate = moment().format("YYYYMMDDHHmmss");
-  const nowDay = moment().format("YYYY-MM-DD");
-  const nowTime = moment().subtract(1, "hours").format("HH:00:00");
-  if (Number(moment(endDate).format("YYYYMMDDHHmmss")) > Number(nowDate)) {
-    return moment(nowDay + " " + nowTime).format("YYYY-MM-DD HH:mm:ss");
+  const nowTime = moment().format("HH");
+
+  if (
+    Number(moment(endDate).format("YYYYMMDDHHmmss")) > Number(nowDate) ||
+    Number(moment(endDate).format("HH")) === Number(nowTime)
+  ) {
+    return moment().subtract(1, "hours").format("YYYY-MM-DD HH:mm:ss");
   }
   return momentAddDatetime(endDate, "seconds");
 }
@@ -644,6 +652,19 @@ function normalServiceIncludBody(result, reqDatetime, resDatetime) {
       responseDatetime: resDatetime,
     },
     body: result[0],
+  };
+  return response;
+}
+
+function normalServiceIncludBodyProcedure(result, reqDatetime, resDatetime) {
+  const response = {
+    header: {
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    },
+    body: result[0][0],
   };
   return response;
 }
@@ -1157,19 +1178,17 @@ function noId(readData) {
 
 function insertNull(id) {
   let saveDataList = [];
+  const time = moment().subtract(1, "minutes").format("YYYY-MM-DD HH:mm:ss");
   if (id.length > 0) {
     for (let j of id) {
       saveDataList.push({
-        sensor_information_id: j,
-        sensor_data_value: null,
-        sensor_data_created_at: moment()
-          .subtract(1, "minutes")
-          .format("YYYY-MM-DD HH:mm:ss"),
+        id: j,
+        value: null,
       });
     }
   }
 
-  return saveDataList;
+  return { saveDataList, time };
 }
 
 module.exports = {
@@ -1229,4 +1248,6 @@ module.exports = {
   procedureResultStatusCode,
   insertNull,
   noId,
+  multipleConditionId,
+  normalServiceIncludBodyProcedure,
 };

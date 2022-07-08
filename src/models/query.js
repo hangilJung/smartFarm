@@ -18,6 +18,14 @@ const query = {
                 where
                     sensor_name = ?) 
                 , ?, ?) ;`,
+  saveDataId: `
+            insert into 
+                sensor_data (
+                            sensor_information_id,
+                            sensor_data_value,
+                            sensor_data_created_at
+                            )
+            values(?,?,?);`,
   loadSensorData: `select 
                         si.sensor_information_id,
                         si.sensor_node_id,
@@ -231,6 +239,8 @@ const query = {
                         and
                             sensor_information_id in (?, ?)
                         group by
+                            year(sd.sensor_data_created_at),
+                            month(sd.sensor_data_created_at),
                             day(sd.sensor_data_created_at),
                             hour(sd.sensor_data_created_at),                            
                             sd.sensor_information_id
@@ -249,6 +259,8 @@ const query = {
                         and
                             sensor_information_id in (?)
                         group by
+                            year(sd.sensor_data_created_at),
+                            month(sd.sensor_data_created_at),
                             day(sd.sensor_data_created_at),
                             hour(sd.sensor_data_created_at),                            
                             sd.sensor_information_id
@@ -331,7 +343,7 @@ const query = {
   mainInsideSensorData: `                
                     select 
                         si.sensor_name,
-                        cast((sd.sensor_data_value) as decimal(5, 0)) as sensor_data_value,
+                        cast((ifnull(sd.sensor_data_value, -500)) as decimal(5, 0)) as sensor_data_value,
                         sd.sensor_data_created_at 
                     from 
                         sensor_information si 
@@ -356,7 +368,7 @@ const query = {
   mainOutsideSensorData: `                
                     select 
                         si.sensor_name,
-                        cast((sd.sensor_data_value) as decimal(5, 1)) as sensor_data_value,
+                        cast((ifnull(sd.sensor_data_value, -500)) as decimal(5, 0)) as sensor_data_value,
                         sd.sensor_data_created_at 
                     from 
                         sensor_information si 
@@ -437,7 +449,7 @@ const query = {
                     (   
                     select 
                         sd.sensor_information_id as sensor_information_id,
-                        cast(avg((sd.sensor_data_value)) as decimal(5, 1)) as sensor_data_value,
+                        cast(ifnull(avg((sd.sensor_data_value)), null) as decimal(5, 1)) as sensor_data_value,
                         date_format(sd.sensor_data_created_at, '%Y-%m-%d %H:00:00') as sensor_data_created_at
                     from 
                         sensor_data sd
@@ -446,6 +458,8 @@ const query = {
                     and
                         sd.sensor_information_id in(14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29)
                     group by
+                        year(sd.sensor_data_created_at),
+                        month(sd.sensor_data_created_at),
                         day(sd.sensor_data_created_at),
                         hour(sd.sensor_data_created_at),
                         sd.sensor_information_id
@@ -662,62 +676,10 @@ const query = {
                                                         )
                             and
                                 sensor_information_id = 40;`,
-  hourlyConsumptionData: `
-                        select
-                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
-                            created_at
-                        from 
-                            power_consumption_data pcd
-                        where
-                            created_at >= ?
-                        and
-                            created_at < ?
-                        group by
-                            year(created_at),
-                            month(created_at),
-                            day(created_at),
-                            hour(created_at)
-                        order by
-                            created_at;`,
-  dailyConsumptionData: `
-                        select
-                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
-                            date_format(created_at, '%Y-%m-%d') as created_at
-                        from 
-                            power_consumption_data pcd
-                        where
-                            created_at >= ?
-                        and
-                            created_at < ?
-                        group by
-                            year(created_at),
-                            month(created_at),
-                            day(created_at);`,
-  monthlyConsumptionData: `
-                        select
-                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
-                            date_format(created_at, '%Y-%m') as created_at
-                        from 
-                            power_consumption_data pcd
-                        where
-                            created_at >= ?
-                        and
-                            created_at < ?
-                        group by
-                            year(created_at),
-                            month(created_at);`,
-  yearlyConsumptionData: `
-                        select
-                            cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
-                            date_format(created_at, '%Y') as created_at
-                        from 
-                            power_consumption_data pcd
-                        where
-                            created_at >= ?
-                        and
-                            created_at < ?
-                        group by
-                            year(created_at);`,
+  hourlyConsumptionData: `call power_consumption_hour(?,?);`,
+  dailyConsumptionData: `call power_consumption_day(?,?);`,
+  monthlyConsumptionData: `call power_consumption_month(?,?);`,
+  yearlyConsumptionData: `call power_consumption_year(?,?);`,
   sensorDataMinutely: `
                     select 
                         sd.sensor_information_id,

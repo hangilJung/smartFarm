@@ -437,7 +437,7 @@ class SensorData {
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const response = fn.normalServiceIncludBody(
+      const response = fn.normalServiceIncludBodyProcedure(
         result,
         reqDatetime,
         resDatetime
@@ -491,7 +491,7 @@ class SensorData {
     let { endDate } = this.body;
     endDate = fn.addEndDate(endDate);
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-
+    console.log("endDate : ", endDate);
     try {
       if (fn.dateChecker(startDate, endDate)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -676,9 +676,19 @@ class SensorData {
   async detectSensorData() {
     try {
       const result = await DataAccess.detectSensorData();
-      logger.info(JSON.stringify(fn.insertNull(fn.noId(result[0]))));
+      const isData = fn.insertNull(fn.noId(result[0]));
+      logger.info(JSON.stringify(isData));
 
-      return result[0];
+      if (isData["saveDataList"].length > 0) {
+        DataAccess.saveSensorDataSensorInformationId(
+          isData["saveDataList"],
+          isData["time"]
+        );
+        logger.info(JSON.stringify(isData["saveDataList"]));
+        logger.info(JSON.stringify(isData["time"]));
+        logger.info("save sensor data to detectSensorData");
+      }
+      return;
     } catch (error) {
       console.log(error);
       logger.error(
