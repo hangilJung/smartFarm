@@ -397,6 +397,7 @@ function invalidRequestParameterError() {
 }
 
 function fanInvalidRequestParameterError() {
+  console.log("error 쪽 INVALID_REQUEST_PARAMETER_ERROR");
   const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
   const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 

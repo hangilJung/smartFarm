@@ -15,41 +15,46 @@ class ActuatorControl {
   }
 
   async simpleActuatorControl() {
-    const { deviceName, active } = this.body;
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const device = actu.deviceList[deviceName];
-
-    let finalResult;
-
-    const ctrl = {
-      farmlandId: 1,
-      data: [
-        {
-          bedId: 5,
-          device,
-          active,
-          device_name: deviceName,
-          datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-          dev_data: [],
-        },
-      ],
-    };
-
-    if (
-      fn.parameterIsUndefinded(actu.activeList[active]) ||
-      fn.isDeviceNameAndActive(deviceName, active)
-    ) {
-      return fn.invalidRequestParameterError();
-    }
-
     try {
+      const { deviceName, active } = this.body;
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const device = await actu.deviceList[deviceName];
+
+      let finalResult;
+
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device,
+            active,
+            device_name: deviceName,
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+            dev_data: [],
+          },
+        ],
+      };
+
+      if (
+        fn.parameterIsUndefinded(actu.activeList[active]) ||
+        fn.isDeviceNameAndActive(deviceName, active)
+      ) {
+        return fn.invalidRequestParameterError();
+      }
+
       // const content = fn.createCharacter(deviceName, active);
       // console.log(content);
       // DataAccess.actuatorControlActionRecord(deviceName, content);
-      console.log(ctrl);
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      console.log("ctrl임", ctrl);
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl, {
+        timeout: timeoutSettingValue,
+      });
 
+      console.log("axios 다음");
+      console.log(result.data);
       const resultCode = await result["data"]["header"]["resultCode"];
+      console.log("resulCode 다음");
 
       if (result.data === undefined || resultCode == "10") {
         const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
@@ -127,35 +132,70 @@ class ActuatorControl {
     }
   }
 
-  async simpleTest() {
-    const { deviceName, active } = await this.body;
-    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const device = await actu.deviceList[deviceName];
-    let finalResult;
-
-    const ctrl = {
-      farmlandId: 1,
-      data: [
-        {
-          bedId: 5,
-          device,
-          active,
-          device_name: deviceName,
-          datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-          dev_data: [],
-        },
-      ],
-    };
-
-    if (
-      fn.parameterIsUndefinded(actu.activeList[active]) ||
-      fn.isDeviceNameAndActive(deviceName, active)
-    ) {
-      return fn.invalidRequestParameterError();
-    }
-
+  async simpleTest2() {
     try {
-      console.log(ctrl);
+      const { deviceName, active } = await this.body;
+
+      const device = await actu.deviceList[deviceName];
+
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device: device,
+            active: active,
+            device_name: deviceName,
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+            dev_data: [],
+          },
+        ],
+      };
+
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function simpleTest() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
+      return fn.fanInvalidRequestParameterError();
+    }
+  }
+
+  async simpleTest() {
+    try {
+      const { deviceName, active } = await this.body;
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const device = await actu.deviceList[deviceName];
+      let finalResult;
+
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device: device,
+            active: active,
+            device_name: deviceName,
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+            dev_data: [],
+          },
+        ],
+      };
+
+      if (
+        fn.parameterIsUndefinded(actu.activeList[active]) ||
+        fn.isDeviceNameAndActive(deviceName, active)
+      ) {
+        return fn.invalidRequestParameterError();
+      }
+
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       console.log(result.data);
 
