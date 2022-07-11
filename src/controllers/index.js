@@ -50,6 +50,11 @@ const process = {
     const result = await sensorData.updateSensorSettingValue();
     res.json(result);
   },
+  detectSensorData: async (req, res) => {
+    const sensorData = new SensorData();
+    const result = await sensorData.detectSensorData();
+    return result;
+  },
 };
 
 const socketIO = {};

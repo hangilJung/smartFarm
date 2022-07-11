@@ -3,7 +3,7 @@ const ctl = require("../controllers/loadSensorData");
 const schedule = require("node-schedule");
 const DataAccess = require("../models/DataAccess");
 const logger = require("../config/logger");
-const test = require("../controllers/index");
+const dsd = require("../controllers/index");
 
 module.exports = () => {
   setInterval(async () => {
@@ -39,6 +39,6 @@ module.exports = () => {
   schedule.scheduleJob("02 * * * * *", async () => {
     console.log("센서 데이터 없는거 체크");
     logger.info("센서 데이터 없는거 체크");
-    test.test.test();
+    dsd.process.detectSensorData();
   });
 };
