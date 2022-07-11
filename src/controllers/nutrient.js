@@ -92,6 +92,11 @@ const socketIO = {
     const actuatorControl = new ActuatorControl();
     await actuatorControl.loadActuatorRecord();
   },
+  simpleTest: async (req, res) => {
+    const actuatorControl = new ActuatorControl(req.body);
+    const result = await actuatorControl.simpleTest();
+    res.json(result);
+  },
   //테스트 끝
 };
 

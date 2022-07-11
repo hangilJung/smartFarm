@@ -66,8 +66,8 @@ const test = {
     res.json(result);
   },
   test: async () => {
-    const sensorData = new SensorData();
-    const result = await sensorData.detectSensorData();
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.simpleTest();
     return result;
   },
 };

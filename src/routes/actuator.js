@@ -27,4 +27,7 @@ router.post("/detail-setting-tray-is-use", nt.nutrient.detailSettingTrayIsUse);
 router.post("/detail-supply-setting", nt.nutrient.detailSupplySetting);
 router.post("/ec-ph-setting", nt.nutrient.ecPhSetting);
 
+//test
+router.post("/simple-test", nt.socketIO.simpleTest);
+
 module.exports = router;

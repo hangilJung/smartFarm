@@ -18,9 +18,8 @@ class ActuatorControl {
     const { deviceName, active } = this.body;
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     const device = actu.deviceList[deviceName];
-    const response = {
-      header: {},
-    };
+
+    let finalResult;
 
     const ctrl = {
       farmlandId: 1,
@@ -30,13 +29,11 @@ class ActuatorControl {
           device,
           active,
           device_name: deviceName,
-          dev_data: [],
           datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+          dev_data: [],
         },
       ],
     };
-
-    console.log(ctrl);
 
     if (
       fn.parameterIsUndefinded(actu.activeList[active]) ||
@@ -46,74 +43,171 @@ class ActuatorControl {
     }
 
     try {
-      const content = fn.createCharacter(deviceName, active);
-      console.log(content);
-      DataAccess.actuatorControlActionRecord(deviceName, content);
+      // const content = fn.createCharacter(deviceName, active);
+      // console.log(content);
+      // DataAccess.actuatorControlActionRecord(deviceName, content);
+      console.log(ctrl);
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
 
-      // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
-      const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const resultCode = await result["data"]["header"]["resultCode"];
 
-      // if (result.data === undefined) {
-      //   return fn.communicationError("fan");
-      // }
-
-      if (active == "on") {
-        fn.currentValueFsWrite(deviceName, "on");
-      } else {
-        fn.currentValueFsWrite(deviceName, "off");
+      if (result.data === undefined || resultCode == "10") {
+        const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+        return fn.communicationError("fan", reqDatetime, resDatetime);
       }
 
-      // if (
-      //   // result.data.header.resultCode == "00"
-      //   true
-      // ) {
-      //   setTimeout(async () => {
-      //     try {
-      //       const result = await DataAccess.currentAmountOfChange();
-      //       console.log(result[0][0]["sensor_data_value"]);
-      //       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      if (active == "on") {
+        if (resultCode == "00" && true) {
+          await fn.sleep(1000).then(async () => {
+            const result = await DataAccess.currentAmountOfChange();
 
-      //       if (
-      //         result[0][0]["sensor_data_value"] >
-      //         fn.addCurrent(fn.deviceStatus())
-      //       ) {
-      //         response.header = {
-      //           resultCode: "00",
-      //           resultMsg: "NORMAL_SERVICE",
-      //           requestDatetime: reqDatetime,
-      //           responseDatetime: resDatetime,
-      //         };
-      //         response.body = [{ device: device }];
-      //       } else {
-      //         response.header = {
-      //           resultCode: "40",
-      //           resultMsg: "NOT_WORKING",
-      //           requestDatetime: reqDatetime,
-      //           responseDatetime: resDatetime,
-      //         };
-      //         response.body = [{ device: device }];
-      //       }
-      //     } catch (error) {
-      //       console.log(error);
-      //     }
-      //   }, 3000);
-      // }
+            if (
+              result[0][0]["sensor_data_value"] >
+              fn.addCurrent(fn.deviceStatus())
+            ) {
+              fn.currentValueFsWrite(deviceName, "on");
+              const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+              finalResult = fn.simpleResultStatusNormal(
+                reqDatetime,
+                resDatetime,
+                device
+              );
+            } else {
+              const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+              finalResult = fn.simpleResultStatusNotWorking(
+                reqDatetime,
+                resDatetime,
+                device
+              );
+            }
+            return finalResult;
+          });
+        }
+      } else if (active == "stop") {
+        if (resultCode == "00" && true) {
+          await fn.sleep(1000).then(async () => {
+            const result = await DataAccess.currentAmountOfChange();
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      // if (result.data.header == "00" && ctrl.data[0].device == device) {
-      response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
-        requestDatetime: reqDatetime,
-        responseDatetime: resDatetime,
-      };
-      response.body = [{ device: device }];
-      // }
+            if (
+              result[0][0]["sensor_data_value"] <
+              fn.addCurrent(fn.deviceStatus())
+            ) {
+              fn.currentValueFsWrite(deviceName, "off");
+              finalResult = fn.simpleResultStatusNormal(
+                reqDatetime,
+                resDatetime,
+                device
+              );
+            } else {
+              const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+              finalResult = fn.simpleResultStatusNotWorking(
+                reqDatetime,
+                resDatetime,
+                device
+              );
+            }
+            return finalResult;
+          });
+        }
+      }
 
-      return response;
+      return finalResult;
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function simpleActuatorControl() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
+      return fn.fanInvalidRequestParameterError();
+    }
+  }
+
+  async simpleTest() {
+    const { deviceName, active } = await this.body;
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const device = await actu.deviceList[deviceName];
+    let finalResult;
+
+    const ctrl = {
+      farmlandId: 1,
+      data: [
+        {
+          bedId: 5,
+          device,
+          active,
+          device_name: deviceName,
+          datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+          dev_data: [],
+        },
+      ],
+    };
+
+    if (
+      fn.parameterIsUndefinded(actu.activeList[active]) ||
+      fn.isDeviceNameAndActive(deviceName, active)
+    ) {
+      return fn.invalidRequestParameterError();
+    }
+
+    try {
+      console.log(ctrl);
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      console.log(result.data);
+
+      const fanStatus = await result.data.body.data[0].dev_data[0]["status"];
+
+      console.log("@@@@", fanStatus);
+
+      // 테스트 시 지울것 Start
+      // const fanStatus = "off";
+      // 테스트 시 지울것 End
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (active === "on") {
+        if (fanStatus === "on") {
+          fn.currentValueFsWrite(deviceName, "on");
+
+          finalResult = fn.simpleResultStatusNormal(
+            reqDatetime,
+            resDatetime,
+            device
+          );
+        } else if (fanStatus === "off") {
+          finalResult = fn.simpleResultStatusNotWorking(
+            reqDatetime,
+            resDatetime,
+            device
+          );
+        }
+      } else if (active === "stop") {
+        if (fanStatus === "off") {
+          fn.currentValueFsWrite(deviceName, "off");
+
+          finalResult = fn.simpleResultStatusNormal(
+            reqDatetime,
+            resDatetime,
+            device
+          );
+        } else if (fanStatus === "on") {
+          finalResult = fn.simpleResultStatusNotWorking(
+            reqDatetime,
+            resDatetime,
+            device
+          );
+        }
+      }
+
+      return finalResult;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function simpleTest() error : ${
           error ?? "not load error contents"
         }`
       );
@@ -258,7 +352,9 @@ class ActuatorControl {
       //   fn.writeNutreint(actu.nutrient.act.run)
       // );
       // if (result.data === undefined) {
-      //   return fn.communicationError("nutrient");
+      // const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+
+      //   return fn.communicationError("nutrient", reqDatetime, resDatetime);
       // }
       // return result.data;
 
@@ -454,10 +550,11 @@ class ActuatorControl {
       );
 
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
-      if (result["resultCode"] == "10" || result === undefined) {
+      if (result.data["resultCode"] == "10" || result === undefined) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         response.header = {
           resultCode: "10",
@@ -595,7 +692,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -633,7 +731,8 @@ class ActuatorControl {
       );
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -675,7 +774,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -717,7 +817,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -759,7 +860,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -798,7 +900,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -846,7 +949,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -891,7 +995,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();
@@ -933,7 +1038,8 @@ class ActuatorControl {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log(result.data);
       if (result.data === undefined) {
-        return fn.communicationError("nutrient");
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
       }
 
       this.sendToFrontNutrienNewtData();

@@ -388,6 +388,7 @@ function normalService(result) {
 }
 
 function invalidRequestParameterError() {
+  console.log("invalidRequestParmeterError 쪽");
   const response = {
     header: headerStatusCode.invalidRequestParameterError,
   };
@@ -397,7 +398,7 @@ function invalidRequestParameterError() {
 
 function fanInvalidRequestParameterError() {
   const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-  const resDatetime = moment().format("YYYY-MM-DD T HH:mm:ss");
+  const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
   const response = {
     header: {
@@ -628,7 +629,7 @@ function nutrientStatusCode(result, reqDatetime, resDatetime) {
   return response;
 }
 
-function communicationError(device) {
+function communicationError(device, reqDatetime, resDatetime) {
   const response = {
     header: {},
   };
@@ -710,7 +711,7 @@ function currentValueFsWrite(what, status) {
 }
 
 function deviceStatus() {
-  const result = fsRead();
+  const result = currentValueFsRead();
   const onList = [];
 
   if (result.fan1.status == "on") {
@@ -1191,7 +1192,41 @@ function insertNull(id) {
   return { saveDataList, time };
 }
 
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function simpleResultStatusNormal(reqDatetime, resDatetime, device) {
+  const response = {
+    header: {
+      resultCode: "00",
+      resultMsg: "NORMAL_SERVICE",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    },
+    body: [{ device }],
+  };
+
+  return response;
+}
+
+function simpleResultStatusNotWorking(reqDatetime, resDatetime, device) {
+  const response = {
+    header: {
+      resultCode: "40",
+      resultMsg: "NOT_WORKING",
+      requestDatetime: reqDatetime,
+      responseDatetime: resDatetime,
+    },
+    body: [{ device }],
+  };
+
+  return response;
+}
+
 module.exports = {
+  simpleResultStatusNormal,
+  simpleResultStatusNotWorking,
   responseHeaderAndBody,
   nutrientStatusCode,
   convertBufferDataToJsonFormat,
@@ -1250,4 +1285,5 @@ module.exports = {
   noId,
   multipleConditionId,
   normalServiceIncludBodyProcedure,
+  sleep,
 };

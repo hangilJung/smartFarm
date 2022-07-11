@@ -1,1 +1,1 @@
-{"fan1":{"status":"off","currentValue":0.2},"fan2":{"status":"off","currentValue":0.2},"fan3":{"status":"off","currentValue":0.2},"nutrient":{"status":"off","currentValue":2.8}}
+{"fan1":{"status":"on","currentValue":0.2},"fan2":{"status":"off","currentValue":0.2},"fan3":{"status":"off","currentValue":0.2},"nutrient":{"status":"off","currentValue":2.8}}
