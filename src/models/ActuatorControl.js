@@ -60,7 +60,7 @@ class ActuatorControl {
 
       if (active == "on") {
         if (resultCode == "00" && true) {
-          await fn.sleep(2000).then(async () => {
+          await fn.sleep(3000).then(async () => {
             const result = await DataAccess.currentAmountOfChange();
 
             if (
@@ -87,7 +87,7 @@ class ActuatorControl {
         }
       } else if (active == "stop") {
         if (resultCode == "00" && true) {
-          await fn.sleep(2000).then(async () => {
+          await fn.sleep(3000).then(async () => {
             const result = await DataAccess.currentAmountOfChange();
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -319,9 +319,26 @@ class ActuatorControl {
       header: {},
     };
     try {
+      
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device: "nuctrl",
+            active: "nctrl_write",
+            device_name: "nutrient",
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+            dev_data: [actu.nutrient.act.run],
+          },
+        ],
+      };
+      console.log(ctrl)
+
+
       const result = await axios.post(
         process.env.GATEWAY_SERVER,
-        fn.writeNutreint(actu.nutrient.act.run)
+        ctrl
       );
       if (result.data === undefined) {
         const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
@@ -332,7 +349,7 @@ class ActuatorControl {
       fn.currentValueFsWrite("nutrient", "on");
 
       if (result.data.header.resultCode == "00" && true) {
-        await fn.sleep(2000).then(async () => {
+        await fn.sleep(3000).then(async () => {
           try {
             const result = await DataAccess.currentAmountOfChange();
             console.log(result[0][0]["sensor_data_value"]);
@@ -373,6 +390,7 @@ class ActuatorControl {
         });
       }
 
+
       return response;
     } catch (error) {
       console.log(error);
@@ -391,6 +409,19 @@ class ActuatorControl {
   async stop() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device: "nuctrl",
+            active: "nctrl_write",
+            device_name: "nutrient",
+            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+            dev_data: [actu.nutrient.act.stop],
+          },
+        ],
+      };      
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       if (result.data === undefined) {
         return fn.communicationError("nutrient");

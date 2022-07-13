@@ -41,11 +41,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-    //  try {
-    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
-    //  } catch (error) {
-    //    console.log(error);
-    //  }
+     try {
+     axios.post(process.env.TEST_LOCAL_SERVER, this.body);
+     } catch (error) {
+       console.log(error);
+     }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));

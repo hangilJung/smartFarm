@@ -158,8 +158,8 @@ const nutrient = {
     line_4: { modbus_address: "00163", description: "0", property: "write" },
   },
   act: {
-    run: { modbus_address: "00560", description: "1", property: "write" },
-    stop: { modbus_address: "00561", description: "1", property: "write" },
+    run: { modbus_address: "560", description: "1", property: "write" },
+    stop: { modbus_address: "561", description: "1", property: "write" },
   },
 
   state: {
