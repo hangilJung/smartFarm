@@ -55,6 +55,21 @@ const process = {
     const result = await sensorData.detectSensorData();
     return result;
   },
+  fanStatus: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.fanStatus();
+    res.json(result);
+  },
+  setAction: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.setAction();
+    res.json(result);
+  },
+  readAction: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.readAction();
+    res.json(result);
+  },
 };
 
 const socketIO = {};

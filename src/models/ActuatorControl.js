@@ -51,10 +51,7 @@ class ActuatorControl {
         timeout: timeoutSettingValue,
       });
 
-      console.log("axios 다음");
-      console.log(result.data);
       const resultCode = await result["data"]["header"]["resultCode"];
-      console.log("resulCode 다음");
 
       if (result.data === undefined || resultCode == "10") {
         const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
@@ -63,7 +60,7 @@ class ActuatorControl {
 
       if (active == "on") {
         if (resultCode == "00" && true) {
-          await fn.sleep(1000).then(async () => {
+          await fn.sleep(2000).then(async () => {
             const result = await DataAccess.currentAmountOfChange();
 
             if (
@@ -90,7 +87,7 @@ class ActuatorControl {
         }
       } else if (active == "stop") {
         if (resultCode == "00" && true) {
-          await fn.sleep(1000).then(async () => {
+          await fn.sleep(2000).then(async () => {
             const result = await DataAccess.currentAmountOfChange();
             const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -122,42 +119,6 @@ class ActuatorControl {
       console.log(error);
       logger.error(
         `src/models/ActuatorControl.js function simpleActuatorControl() error : ${
-          error ?? "not load error contents"
-        }`
-      );
-      if (error?.code === "ECONNABORTED") {
-        return fn.timeOutError();
-      }
-      return fn.fanInvalidRequestParameterError();
-    }
-  }
-
-  async simpleTest2() {
-    try {
-      const { deviceName, active } = await this.body;
-
-      const device = await actu.deviceList[deviceName];
-
-      const ctrl = {
-        farmland_id: 1,
-        data: [
-          {
-            bed_id: 5,
-            device: device,
-            active: active,
-            device_name: deviceName,
-            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-            dev_data: [],
-          },
-        ],
-      };
-
-      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
-      console.log(result.data);
-    } catch (error) {
-      console.log(error);
-      logger.error(
-        `src/models/ActuatorControl.js function simpleTest() error : ${
           error ?? "not load error contents"
         }`
       );
@@ -200,12 +161,6 @@ class ActuatorControl {
       console.log(result.data);
 
       const fanStatus = await result.data.body.data[0].dev_data[0]["status"];
-
-      console.log("@@@@", fanStatus);
-
-      // 테스트 시 지울것 Start
-      // const fanStatus = "off";
-      // 테스트 시 지울것 End
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -258,6 +213,43 @@ class ActuatorControl {
     }
   }
 
+  async fanStatus() {
+    try {
+      const fileRead = fn.currentValueFsRead();
+
+      return {
+        header: {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+        },
+        body: [
+          {
+            device: "fan1",
+            status: fileRead["fan1"]["status"],
+          },
+          {
+            device: "fan2",
+            status: fileRead["fan2"]["status"],
+          },
+          {
+            device: "fan3",
+            status: fileRead["fan3"]["status"],
+          },
+        ],
+      };
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function fanStatus() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
+      return fn.fanInvalidRequestParameterError();
+    }
+  }
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
     const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");

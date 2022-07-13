@@ -1225,6 +1225,286 @@ function simpleResultStatusNotWorking(reqDatetime, resDatetime, device) {
   return response;
 }
 
+function invalidActionSettingValue(body) {
+  let result = false;
+
+  const invalidCheck = [
+    "num1TimeHour",
+    "num1TimeMinute",
+    "num1TemperatureMinimum",
+    "num1TemperatureMaximum",
+    "num1HumidityMinimum",
+    "num1HumidityMaximum",
+    "num1InsolationMinimum",
+    "num1InsolationMaximum",
+    "num2TimeHour",
+    "num2TimeMinute",
+    "num2TemperatureMinimum",
+    "num2TemperatureMaximum",
+    "num2HumidityMinimum",
+    "num2HumidityMaximum",
+    "num2InsolationMinimum",
+    "num2InsolationMaximum",
+    "num3TimeHour",
+    "num3TimeMinute",
+    "num3TemperatureMinimum",
+    "num3TemperatureMaximum",
+    "num3HumidityMinimum",
+    "num3HumidityMaximum",
+    "num3InsolationMinimum",
+    "num3InsolationMaximum",
+    "num4TimeHour",
+    "num4TimeMinute",
+    "num4TemperatureMinimum",
+    "num4TemperatureMaximum",
+    "num4HumidityMinimum",
+    "num4HumidityMaximum",
+    "num4InsolationMinimum",
+    "num4InsolationMaximum",
+    "num5TimeHour",
+    "num5TimeMinute",
+    "num5TemperatureMinimum",
+    "num5TemperatureMaximum",
+    "num5HumidityMinimum",
+    "num5HumidityMaximum",
+    "num5InsolationMinimum",
+    "num5InsolationMaximum",
+    "num6TimeHour",
+    "num6TimeMinute",
+    "num6TemperatureMinimum",
+    "num6TemperatureMaximum",
+    "num6HumidityMinimum",
+    "num6HumidityMaximum",
+    "num6InsolationMinimum",
+    "num6InsolationMaximum",
+    "num7TimeHour",
+    "num7TimeMinute",
+    "num7TemperatureMinimum",
+    "num7TemperatureMaximum",
+    "num7HumidityMinimum",
+    "num7HumidityMaximum",
+    "num7InsolationMinimum",
+    "num7InsolationMaximum",
+    "num8TimeHour",
+    "num8TimeMinute",
+    "num8TemperatureMinimum",
+    "num8TemperatureMaximum",
+    "num8HumidityMinimum",
+    "num8HumidityMaximum",
+    "num8InsolationMinimum",
+    "num8InsolationMaximum",
+    "num9TimeHour",
+    "num9TimeMinute",
+    "num9TemperatureMinimum",
+    "num9TemperatureMaximum",
+    "num9HumidityMinimum",
+    "num9HumidityMaximum",
+    "num9InsolationMinimum",
+    "num9InsolationMaximum",
+    "num10TimeHour",
+    "num10TimeMinute",
+    "num10TemperatureMinimum",
+    "num10TemperatureMaximum",
+    "num10HumidityMinimum",
+    "num10HumidityMaximum",
+    "num10InsolationMinimum",
+    "num10InsolationMaximum",
+    "num11TimeHour",
+    "num11TimeMinute",
+    "num11TemperatureMinimum",
+    "num11TemperatureMaximum",
+    "num11HumidityMinimum",
+    "num11HumidityMaximum",
+    "num11InsolationMinimum",
+    "num11InsolationMaximum",
+    "num12TimeHour",
+    "num12TimeMinute",
+    "num12TemperatureMinimum",
+    "num12TemperatureMaximum",
+    "num12HumidityMinimum",
+    "num12HumidityMaximum",
+    "num12InsolationMinimum",
+    "num12InsolationMaximum",
+    "num13TimeHour",
+    "num13TimeMinute",
+    "num13TemperatureMinimum",
+    "num13TemperatureMaximum",
+    "num13HumidityMinimum",
+    "num13HumidityMaximum",
+    "num13InsolationMinimum",
+    "num13InsolationMaximum",
+    "num14TimeHour",
+    "num14TimeMinute",
+    "num14TemperatureMinimum",
+    "num14TemperatureMaximum",
+    "num14HumidityMinimum",
+    "num14HumidityMaximum",
+    "num14InsolationMinimum",
+    "num14InsolationMaximum",
+    "num15TimeHour",
+    "num15TimeMinute",
+    "num15TemperatureMinimum",
+    "num15TemperatureMaximum",
+    "num15HumidityMinimum",
+    "num15HumidityMaximum",
+    "num15InsolationMinimum",
+    "num15InsolationMaximum",
+    "num16TimeHour",
+    "num16TimeMinute",
+    "num16TemperatureMinimum",
+    "num16TemperatureMaximum",
+    "num16HumidityMinimum",
+    "num16HumidityMaximum",
+    "num16InsolationMinimum",
+    "num16InsolationMaximum",
+    "num17TimeHour",
+    "num17TimeMinute",
+    "num17TemperatureMinimum",
+    "num17TemperatureMaximum",
+    "num17HumidityMinimum",
+    "num17HumidityMaximum",
+    "num17InsolationMinimum",
+    "num17InsolationMaximum",
+    "num18TimeHour",
+    "num18TimeMinute",
+    "num18TemperatureMinimum",
+    "num18TemperatureMaximum",
+    "num18HumidityMinimum",
+    "num18HumidityMaximum",
+    "num18InsolationMinimum",
+    "num18InsolationMaximum",
+    "num19TimeHour",
+    "num19TimeMinute",
+    "num19TemperatureMinimum",
+    "num19TemperatureMaximum",
+    "num19HumidityMinimum",
+    "num19HumidityMaximum",
+    "num19InsolationMinimum",
+    "num19InsolationMaximum",
+    "num20TimeHour",
+    "num20TimeMinute",
+    "num20TemperatureMinimum",
+    "num20TemperatureMaximum",
+    "num20HumidityMinimum",
+    "num20HumidityMaximum",
+    "num20InsolationMinimum",
+    "num20InsolationMaximum",
+    "ousideWindSpeed",
+    "outsideRainFall",
+    "outsideTempertature",
+    "outsideInsolation",
+  ];
+
+  const list = Object.keys(body);
+  const checkList = [];
+
+  for (let i of list) {
+    if (invalidCheck.includes(i)) {
+      checkList.push(i);
+    }
+    if (i.slice(4, 20) === "TimeHour") {
+      if (Number(body[i]) > 23 || Number(body[i]) < 0) {
+        console.log("timeHour 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "TimeMinute") {
+      if (Number(body[i]) > 59 || Number(body[i]) < 0) {
+        console.log("TimeMinute 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "TemperatureMinimum") {
+      if (Number(body[i]) > 85 || Number(body[i]) < -25) {
+        console.log("TemperatureMinimum 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "TemperatureMaximum") {
+      if (Number(body[i]) > 85 || Number(body[i]) < -25) {
+        console.log("TemperatureMaximum 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "HumidityMinimum") {
+      if (Number(body[i]) > 100 || Number(body[i]) < 0) {
+        console.log("HumidityMinimum 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "HumidityMaximum") {
+      if (Number(body[i]) > 100 || Number(body[i]) < 0) {
+        console.log("HumidityMaximum 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "InsolationMinimum") {
+      if (Number(body[i]) > 1500 || Number(body[i]) < 0) {
+        console.log("InsolationMinimum 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "InsolationMaximum") {
+      if (Number(body[i]) > 1500 || Number(body[i]) < 0) {
+        console.log("InsolationMaximum 유효성");
+        result = true;
+        break;
+      }
+    }
+  }
+
+  if (list.length !== checkList.length) {
+    console.log("JSON 키값 유효성");
+    console.log(list);
+    result = true;
+  }
+
+  return result;
+}
+
+function selectActionData(body) {
+  const list = [];
+  for (let i of Object.keys(body)) {
+    if (body[i] != "") {
+      if (i.slice(8, 9) === "H" || i.slice(8, 9) === "M") {
+        if (Number(body[i]) < 10 && body[i].length === 1) {
+          list.push({
+            where: i,
+            value: "0" + body[i],
+          });
+        } else {
+          list.push({
+            where: i,
+            value: body[i],
+          });
+        }
+      } else {
+        list.push({
+          where: i,
+          value: body[i],
+        });
+      }
+    }
+  }
+
+  return list;
+}
+
+function readActionStatus() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/actionSettingValue.json", "utf8")
+  );
+}
+
+function writeActionStatus(where, value) {
+  const fileRead = this.readActionStatus();
+  fileRead[where] = value;
+  fs.writeFileSync(
+    __dirname + "/../utils/actionSettingValue.json",
+    JSON.stringify(fileRead)
+  );
+}
+
 module.exports = {
   simpleResultStatusNormal,
   simpleResultStatusNotWorking,
@@ -1287,4 +1567,8 @@ module.exports = {
   multipleConditionId,
   normalServiceIncludBodyProcedure,
   sleep,
+  readActionStatus,
+  selectActionData,
+  writeActionStatus,
+  invalidActionSettingValue,
 };

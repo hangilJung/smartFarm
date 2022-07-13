@@ -688,11 +688,80 @@ class SensorData {
         logger.info(JSON.stringify(isData["time"]));
         logger.info("save sensor data to detectSensorData");
       }
-      return;
+      return "success";
     } catch (error) {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function detectSensorData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
+
+  async setAction() {
+    try {
+      const response = {
+        header: {},
+      };
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      if (fn.invalidActionSettingValue(this.body)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
+
+      const list = fn.selectActionData(this.body);
+
+      for (let i of list) {
+        fn.writeActionStatus(i["where"], i["value"]);
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function setActionFsWrite() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
+
+  async readAction() {
+    try {
+      const response = {
+        header: {},
+      };
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+      response.body = [fn.readActionStatus()];
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function setAction() error : ${
           error ?? "not load error contents"
         }`
       );
