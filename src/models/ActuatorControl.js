@@ -263,67 +263,7 @@ class ActuatorControl {
       // const result = await axios.post(process.env.GATEWAY_SERVER, dataFormat, {
       //   timeout: timeoutSettingValue,
       // });
-      DataAccess.actuatorControlActionRecord(
-        dataFormat.data[0]["deviceName"],
-        content
-      );
-      const nutrientLineSupplyResult = await DataAccess.nutrientLineSupply();
 
-      for (let i of nutrientLineSupplyResult[0]) {
-        if (i["total_supply"] !== null) {
-          latelyTotalSupply = i["total_supply"];
-          line = i["line"];
-        }
-      }
-
-      // const getDataNutrientTotalSupplyResult = await axios.post(
-      //   process.env.GATEWAY_SERVER,
-      //   fn.whatLine(line)
-      // );
-
-      // const todaySupply = Number(
-      //   getDataNutrientTotalSupplyResult.data[0].dev_data[0]["description"]
-      // );
-
-      // const supply = todaySupply - latelyTotalSupply;
-      // console.log(supply);
-
-      // await DataAccess.nutrientEndSupplyDatetime(supply, todaySupply, nowTime);
-      // const readNutrientSupplyResult = await DataAccess.readNutrientSupply();
-
-      // const startSupplyDatetime = moment(
-      //   readNutrientSupplyResult[0][0]["start_supply_date_time"]
-      // );
-      // const endSupplyDatetime = moment(
-      //   readNutrientSupplyResult[0][0]["end_supply_date_time"]
-      // );
-
-      // const matter = readNutrientSupplyResult[0][0]["matter"];
-
-      // if (startSupplyDatetime.format("HH") === endSupplyDatetime.format("HH")) {
-      //   data = [
-      //     {
-      //       matter: matter,
-      //       line: line,
-      //       supply_date_time: nowTime,
-      //       supply: supply,
-      //     },
-      //   ];
-      // } else {
-      //   const minutePerLitter =
-      //     supply /
-      //     endSupplyDatetime.diff(moment(startSupplyDatetime), "minutes");
-
-      //   data = fn.twoHourData(
-      //     matter,
-      //     line,
-      //     startSupplyDatetime,
-      //     endSupplyDatetime,
-      //     minutePerLitter
-      //   );
-      // }
-
-      // DataAccess.hourlyLineSupply(data);
       return fn.normalService();
     } catch (error) {
       return fn.invalidRequestParameterError();
@@ -379,63 +319,59 @@ class ActuatorControl {
       header: {},
     };
     try {
-      // const result = await axios.post(
-      //   process.env.GATEWAY_SERVER,
-      //   fn.writeNutreint(actu.nutrient.act.run)
-      // );
-      // if (result.data === undefined) {
-      // const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+      const result = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.writeNutreint(actu.nutrient.act.run)
+      );
+      if (result.data === undefined) {
+        const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
-      //   return fn.communicationError("nutrient", reqDatetime, resDatetime);
-      // }
-      // return result.data;
+        return fn.communicationError("nutrient", reqDatetime, resDatetime);
+      }
 
-      // fn.currentValueFsWrite("nutrient", "on");
+      fn.currentValueFsWrite("nutrient", "on");
 
-      // if (
-      // result.data.header.resultCode == "00"
-      // true
-      // ) {
-      // setTimeout(async () => {
-      //     try {
-      //       const result = await DataAccess.currentAmountOfChange();
-      //       console.log(result[0][0]["sensor_data_value"]);
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-      //       if (
-      //         result[0][0]["sensor_data_value"] >
-      //         fn.addCurrent(fn.deviceStatus())
-      //       ) {
-      //         await DataAccess.actuatorControlActionRecord(
-      //           "nutrient",
-      //           "양액기가 공급을 시작합니다."
-      //         );
+      if (result.data.header.resultCode == "00" && true) {
+        await fn.sleep(2000).then(async () => {
+          try {
+            const result = await DataAccess.currentAmountOfChange();
+            console.log(result[0][0]["sensor_data_value"]);
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+            if (
+              result[0][0]["sensor_data_value"] >
+              fn.addCurrent(fn.deviceStatus())
+            ) {
+              await DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기가 공급을 시작합니다."
+              );
 
-      response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
-        requestDatetime: reqDatetime,
-        responseDatetime: resDatetime,
-      };
-      response.body = [{ device: "nutrient" }];
-      //       } else {
-      //        await  DataAccess.actuatorControlActionRecord(
-      //           "nutrient",
-      //           "양액기 작동 명령에도 작동하지 않습니다."
-      //         );
+              response.header = {
+                resultCode: "00",
+                resultMsg: "NORMAL_SERVICE",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            } else {
+              await DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기 작동 명령에도 작동하지 않습니다."
+              );
 
-      //         response.header = {
-      //           resultCode: "40",
-      //           resultMsg: "NOT_WORKING",
-      //           requestDatetime: reqDatetime,
-      //           responseDatetime: resDatetime,
-      //         };
-      //         response.body = [{ device: "nutrient" }];
-      //       }
-      //     } catch (error) {
-      //       console.log(error);
-      //     }
-      //   }, 1500);
-      // }
+              response.header = {
+                resultCode: "40",
+                resultMsg: "NOT_WORKING",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      }
 
       return response;
     } catch (error) {
@@ -455,57 +391,116 @@ class ActuatorControl {
   async stop() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
     try {
-      // const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
-      // if (result.data === undefined) {
-      //   return fn.communicationError("nutrient");
-      // }
-      // return result.data;
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
+      if (result.data === undefined) {
+        return fn.communicationError("nutrient");
+      }
 
-      // fn.currentValueFsWrite("nutrient", "off");
-      // if (
-      // result.data.header.resultCode == "00"
-      // true
-      // ) {
-      //   setTimeout(async () => {
-      //     try {
-      //       const result = await DataAccess.currentAmountOfChange();
-      //       console.log(result[0][0]["sensor_data_value"]);
-      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-      //       if (
-      //         result[0][0]["sensor_data_value"] <
-      //         fn.addCurrent(fn.deviceStatus())
-      //       ) {
-      //        await DataAccess.actuatorControlActionRecord(
-      //           "nutrient",
-      //           "양액기가 공급을 중지합니다."
-      //         );
+      fn.currentValueFsWrite("nutrient", "off");
+      if (result.data.header.resultCode == "00" && true) {
+        await fn.sleep(2000).then(async () => {
+          try {
+            const result = await DataAccess.currentAmountOfChange();
+            console.log(result[0][0]["sensor_data_value"]);
+            const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+            if (
+              result[0][0]["sensor_data_value"] <
+              fn.addCurrent(fn.deviceStatus())
+            ) {
+              await DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기가 공급을 중지합니다."
+              );
 
-      response.header = {
-        resultCode: "00",
-        resultMsg: "NORMAL_SERVICE",
-        requestDatetime: reqDatetime,
-        responseDatetime: resDatetime,
-      };
-      response.body = [{ device: "nutrient" }];
-      //       } else {
-      //        await DataAccess.actuatorControlActionRecord(
-      //           "nutrient",
-      //           "양액기 중지명령에도 중지하지 않습니다."
-      //         );
+              response.header = {
+                resultCode: "00",
+                resultMsg: "NORMAL_SERVICE",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            } else {
+              await DataAccess.actuatorControlActionRecord(
+                "nutrient",
+                "양액기 중지명령에도 중지하지 않습니다."
+              );
 
-      //         response.header = {
-      //           resultCode: "40",
-      //           resultMsg: "NOT_WORKING",
-      //           requestDatetime: reqDatetime,
-      //           responseDatetime: resDatetime,
-      //         };
-      //         response.body = [{ device: "nutrient" }];
-      //       }
-      //     } catch (error) {
-      //       console.log(error);
-      //     }
-      //   }, 1500);
-      // }
+              response.header = {
+                resultCode: "40",
+                resultMsg: "NOT_WORKING",
+                requestDatetime: reqDatetime,
+                responseDatetime: resDatetime,
+              };
+              response.body = [{ device: "nutrient" }];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      }
+
+      // DataAccess.actuatorControlActionRecord(
+      //   dataFormat.data[0]["deviceName"],
+      //   content
+      // );
+
+      const nutrientLineSupplyResult = await DataAccess.nutrientLineSupply();
+
+      for (let i of nutrientLineSupplyResult[0]) {
+        if (i["total_supply"] !== null) {
+          latelyTotalSupply = i["total_supply"];
+          line = i["line"];
+        }
+      }
+
+      const getDataNutrientTotalSupplyResult = await axios.post(
+        process.env.GATEWAY_SERVER,
+        fn.whatLine(line)
+      );
+
+      const todaySupply = Number(
+        getDataNutrientTotalSupplyResult.data[0].dev_data[0]["description"]
+      );
+
+      const supply = todaySupply - latelyTotalSupply;
+      console.log(supply);
+
+      await DataAccess.nutrientEndSupplyDatetime(supply, todaySupply, nowTime);
+      const readNutrientSupplyResult = await DataAccess.readNutrientSupply();
+
+      const startSupplyDatetime = moment(
+        readNutrientSupplyResult[0][0]["start_supply_date_time"]
+      );
+      const endSupplyDatetime = moment(
+        readNutrientSupplyResult[0][0]["end_supply_date_time"]
+      );
+
+      const matter = readNutrientSupplyResult[0][0]["matter"];
+
+      if (startSupplyDatetime.format("HH") === endSupplyDatetime.format("HH")) {
+        data = [
+          {
+            matter: matter,
+            line: line,
+            supply_date_time: nowTime,
+            supply: supply,
+          },
+        ];
+      } else {
+        const minutePerLitter =
+          supply /
+          endSupplyDatetime.diff(moment(startSupplyDatetime), "minutes");
+
+        data = fn.twoHourData(
+          matter,
+          line,
+          startSupplyDatetime,
+          endSupplyDatetime,
+          minutePerLitter
+        );
+      }
+
+      DataAccess.hourlyLineSupply(data);
 
       return response;
     } catch (error) {
