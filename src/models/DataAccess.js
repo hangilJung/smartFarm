@@ -415,6 +415,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async fiveMinuteAgoSensorData() {
+    const sql = query.fiveMinuteAgoSensorData;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

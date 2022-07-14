@@ -29,13 +29,13 @@ module.exports = () => {
     logger.info("강루량 센서 시간단위 저장 실행");
   });
   //테스트로 매 00초 마다 데이터 전송되게 해둠.
-  schedule.scheduleJob("00 * * * * *", async () => {
-    console.log("test 소켓통신 실행");
-    ctl.socketIO.consumptionHourData();
-    ctl.socketIO.consumptionAccumulatedDayData();
-    ctl.socketIO.bedData();
-    nt.socketIO.actionRecord();
-  });
+  // schedule.scheduleJob("00 * * * * *", async () => {
+  //   console.log("test 소켓통신 실행");
+  //   ctl.socketIO.consumptionHourData();
+  //   ctl.socketIO.consumptionAccumulatedDayData();
+  //   ctl.socketIO.bedData();
+  //   nt.socketIO.actionRecord();
+  // });
   schedule.scheduleJob("02 * * * * *", async () => {
     console.log("센서 데이터 없는거 체크");
     logger.info("센서 데이터 없는거 체크");

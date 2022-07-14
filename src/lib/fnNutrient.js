@@ -1290,7 +1290,7 @@ function whatDetailNumber(data) {
         console.log("담다");
         arr.push("todaySupply");
       }
-    } else if (list["address"] == "560") {
+    } else if (list["address"] == "10096") {
       console.log("1회 관수");
       if (run) {
         console.log("담다");
@@ -1759,7 +1759,7 @@ function sendToNutricultureMachinePageSocket(list, nutrientData) {
         choiceDetailSettingChangeData(nutrientData, detailSetting23)
       );
     } else if (data == "run") {
-      const run = ["560"];
+      const run = ["10096"];
       console.log("run");
       socketEmit("run", choiceDetailSettingChangeData(nutrientData, run));
     } else if (data == "todaySupply") {

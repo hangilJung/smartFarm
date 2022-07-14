@@ -3,6 +3,8 @@ const fs = require("fs");
 const Token = require("../models/Token");
 const actu = require("../utils/actuator");
 const moment = require("moment");
+const e = require("express");
+const logger = require("../config/logger.js");
 
 function dataExtraction(data) {
   return convertJsonInArrayToJson(convertBufferDataToJsonFormat(data));
@@ -781,6 +783,52 @@ function addCurrent(onList) {
   return curr.toFixed(1);
 }
 
+function addCurrentOff(onList) {
+  let curr = 0.7;
+  const oneFanValue = 0.4;
+  const twoFanValue = 1.1;
+  const threeFanValue = 1.7;
+  const nutrientValue = 5.6;
+
+  if (onList.includes("fan1")) {
+    curr += oneFanValue;
+    if (onList.includes("fan2")) {
+      curr += twoFanValue;
+      if (onList.includes("fan3")) {
+        curr += threeFanValue;
+      }
+    } else if (onList.includes("fan3")) {
+      curr += twoFanValue;
+    }
+  } else if (onList.includes("fan2")) {
+    curr += oneFanValue;
+    if (onList.includes("fan1")) {
+      curr += twoFanValue;
+      if (onList.includes("fan3")) {
+        curr += threeFanValue;
+      }
+    } else if (onList.includes("fan3")) {
+      curr += twoFanValue;
+    }
+  } else if (onList.includes("fan3")) {
+    curr += oneFanValue;
+    if (onList.includes("fan2")) {
+      curr += twoFanValue;
+      if (onList.includes("fan1")) {
+        curr += threeFanValue;
+      }
+    } else if (onList.includes("fan1")) {
+      curr += twoFanValue;
+    }
+  }
+
+  if (onList.includes("nutrient")) {
+    curr += nutrientValue;
+  }
+
+  return curr.toFixed(1);
+}
+
 function invalidInsideMainSensorData(list) {
   try {
     const inTemp = "inTemp";
@@ -1229,170 +1277,90 @@ function invalidActionSettingValue(body) {
   let result = false;
 
   const invalidCheck = [
-    "num1TimeHour",
-    "num1TimeMinute",
-    "num1TemperatureMinimum",
-    "num1TemperatureMaximum",
-    "num1HumidityMinimum",
-    "num1HumidityMaximum",
-    "num1InsolationMinimum",
-    "num1InsolationMaximum",
-    "num2TimeHour",
-    "num2TimeMinute",
-    "num2TemperatureMinimum",
-    "num2TemperatureMaximum",
-    "num2HumidityMinimum",
-    "num2HumidityMaximum",
-    "num2InsolationMinimum",
-    "num2InsolationMaximum",
-    "num3TimeHour",
-    "num3TimeMinute",
-    "num3TemperatureMinimum",
-    "num3TemperatureMaximum",
-    "num3HumidityMinimum",
-    "num3HumidityMaximum",
-    "num3InsolationMinimum",
-    "num3InsolationMaximum",
-    "num4TimeHour",
-    "num4TimeMinute",
-    "num4TemperatureMinimum",
-    "num4TemperatureMaximum",
-    "num4HumidityMinimum",
-    "num4HumidityMaximum",
-    "num4InsolationMinimum",
-    "num4InsolationMaximum",
-    "num5TimeHour",
-    "num5TimeMinute",
-    "num5TemperatureMinimum",
-    "num5TemperatureMaximum",
-    "num5HumidityMinimum",
-    "num5HumidityMaximum",
-    "num5InsolationMinimum",
-    "num5InsolationMaximum",
-    "num6TimeHour",
-    "num6TimeMinute",
-    "num6TemperatureMinimum",
-    "num6TemperatureMaximum",
-    "num6HumidityMinimum",
-    "num6HumidityMaximum",
-    "num6InsolationMinimum",
-    "num6InsolationMaximum",
-    "num7TimeHour",
-    "num7TimeMinute",
-    "num7TemperatureMinimum",
-    "num7TemperatureMaximum",
-    "num7HumidityMinimum",
-    "num7HumidityMaximum",
-    "num7InsolationMinimum",
-    "num7InsolationMaximum",
-    "num8TimeHour",
-    "num8TimeMinute",
-    "num8TemperatureMinimum",
-    "num8TemperatureMaximum",
-    "num8HumidityMinimum",
-    "num8HumidityMaximum",
-    "num8InsolationMinimum",
-    "num8InsolationMaximum",
-    "num9TimeHour",
-    "num9TimeMinute",
-    "num9TemperatureMinimum",
-    "num9TemperatureMaximum",
-    "num9HumidityMinimum",
-    "num9HumidityMaximum",
-    "num9InsolationMinimum",
-    "num9InsolationMaximum",
-    "num10TimeHour",
-    "num10TimeMinute",
-    "num10TemperatureMinimum",
-    "num10TemperatureMaximum",
-    "num10HumidityMinimum",
-    "num10HumidityMaximum",
-    "num10InsolationMinimum",
-    "num10InsolationMaximum",
-    "num11TimeHour",
-    "num11TimeMinute",
-    "num11TemperatureMinimum",
-    "num11TemperatureMaximum",
-    "num11HumidityMinimum",
-    "num11HumidityMaximum",
-    "num11InsolationMinimum",
-    "num11InsolationMaximum",
-    "num12TimeHour",
-    "num12TimeMinute",
-    "num12TemperatureMinimum",
-    "num12TemperatureMaximum",
-    "num12HumidityMinimum",
-    "num12HumidityMaximum",
-    "num12InsolationMinimum",
-    "num12InsolationMaximum",
-    "num13TimeHour",
-    "num13TimeMinute",
-    "num13TemperatureMinimum",
-    "num13TemperatureMaximum",
-    "num13HumidityMinimum",
-    "num13HumidityMaximum",
-    "num13InsolationMinimum",
-    "num13InsolationMaximum",
-    "num14TimeHour",
-    "num14TimeMinute",
-    "num14TemperatureMinimum",
-    "num14TemperatureMaximum",
-    "num14HumidityMinimum",
-    "num14HumidityMaximum",
-    "num14InsolationMinimum",
-    "num14InsolationMaximum",
-    "num15TimeHour",
-    "num15TimeMinute",
-    "num15TemperatureMinimum",
-    "num15TemperatureMaximum",
-    "num15HumidityMinimum",
-    "num15HumidityMaximum",
-    "num15InsolationMinimum",
-    "num15InsolationMaximum",
-    "num16TimeHour",
-    "num16TimeMinute",
-    "num16TemperatureMinimum",
-    "num16TemperatureMaximum",
-    "num16HumidityMinimum",
-    "num16HumidityMaximum",
-    "num16InsolationMinimum",
-    "num16InsolationMaximum",
-    "num17TimeHour",
-    "num17TimeMinute",
-    "num17TemperatureMinimum",
-    "num17TemperatureMaximum",
-    "num17HumidityMinimum",
-    "num17HumidityMaximum",
-    "num17InsolationMinimum",
-    "num17InsolationMaximum",
-    "num18TimeHour",
-    "num18TimeMinute",
-    "num18TemperatureMinimum",
-    "num18TemperatureMaximum",
-    "num18HumidityMinimum",
-    "num18HumidityMaximum",
-    "num18InsolationMinimum",
-    "num18InsolationMaximum",
-    "num19TimeHour",
-    "num19TimeMinute",
-    "num19TemperatureMinimum",
-    "num19TemperatureMaximum",
-    "num19HumidityMinimum",
-    "num19HumidityMaximum",
-    "num19InsolationMinimum",
-    "num19InsolationMaximum",
-    "num20TimeHour",
-    "num20TimeMinute",
-    "num20TemperatureMinimum",
-    "num20TemperatureMaximum",
-    "num20HumidityMinimum",
-    "num20HumidityMaximum",
-    "num20InsolationMinimum",
-    "num20InsolationMaximum",
-    "ousideWindSpeed",
-    "outsideRainFall",
-    "outsideTempertature",
-    "outsideInsolation",
+    "num1Time",
+    "num1Temperature",
+    "num1Humidity",
+    "num2Time",
+    "num2Temperature",
+    "num2Humidity",
+    "num3Time",
+    "num3Temperature",
+    "num3Humidity",
+    "num4Time",
+    "num4Temperature",
+    "num4Humidity",
+    "num5Time",
+    "num5Temperature",
+    "num5Humidity",
+    "num6Time",
+    "num6Temperature",
+    "num6Humidity",
+    "num7Time",
+    "num7Temperature",
+    "num7Humidity",
+    "num8Time",
+    "num8Temperature",
+    "num8Humidity",
+    "num9Time",
+    "num9Temperature",
+    "num9Humidity",
+    "num10Time",
+    "num10Temperature",
+    "num10Humidity",
+    "num11Time",
+    "num11Temperature",
+    "num11Humidity",
+    "num12Time",
+    "num12Temperature",
+    "num12Humidity",
+    "num13Time",
+    "num13Temperature",
+    "num13Humidity",
+    "num14Time",
+    "num14Temperature",
+    "num14Humidity",
+    "num15Time",
+    "num15Temperature",
+    "num15Humidity",
+    "num16Time",
+    "num16Temperature",
+    "num16Humidity",
+    "num17Time",
+    "num17Temperature",
+    "num17Humidity",
+    "num18Time",
+    "num18Temperature",
+    "num18Humidity",
+    "num19Time",
+    "num19Temperature",
+    "num19Humidity",
+    "num20Time",
+    "num20Temperature",
+    "num20Humidity",
+    "windSpeed",
+    "rainFall",
+    "temperature",
+    "insolation",
+    "num1Insolation",
+    "num2Insolation",
+    "num3Insolation",
+    "num4Insolation",
+    "num5Insolation",
+    "num6Insolation",
+    "num7Insolation",
+    "num8Insolation",
+    "num9Insolation",
+    "num10Insolation",
+    "num11Insolation",
+    "num12Insolation",
+    "num13Insolation",
+    "num14Insolation",
+    "num15Insolation",
+    "num16Insolation",
+    "num17Insolation",
+    "num18Insolation",
+    "num19Insolation",
+    "num20Insolation",
   ];
 
   const list = Object.keys(body);
@@ -1402,51 +1370,86 @@ function invalidActionSettingValue(body) {
     if (invalidCheck.includes(i)) {
       checkList.push(i);
     }
-    if (i.slice(4, 20) === "TimeHour") {
-      if (Number(body[i]) > 23 || Number(body[i]) < 0) {
+    if (i.slice(4, 20) === "Time") {
+      const timeHour = i.split(":")[0];
+      const timeMinute = i.split(":")[1];
+
+      if (Number(timeHour) > 23 || Number(timeHour) < 0) {
         console.log("timeHour 유효성");
         result = true;
         break;
       }
-    } else if (i.slice(4, 20) === "TimeMinute") {
-      if (Number(body[i]) > 59 || Number(body[i]) < 0) {
-        console.log("TimeMinute 유효성");
+      if (Number(timeMinute) > 59 || Number(timeMinute) < 0) {
+        console.log("timeMinute 유효성");
         result = true;
         break;
       }
-    } else if (i.slice(4, 20) === "TemperatureMinimum") {
+    } else if (i.slice(4, 20) === "Temperature") {
+      const tempMin = i.split(":")[0];
+      const tempMax = i.split(":")[1];
+
+      if (
+        Number(tempMax) > 85 ||
+        Number(tempMax) < -25 ||
+        Number(tempMin) > 85 ||
+        Number(tempMin) < -25 ||
+        Number(tempMin) > Number(tempMax)
+      ) {
+        console.log("Temperature 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "Humidity") {
+      const humiMin = i.split("-")[0];
+      const humiMax = i.split("-")[1];
+
+      if (
+        Number(humiMin) > 100 ||
+        Number(humiMin) < 0 ||
+        Number(humiMax) > 100 ||
+        Number(humiMax) < 0 ||
+        Number(humiMin) > Number(humiMax)
+      ) {
+        console.log("Humidity 유효성");
+        result = true;
+        break;
+      }
+    } else if (i.slice(4, 20) === "Insolation") {
+      const insolMin = i.split("-")[0];
+      const insolMax = i.split("-")[1];
+      if (
+        Number(insolMin) > 1500 ||
+        Number(insolMin) < 0 ||
+        Number(insolMax) > 1500 ||
+        Number(insolMax) < 0 ||
+        Number(insolMin) > Number(insolMax)
+      ) {
+        console.log("Humidity 유효성");
+        result = true;
+        break;
+      }
+    } else if (i === "windSpeed") {
+      if (Number(body[i]) > 60 || Number(body[i]) < 0) {
+        console.log("windSpeed 유효성");
+        result = true;
+        break;
+      }
+    } else if (i === "rainFall") {
+      if (Number(body[i]) > 400 || Number(body[i]) < 0) {
+        console.log("rainFall 유효성");
+        result = true;
+        break;
+      }
+    } else if (i === "temperature") {
       if (Number(body[i]) > 85 || Number(body[i]) < -25) {
-        console.log("TemperatureMinimum 유효성");
+        console.log("temperature 유효성");
         result = true;
         break;
       }
-    } else if (i.slice(4, 20) === "TemperatureMaximum") {
-      if (Number(body[i]) > 85 || Number(body[i]) < -25) {
-        console.log("TemperatureMaximum 유효성");
-        result = true;
-        break;
-      }
-    } else if (i.slice(4, 20) === "HumidityMinimum") {
-      if (Number(body[i]) > 100 || Number(body[i]) < 0) {
-        console.log("HumidityMinimum 유효성");
-        result = true;
-        break;
-      }
-    } else if (i.slice(4, 20) === "HumidityMaximum") {
-      if (Number(body[i]) > 100 || Number(body[i]) < 0) {
-        console.log("HumidityMaximum 유효성");
-        result = true;
-        break;
-      }
-    } else if (i.slice(4, 20) === "InsolationMinimum") {
+    } else if (i === "insolation") {
       if (Number(body[i]) > 1500 || Number(body[i]) < 0) {
-        console.log("InsolationMinimum 유효성");
-        result = true;
-        break;
-      }
-    } else if (i.slice(4, 20) === "InsolationMaximum") {
-      if (Number(body[i]) > 1500 || Number(body[i]) < 0) {
-        console.log("InsolationMaximum 유효성");
+        console.log("insolation 유효성");
+
         result = true;
         break;
       }
@@ -1455,7 +1458,8 @@ function invalidActionSettingValue(body) {
 
   if (list.length !== checkList.length) {
     console.log("JSON 키값 유효성");
-    console.log(list);
+    logger.info(JSON.stringify(list));
+    logger.info(JSON.stringify(checkList));
     result = true;
   }
 
@@ -1464,20 +1468,30 @@ function invalidActionSettingValue(body) {
 
 function selectActionData(body) {
   const list = [];
+
   for (let i of Object.keys(body)) {
     if (body[i] != "") {
-      if (i.slice(8, 9) === "H" || i.slice(8, 9) === "M") {
-        if (Number(body[i]) < 10 && body[i].length === 1) {
-          list.push({
-            where: i,
-            value: "0" + body[i],
-          });
+      if (i.slice(4, 20) === "Time") {
+        const timeHour = body[i].split(":")[0];
+        const timeMinute = body[i].split(":")[1];
+        let transTimeHour;
+        let transTimeMinute;
+
+        if (Number(timeHour) < 10 && timeHour.length === 1) {
+          transTimeHour = "0" + timeHour;
         } else {
-          list.push({
-            where: i,
-            value: body[i],
-          });
+          transTimeHour = timeHour;
         }
+        if (Number(timeMinute) < 10 && timeMinute.length === 1) {
+          transTimeMinute = "0" + timeMinute;
+        } else {
+          transTimeMinute = timeMinute;
+        }
+
+        list.push({
+          where: i,
+          value: transTimeHour + ":" + transTimeMinute,
+        });
       } else {
         list.push({
           where: i,
@@ -1571,4 +1585,5 @@ module.exports = {
   selectActionData,
   writeActionStatus,
   invalidActionSettingValue,
+  addCurrentOff,
 };

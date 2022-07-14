@@ -689,7 +689,7 @@ const readNutrientDataDigitalAndAnalog = {
 const nutricultureMachine = {
   list: [
     { modbus_address: "44400", description: "", property: "read" },
-    { modbus_address: "560", description: "", property: "read" },
+    { modbus_address: "10096", description: "", property: "read" },
     { modbus_address: "44100", description: "", property: "read" },
     { modbus_address: "44101", description: "", property: "read" },
     { modbus_address: "44102", description: "", property: "read" },

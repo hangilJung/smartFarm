@@ -41,11 +41,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-     try {
-     axios.post(process.env.TEST_LOCAL_SERVER, this.body);
-     } catch (error) {
-       console.log(error);
-     }
+    //  try {
+    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
+    //  } catch (error) {
+    //    console.log(error);
+    //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));
@@ -748,6 +748,20 @@ class SensorData {
       const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const result = await DataAccess.fiveMinuteAgoSensorData();
+
+      let sensorData = {};
+
+      for (let i of result[0]) {
+        const value = Number(i["sensor_data_value"]);
+        if (i.sensor_name === "co2Humi") {
+          sensorData = { ...sensorData, inHumi: value.toFixed(1) };
+        } else if (i.sensor_name === "co2Temp") {
+          sensorData = { ...sensorData, inTemp: value.toFixed(1) };
+        } else if (i.sensor_name === "inInsol") {
+          sensorData = { ...sensorData, inInsol: value.toFixed(1) };
+        }
+      }
 
       response.header = {
         resultCode: "00",
@@ -755,7 +769,10 @@ class SensorData {
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
-      response.body = [fn.readActionStatus()];
+      response.body = [
+        fn.readActionStatus(),
+        { fiveMinuteAgoSensorData: sensorData },
+      ];
 
       return response;
     } catch (error) {

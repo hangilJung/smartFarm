@@ -93,7 +93,7 @@ class ActuatorControl {
 
             if (
               result[0][0]["sensor_data_value"] <
-              fn.addCurrent(fn.deviceStatus())
+              fn.addCurrentOff(fn.deviceStatus())
             ) {
               fn.currentValueFsWrite(deviceName, "off");
               finalResult = fn.simpleResultStatusNormal(
@@ -319,7 +319,6 @@ class ActuatorControl {
       header: {},
     };
     try {
-      
       const ctrl = {
         farmland_id: 1,
         data: [
@@ -333,13 +332,9 @@ class ActuatorControl {
           },
         ],
       };
-      console.log(ctrl)
+      console.log(ctrl);
 
-
-      const result = await axios.post(
-        process.env.GATEWAY_SERVER,
-        ctrl
-      );
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       if (result.data === undefined) {
         const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
@@ -390,7 +385,6 @@ class ActuatorControl {
         });
       }
 
-
       return response;
     } catch (error) {
       console.log(error);
@@ -421,7 +415,7 @@ class ActuatorControl {
             dev_data: [actu.nutrient.act.stop],
           },
         ],
-      };      
+      };
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl);
       if (result.data === undefined) {
         return fn.communicationError("nutrient");
@@ -650,7 +644,7 @@ class ActuatorControl {
       });
 
       for (let i of processData) {
-        if (i.address == "560") {
+        if (i.address == "10096") {
           if (i.value == "0") {
             fn.currentValueFsWrite("nutrient", "off");
           } else if (i.value == "1") {

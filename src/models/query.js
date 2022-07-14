@@ -762,6 +762,24 @@ const query = {
                             sensor_data_created_at < date_format(now(), '%Y-%m-%d %H:%i:00')
                         and
                             sensor_information_id in  (1,2,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);`,
+
+  fiveMinuteAgoSensorData: `
+                        select
+                            case 
+                                when(sensor_information_id = 6) then 'inInsol'
+                                when(sensor_information_id = 31) then 'co2Temp'
+                                when(sensor_information_id = 32) then 'co2Humi'
+                            end as	sensor_name,
+                            sensor_data_value,
+                            sensor_data_created_at 
+                        from 
+                            sensor_data sd 
+                        where	
+                            sensor_data_created_at >= date_sub(now(), interval 5 minute)
+                        and
+                            sensor_data_created_at < date_sub(now(), interval 4 minute)	
+                        and
+                            sensor_information_id in (31,32,6);`,
 };
 
 module.exports = query;
