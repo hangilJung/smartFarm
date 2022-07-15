@@ -780,6 +780,13 @@ const query = {
                             sensor_data_created_at < date_sub(now(), interval 4 minute)	
                         and
                             sensor_information_id in (31,32,6);`,
+  todaySupply: `
+                select 
+                    * 
+                from 
+                    nutrient_status_value
+                where 
+                    address in ('44521', '44523', '44525', '44527')`,
 };
 
 module.exports = query;

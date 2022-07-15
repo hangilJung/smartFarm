@@ -8,6 +8,21 @@ const dbfn = require("../lib/databaseAccessFn");
 const logger = require("../config/logger");
 const ds = require("../lib/detailSettingFunction");
 const timeoutSettingValue = 10000;
+const { io } = require("socket.io-client");
+const url = require("../config/url");
+
+const mainData = io(url.SOCKETIO_MAIN_DATA_SERVER_HOST, {
+  transports: ["websocket"],
+});
+
+mainData.on("connect", () => {
+  console.log(mainData.id);
+  console.log(mainData.connected);
+});
+
+mainData.on("connect_error", (reason) => {
+  console.log(reason);
+});
 
 class ActuatorControl {
   constructor(body) {
@@ -43,10 +58,11 @@ class ActuatorControl {
         return fn.invalidRequestParameterError();
       }
 
-      // const content = fn.createCharacter(deviceName, active);
-      // console.log(content);
-      // DataAccess.actuatorControlActionRecord(deviceName, content);
-      console.log("ctrl임", ctrl);
+      const content = fn.createCharacter(deviceName, active);
+      console.log(content);
+      await DataAccess.actuatorControlActionRecord(deviceName, content);
+      loadActuatorRecord();
+
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl, {
         timeout: timeoutSettingValue,
       });
@@ -76,12 +92,18 @@ class ActuatorControl {
               );
             } else {
               const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
+
               finalResult = fn.simpleResultStatusNotWorking(
                 reqDatetime,
                 resDatetime,
                 device
               );
             }
+            await DataAccess.actuatorControlActionRecord(
+              deviceName,
+              `${deviceName}작동에 통신 문제가 발생했습니다.`
+            );
+            loadActuatorRecord();
             return finalResult;
           });
         }
@@ -108,6 +130,11 @@ class ActuatorControl {
                 resDatetime,
                 device
               );
+              await DataAccess.actuatorControlActionRecord(
+                deviceName,
+                `${deviceName}작동에 통신 문제가 발생했습니다.`
+              );
+              loadActuatorRecord();
             }
             return finalResult;
           });

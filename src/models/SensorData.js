@@ -750,16 +750,19 @@ class SensorData {
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       const result = await DataAccess.fiveMinuteAgoSensorData();
 
-      let sensorData = {};
+      let sensorData = fn.readActionStatus();
 
       for (let i of result[0]) {
         const value = Number(i["sensor_data_value"]);
         if (i.sensor_name === "co2Humi") {
-          sensorData = { ...sensorData, inHumi: value.toFixed(1) };
+          sensorData = { ...sensorData, fiveMinuteAgoInHumi: value.toFixed(1) };
         } else if (i.sensor_name === "co2Temp") {
-          sensorData = { ...sensorData, inTemp: value.toFixed(1) };
+          sensorData = { ...sensorData, fiveMinuteAgoInTemp: value.toFixed(1) };
         } else if (i.sensor_name === "inInsol") {
-          sensorData = { ...sensorData, inInsol: value.toFixed(1) };
+          sensorData = {
+            ...sensorData,
+            fiveMinuteAgoInInsol: value.toFixed(1),
+          };
         }
       }
 
@@ -769,10 +772,7 @@ class SensorData {
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
-      response.body = [
-        fn.readActionStatus(),
-        { fiveMinuteAgoSensorData: sensorData },
-      ];
+      response.body = [sensorData];
 
       return response;
     } catch (error) {

@@ -422,6 +422,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async todaySupply() {
+    const sql = query.todaySupply;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

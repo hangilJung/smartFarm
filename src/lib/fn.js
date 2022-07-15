@@ -1337,10 +1337,10 @@ function invalidActionSettingValue(body) {
     "num20Time",
     "num20Temperature",
     "num20Humidity",
-    "windSpeed",
-    "rainFall",
-    "temperature",
-    "insolation",
+    "ws",
+    "rf",
+    "outTemp",
+    "outInsol",
     "num1Insolation",
     "num2Insolation",
     "num3Insolation",
@@ -1428,25 +1428,25 @@ function invalidActionSettingValue(body) {
         result = true;
         break;
       }
-    } else if (i === "windSpeed") {
+    } else if (i === "ws") {
       if (Number(body[i]) > 60 || Number(body[i]) < 0) {
         console.log("windSpeed 유효성");
         result = true;
         break;
       }
-    } else if (i === "rainFall") {
+    } else if (i === "rf") {
       if (Number(body[i]) > 400 || Number(body[i]) < 0) {
         console.log("rainFall 유효성");
         result = true;
         break;
       }
-    } else if (i === "temperature") {
-      if (Number(body[i]) > 85 || Number(body[i]) < -25) {
+    } else if (i === "outTemp") {
+      if (Number(body[i]) > 60 || Number(body[i]) < -40) {
         console.log("temperature 유효성");
         result = true;
         break;
       }
-    } else if (i === "insolation") {
+    } else if (i === "outInsol") {
       if (Number(body[i]) > 1500 || Number(body[i]) < 0) {
         console.log("insolation 유효성");
 

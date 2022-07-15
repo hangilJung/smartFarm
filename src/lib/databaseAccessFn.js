@@ -1,6 +1,26 @@
 const DataAccess = require("../models/DataAccess");
 const fn = require("./fn");
 const logger = require("../config/logger");
+const fs = require("fs");
+const { io } = require("socket.io-client");
+
+const nutrient = io(process.env.SOCKETIO_NUTRICULTURE_MACHINE_PAGE, {
+  transports: ["websocket"],
+});
+
+nutrient.on("connect", () => {
+  console.log(nutrient.id);
+  console.log(nutrient.connected);
+});
+
+nutrient.on("connect_error", (reason) => {
+  console.log(reason);
+});
+
+nutrient.on("disconnect", (reason) => {
+  console.log(reason);
+  console.log("disconnect");
+});
 
 function checkDataValidation(body, getSensorDataRange, date) {
   let arr = [];
@@ -201,14 +221,88 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
         }
       }
     }
+
     console.log(list);
+
     await DataAccess.updateNutricultureMachinePageStatus(list);
+
+    const dbResult = await DataAccess.todaySupply();
+    const compare = compareFsRead();
+
+    let status = false;
+
+    for (let i of dbResult[0]) {
+      if (i["value"] === compare[i["address"]]) {
+        console.log("양액기 정지 상태");
+      } else {
+        console.log("양액기 운전 상태");
+        status = true;
+        break;
+      }
+    }
+
+    if (status) {
+      const current = await DataAccess.currentAmountOfChange();
+
+      if (
+        current[0][0]["sensor_data_value"] > fn.addCurrent(fn.deviceStatus())
+      ) {
+        console.log("양액기 전류값 확인 후 작동");
+        fn.currentValueFsWrite("nutrient", "on");
+        nutrient.emit("nutrientStatus", {
+          header: {
+            resultCode: "00",
+            resultMsg: "NORMAL_SERVICE",
+          },
+          body: [
+            {
+              status: "on",
+            },
+          ],
+        });
+      } else {
+        fn.currentValueFsWrite("nutrient", "off");
+      }
+
+      for (let i of dbResult[0]) {
+        compareFsWrite(i["address"], i["value"]);
+      }
+    } else {
+      console.log("보내라 소켓통신");
+      fn.currentValueFsWrite("nutrient", "off");
+      nutrient.emit("nutrientStatus", {
+        header: {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+        },
+        body: [
+          {
+            status: "off",
+          },
+        ],
+      });
+    }
 
     return { result, list };
   } catch (error) {
     console.log(error);
     return fn.invalidRequestParameterError();
   }
+}
+
+function compareFsRead() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/compareTodaySupply.json", "utf8")
+  );
+}
+
+function compareFsWrite(where, value) {
+  const fileRead = fsRead();
+  fileRead[where] = value;
+  fs.writeFileSync(
+    __dirname + "/../utils/compareTodaySupply.json",
+    JSON.stringify(fileRead)
+  );
 }
 
 function dbUpdate(changeData) {
