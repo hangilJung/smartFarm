@@ -78,10 +78,6 @@ function saveOriginalSensorData(data, date) {
     date
   );
   logger.error(`sensor data error ${JSON.stringify(data)}`);
-  DataAccess.actuatorControlActionRecord(
-    "1",
-    `데이터 이상 sensor name : ${data.name}, value : ${data.value}`
-  );
 }
 
 async function compareSensorData(filteringData) {
@@ -297,7 +293,7 @@ function compareFsRead() {
 }
 
 function compareFsWrite(where, value) {
-  const fileRead = fsRead();
+  const fileRead = compareFsRead();
   fileRead[where] = value;
   fs.writeFileSync(
     __dirname + "/../utils/compareTodaySupply.json",

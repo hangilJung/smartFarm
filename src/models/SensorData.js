@@ -5,6 +5,8 @@ const daFn = require("../lib/databaseAccessFn");
 const io = require("../utils/io");
 const logger = require("../config/logger");
 const axios = require("axios");
+const schedule = require("node-schedule");
+const ActuatorControl = require("./ActuatorControl");
 
 class SensorData {
   constructor(body) {
@@ -779,6 +781,391 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function setAction() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
+
+  async actionLogic() {
+    try {
+      //현재 시간 중 시간 부분을 뽑아냄
+      const nowTime = moment().format("HH:00");
+      // 상태값
+      const detectStatus = fn.detectStatusFsRead();
+      //시간뽑을 키값 배열
+      const timeNameList = [
+        "num1Time",
+        "num2Time",
+        "num3Time",
+        "num4Time",
+        "num5Time",
+        "num6Time",
+        "num7Time",
+        "num8Time",
+        "num9Time",
+        "num10Time",
+        "num11Time",
+        "num12Time",
+        "num13Time",
+        "num14Time",
+        "num15Time",
+        "num16Time",
+        "num17Time",
+        "num18Time",
+        "num19Time",
+        "num20Time",
+      ];
+      const result = fn.readActionStatus();
+
+      //외부 및 내부 메인 센서 데이터 가져오기
+      const sensorData = await DataAccess.detectAction();
+
+      let sensorDataList = {};
+
+      //외부 및 내부 메인 온도 값 가져오기
+      for (let i of sensorData[0]) {
+        if (i["sensor_name"] === "outTemp") {
+          sensorDataList = {
+            ...sensorDataList,
+            outTemp: i["sensor_data_value"],
+          };
+        } else if (i["sensor_name"] === "outHumi") {
+          sensorDataList = {
+            ...sensorDataList,
+            outHumi: i["sensor_data_value"],
+          };
+        } else if (i["sensor_name"] === "ws") {
+          sensorDataList = { ...sensorDataList, ws: i["sensor_data_value"] };
+        } else if (i["sensor_name"] === "rf") {
+          sensorDataList = { ...sensorDataList, rf: i["sensor_data_value"] };
+        } else if (i["sensor_name"] === "outInsol") {
+          sensorDataList = {
+            ...sensorDataList,
+            outInsol: i["sensor_data_value"],
+          };
+        } else if (i["sensor_name"] === "co2Temp") {
+          sensorDataList = {
+            ...sensorDataList,
+            co2Temp: i["sensor_data_value"],
+          };
+        } else if (i["sensor_name"] === "co2Humi") {
+          sensorDataList = {
+            ...sensorDataList,
+            co2Humi: i["sensor_data_value"],
+          };
+        } else if (i["sensor_name"] === "inInsol") {
+          sensorDataList = {
+            ...sensorDataList,
+            inInsol: i["sensor_data_value"],
+          };
+        }
+      }
+
+      console.log(sensorDataList);
+      let settingList = {};
+
+      //세팅 온도 값 뽑아내기
+      for (let i of timeNameList) {
+        if (result[i] != "") {
+          if (result[i] == nowTime) {
+            const where = i.slice(0, 4);
+            const temp = where + "Temperature";
+
+            const tempMin = result[temp].split("-")[0];
+            const tempMax = result[temp].split("-")[1];
+
+            settingList = { settingTempMin: tempMin, settingTempMax: tempMax };
+          }
+        }
+      }
+
+      console.log(settingList);
+      let stage2Timer;
+
+      const sub =
+        Number(sensorDataList["co2Temp"]) -
+        Number(settingList["settingTempMax"]);
+      console.log(`sub 값은? ${sub.toFixed(1)}`);
+
+      //환풍기
+      if (sub.toFixed(1) > 5) {
+        ///여기서 환풍기 작동 명려 넣기
+        if (detectStatus["fanStatus"] === "") {
+          const actuatorControl = new ActuatorControl({
+            deviceName: "oneTwoThree",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+          console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
+        } else if (detectStatus["fanStatus"] === "1") {
+          console.log("환풍기 1,3번 작동하여 2개의 환풍기 작동");
+          const actuatorControl = new ActuatorControl({
+            deviceName: "oneThree",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+        } else if (detectStatus["fanStatus"] === "2") {
+          const actuatorControl = new ActuatorControl({
+            deviceName: "fan3",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+          console.log("환풍기 3번 작동하여 1개의 환풍기 작동");
+        } else if (detectStatus["fanStatus"] === "3") {
+          console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
+        }
+
+        // detectStatus 에서 isLoop 상태값을 false로 변환
+        fn.detectFsWrite("fanStatus", "3");
+        fn.detectFsWrite("isLoop", false);
+
+        const { month, day, hour, minute, second } = fn.endTime("10");
+        console.log("스케줄의 시간", minute, ":", second);
+        schedule.scheduleJob(
+          `${second} ${minute} ${hour} ${day} ${month} *`,
+          () => {
+            const actuatorControl = new ActuatorControl({
+              deviceName: "oneTwoThree",
+              active: "stop",
+            });
+            actuatorControl.simpleActuatorControl();
+            console.log("레벨 3 스케줄 작동");
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              //환풍기 중지 명령 넣기
+              // detectStatus에서 level을 "" 으로 쓰기
+              fn.detectFsWrite("fanStatus", "");
+              console.log("실내 온도가 낮아서 환풍기 중지");
+
+              const { month, day, hour, minute, second } = fn.endTime(
+                detectStatus["coolTime"]
+              );
+              console.log("현재시간", moment().format("YYYY-MM-DD HH:mm:ss"));
+              console.log(`스케줄안의 스케줄에서 시간${minute}:${second}`);
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                () => {
+                  //상태값 true 변환
+                  fn.detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            } else {
+              fn.detectFsWrite("isLoop", true);
+
+              console.log("상태값 true 변환 스케줄 작동");
+            }
+          }
+        );
+      } else if (sub.toFixed(1) > 3) {
+        //여기서 환풍기 동작 명령 넣기
+        if (detectStatus["level"] === "") {
+          const actuatorControl = new ActuatorControl({
+            deviceName: "oneTwo",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+          console.log("환풍기 1,2번 작동하여 2개의 환풍기 작동");
+        } else if (detectStatus["fanStatus"] === "1") {
+          const actuatorControl = new ActuatorControl({
+            deviceName: "fan1",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+          console.log("환풍기 1번 작동하여 1개의 환풍기 작동");
+        } else if (detectStatus["fanStatus"] === "2") {
+          console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
+        }
+
+        // detectStatus 에서 isLoop 상태값을 false로 변환
+        fn.detectFsWrite("fanStatus", "2");
+        fn.detectFsWrite("isLoop", false);
+
+        const { month, day, hour, minute, second } = fn.endTime("10");
+
+        schedule.scheduleJob(
+          `${second} ${minute} ${hour} ${day} ${month} *`,
+          async () => {
+            console.log("레벨 2 스케줄 작동");
+            const actuatorControl = new ActuatorControl({
+              deviceName: "oneTwo",
+              active: "stop",
+            });
+            actuatorControl.simpleActuatorControl();
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              //환풍기 중지 명령 넣기
+              // detectStatus에서 level을 "" 으로 쓰기
+              fn.detectFsWrite("fanStatus", "");
+
+              console.log("실내 온도가 낮아서 환풍기 중지");
+
+              //상태값 true 변환
+              const { month, day, hour, minute, second } = fn.endTime(
+                detectStatus["coolTime"]
+              );
+              console.log(`스케줄안의 스케줄에서 시간${minute} ${second}`);
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  fn.detectFsWrite("isLoop", true);
+
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            } else {
+              fn.detectFsWrite("isLoop", true);
+
+              console.log("isLoop를 true로 유지");
+            }
+          }
+        );
+      } else if (sub.toFixed(1) > 1) {
+        //여기서 환풍기 동작 명령 넣기
+        if (detectStatus["fanStatus"] === "") {
+          const actuatorControl = new ActuatorControl({
+            deviceName: "fan2",
+            active: "on",
+          });
+          actuatorControl.simpleActuatorControl();
+          console.log("환풍기 2번 작동하여 1개의 환풍기 작동");
+        } else if (detectStatus["fanStatus"] === "1") {
+          console.log("환풍기 작동시킬게 없어 그냥 그대로 있는다");
+        }
+        // detectStatus 에서 isLoop 상태값을 false로 변환
+        fn.detectFsWrite("fanStatus", "1");
+        fn.detectFsWrite("isLoop", false);
+
+        const { month, day, hour, minute, second } = fn.endTime("5");
+
+        schedule.scheduleJob(
+          `${second} ${minute} ${hour} ${day} ${month} *`,
+          async () => {
+            console.log("레벨 1 스케줄 작동");
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              //환풍기 중지 명령 넣기
+              // detectStatus에서 level을 "" 으로 쓰기
+              detectFsWrite("fanStatus", "");
+              console.log("실내 온도가 낮아서 환풍기 중지");
+
+              //상태값 true 변환
+              const { month, day, hour, minute, second } = fn.endTime(
+                detectStatus["coolTime"]
+              );
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            } else {
+              detectFsWrite("isLoop", true);
+
+              console.log("상태값 true 변환 스케줄 작동");
+            }
+          }
+        );
+      }
+
+      if (stage2Timer) {
+        const { month, day, hour, minute, second } = fn.endTime("50");
+        schedule.scheduleJob(
+          `${second} ${minute} ${hour} ${day} ${month} *`,
+          async () => {
+            detectFsWrite("stage", "2");
+            console.log("상태값 true 변환 스케줄 작동");
+          }
+        );
+      }
+
+      if (detectStatus["stage"] === "2") {
+        if (
+          Number(sensorDataList["ws"]) < 3 &&
+          Number(sensorDataList["rf"]) < 20 &&
+          Number(
+            sensorDataList["outTemp"] - Number(sensorDataList["co2Temp"])
+          ) < 10
+        ) {
+          //개폐기 쪽
+          console.log(sub.toFixed(1));
+
+          if (sub.toFixed(1) > 5) {
+            console.log("개폐기 실행5");
+
+            const { month, day, hour, minute, second } = fn.endTime(
+              detectStatus["shutterTiming"]["level5"]
+            );
+
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                detectFsWrite("isLoop", true);
+                console.log("상태값 true 변환 스케줄 작동");
+              }
+            );
+          } else if (sub.toFixed(1) > 4) {
+            console.log("개폐기 실행4");
+
+            const { month, day, hour, minute, second } = fn.endTime(
+              detectStatus["shutterTiming"]["level4"]
+            );
+
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                detectFsWrite("isLoop", true);
+                console.log("상태값 true 변환 스케줄 작동");
+              }
+            );
+          } else if (sub.toFixed(1) > 3) {
+            console.log("개폐기 실행3");
+
+            const { month, day, hour, minute, second } = fn.endTime(
+              detectStatus["shutterTiming"]["level3"]
+            );
+
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                detectFsWrite("isLoop", true);
+                console.log("상태값 true 변환 스케줄 작동");
+              }
+            );
+          } else if (sub.toFixed(1) > 2) {
+            console.log("개폐기 실행2");
+
+            const { month, day, hour, minute, second } = fn.endTime(
+              detectStatus["shutterTiming"]["level2"]
+            );
+
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                detectFsWrite("isLoop", true);
+                console.log("상태값 true 변환 스케줄 작동");
+              }
+            );
+          } else if (sub.toFixed(1) > 1) {
+            console.log("개폐기 실행1");
+
+            const { month, day, hour, minute, second } = fn.endTime(
+              detectStatus["shutterTiming"]["level1"]
+            );
+
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                detectFsWrite("isLoop", true);
+                console.log("상태값 true 변환 스케줄 작동");
+              }
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function actionLogic() error : ${
           error ?? "not load error contents"
         }`
       );

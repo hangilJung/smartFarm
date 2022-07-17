@@ -201,8 +201,19 @@ function whereToSupply(matter, line) {
 }
 
 function createCharacter(deviceName, active) {
-  let content = deviceName + " 을(를)";
+  let content;
 
+  if (deviceName === "oneTwo") {
+    content = "fan1, fan2을(를)";
+  } else if (deviceName === "oneThree") {
+    content = "fan1, fan3을(를)";
+  } else if (deviceName === "twoThree") {
+    content = "fan2, fan3을(를)";
+  } else if (deviceName === "oneTwoThree") {
+    content = "fan1, fan2, fan3을(를)";
+  } else {
+  }
+  content = deviceName + " 을(를)";
   if (active === "open") {
     content += " 열었습니다.";
   } else if (active === "close") {
@@ -739,9 +750,9 @@ function deviceStatus() {
 
 function addCurrent(onList) {
   let curr = 0.7;
-  const oneFanValue = 0.3;
-  const twoFanValue = 0.7;
-  const threeFanValue = 1.1;
+  const oneFanValue = 0.2;
+  const twoFanValue = 0.6;
+  const threeFanValue = 0.9;
   const nutrientValue = 5;
 
   if (onList.includes("fan1")) {
@@ -971,7 +982,15 @@ function removeFromArray(invalidList, sensorName) {
 }
 
 function isDeviceNameAndActive(deviceName, active) {
-  if (deviceName == "fan1" || deviceName == "fan2" || deviceName == "fan3") {
+  if (
+    deviceName == "fan1" ||
+    deviceName == "fan2" ||
+    deviceName == "fan3" ||
+    deviceName == "oneTwo" ||
+    deviceName == "oneThree" ||
+    deviceName == "twoThree" ||
+    deviceName == "oneTwoThree"
+  ) {
     if (active == "on" || active == "stop") {
       return false;
     } else {
@@ -1519,7 +1538,46 @@ function writeActionStatus(where, value) {
   );
 }
 
+function actionStatus() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/actionSettingValue.json", "utf8")
+  );
+}
+
+function detectStatusFsRead() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/detectStatus.json", "utf8")
+  );
+}
+
+function detectFsWrite(where, value) {
+  const fileRead = detectStatusFsRead();
+  fileRead[where] = value;
+  fs.writeFileSync(
+    __dirname + "/../utils/detectStatus.json",
+    JSON.stringify(fileRead)
+  );
+}
+
+function endTime(value) {
+  let endTime = moment()
+    .add(Number(value), "seconds")
+    .format("YYYY-MM-DD HH:mm:ss");
+
+  const spaceSplit = endTime.split(" ");
+  const date = spaceSplit[0].split("-");
+  const time = spaceSplit[1].split(":");
+  const [hour, minute, second] = time;
+  const [year, month, day] = date;
+
+  return { month, day, hour, minute, second };
+}
+
 module.exports = {
+  endTime,
+  detectFsWrite,
+  detectStatusFsRead,
+  actionStatus,
   simpleResultStatusNormal,
   simpleResultStatusNotWorking,
   responseHeaderAndBody,

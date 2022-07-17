@@ -787,6 +787,28 @@ const query = {
                     nutrient_status_value
                 where 
                     address in ('44521', '44523', '44525', '44527')`,
+  detectAction: `
+                select
+                    sensor_name,
+                    cast((sensor_data_value) as decimal(5,1)) as sensor_data_value,
+                    sensor_data_created_at
+                from
+                    sensor_data sd 
+                join
+                    sensor_information si 
+                on
+                    si.sensor_information_id =sd.sensor_information_id 
+                where
+                    sensor_data_created_at =(
+                                            select 
+                                                max(sensor_data_created_at)	
+                                            from 
+                                                sensor_data
+                                            where 
+                                                sensor_information_id = 1
+                                            )
+                and
+                    si.sensor_information_id in (1,2,5,7,8,6, 30, 31, 32);`,
 };
 
 module.exports = query;

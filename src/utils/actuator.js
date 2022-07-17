@@ -13,6 +13,10 @@ const deviceList = {
   shutter6: "shutter",
   shutter7: "shutter",
   nutrient: "nutrient",
+  oneTwo: "fan",
+  oneThree: "fan",
+  twoThree: "fan",
+  oneTwoThree: "fan",
 };
 
 const emergency = [

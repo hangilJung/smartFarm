@@ -429,6 +429,13 @@ class DataAccess {
 
     return this.#databaseAcess(sql, condition);
   }
+
+  static async detectAction() {
+    const sql = query.detectAction;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
 }
 
 module.exports = DataAccess;

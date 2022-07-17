@@ -34,22 +34,130 @@ class ActuatorControl {
       const { deviceName, active } = this.body;
       const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
       const device = await actu.deviceList[deviceName];
-
+      let ctrl;
       let finalResult;
 
-      const ctrl = {
-        farmland_id: 1,
-        data: [
-          {
-            bed_id: 5,
-            device,
-            active,
-            device_name: deviceName,
-            datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
-            dev_data: [],
-          },
-        ],
-      };
+      if (deviceName === "oneThree") {
+        ctrl = {
+          farmland_id: 1,
+          data: [
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan1",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan3",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+          ],
+        };
+        fn.currentValueFsWrite("fan1", "on");
+        fn.currentValueFsWrite("fan3", "on");
+      } else if (deviceName === "oneTwo") {
+        ctrl = {
+          farmland_id: 1,
+          data: [
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan2",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan1",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+          ],
+        };
+        fn.currentValueFsWrite("fan1", "on");
+        fn.currentValueFsWrite("fan2", "on");
+      } else if (deviceName === "twoThree") {
+        ctrl = {
+          farmland_id: 1,
+          data: [
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan2",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan3",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+          ],
+        };
+        fn.currentValueFsWrite("fan2", "on");
+        fn.currentValueFsWrite("fan3", "on");
+      } else if (deviceName === "oneTwoThree") {
+        ctrl = {
+          farmland_id: 1,
+          data: [
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan3",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan2",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: "fan1",
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+          ],
+        };
+        fn.currentValueFsWrite("fan1", "on");
+        fn.currentValueFsWrite("fan2", "on");
+        fn.currentValueFsWrite("fan3", "on");
+      } else {
+        ctrl = {
+          farmland_id: 1,
+          data: [
+            {
+              bed_id: 5,
+              device,
+              active,
+              device_name: deviceName,
+              datetime: moment().format("YYYY-MM-DD T HH:mm:ss"),
+              dev_data: [],
+            },
+          ],
+        };
+        fn.currentValueFsWrite(deviceName, "on");
+      }
 
       if (
         fn.parameterIsUndefinded(actu.activeList[active]) ||
@@ -61,8 +169,9 @@ class ActuatorControl {
       const content = fn.createCharacter(deviceName, active);
       console.log(content);
       await DataAccess.actuatorControlActionRecord(deviceName, content);
-      loadActuatorRecord();
+      this.loadActuatorRecord();
 
+      console.log(ctrl);
       const result = await axios.post(process.env.GATEWAY_SERVER, ctrl, {
         timeout: timeoutSettingValue,
       });
@@ -78,12 +187,12 @@ class ActuatorControl {
         if (resultCode == "00" && true) {
           await fn.sleep(3000).then(async () => {
             const result = await DataAccess.currentAmountOfChange();
+            console.log("##", JSON.stringify(fn.addCurrent(fn.deviceStatus())));
 
             if (
               result[0][0]["sensor_data_value"] >
               fn.addCurrent(fn.deviceStatus())
             ) {
-              fn.currentValueFsWrite(deviceName, "on");
               const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
               finalResult = fn.simpleResultStatusNormal(
                 reqDatetime,
@@ -91,6 +200,22 @@ class ActuatorControl {
                 device
               );
             } else {
+              if (deviceName === "oneTwo") {
+                fn.currentValueFsWrite("fan1", "off");
+                fn.currentValueFsWrite("fan2", "off");
+              } else if (deviceName === "oneThree") {
+                fn.currentValueFsWrite("fan1", "off");
+                fn.currentValueFsWrite("fan3", "off");
+              } else if (deviceName === "twoThree") {
+                fn.currentValueFsWrite("fan2", "off");
+                fn.currentValueFsWrite("fan3", "off");
+              } else if (deviceName === "oneTwoThree") {
+                fn.currentValueFsWrite("fan1", "off");
+                fn.currentValueFsWrite("fan2", "off");
+                fn.currentValueFsWrite("fan3", "off");
+              } else {
+                fn.currentValueFsWrite(deviceName, "off");
+              }
               const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
 
               finalResult = fn.simpleResultStatusNotWorking(
@@ -98,13 +223,37 @@ class ActuatorControl {
                 resDatetime,
                 device
               );
+
+              if (deviceName === "oneTwo") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan2작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "oneThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "twoThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan2, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "oneTwoThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan2, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else {
+                await DataAccess.actuatorControlActionRecord(
+                  deviceName,
+                  `${deviceName}작동에 통신 문제가 발생했습니다.`
+                );
+              }
+
+              this.loadActuatorRecord();
+              return finalResult;
             }
-            await DataAccess.actuatorControlActionRecord(
-              deviceName,
-              `${deviceName}작동에 통신 문제가 발생했습니다.`
-            );
-            loadActuatorRecord();
-            return finalResult;
           });
         }
       } else if (active == "stop") {
@@ -124,17 +273,55 @@ class ActuatorControl {
                 device
               );
             } else {
+              if (deviceName === "oneTwo") {
+                fn.currentValueFsWrite("fan1", "on");
+                fn.currentValueFsWrite("fan2", "on");
+              } else if (deviceName === "oneThree") {
+                fn.currentValueFsWrite("fan1", "on");
+                fn.currentValueFsWrite("fan3", "on");
+              } else if (deviceName === "twoThree") {
+                fn.currentValueFsWrite("fan2", "on");
+                fn.currentValueFsWrite("fan3", "on");
+              } else if (deviceName === "oneTwoThree") {
+                fn.currentValueFsWrite("fan1", "on");
+                fn.currentValueFsWrite("fan2", "on");
+                fn.currentValueFsWrite("fan3", "on");
+              } else {
+                fn.currentValueFsWrite(deviceName, "on");
+              }
               const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
               finalResult = fn.simpleResultStatusNotWorking(
                 reqDatetime,
                 resDatetime,
                 device
               );
-              await DataAccess.actuatorControlActionRecord(
-                deviceName,
-                `${deviceName}작동에 통신 문제가 발생했습니다.`
-              );
-              loadActuatorRecord();
+              if (deviceName === "oneTwo") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan2작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "oneThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "twoThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan2, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else if (deviceName === "oneTwoThree") {
+                await DataAccess.actuatorControlActionRecord(
+                  "fan1",
+                  `fan1, fan2, fan3작동에 통신 문제가 발생했습니다.`
+                );
+              } else {
+                await DataAccess.actuatorControlActionRecord(
+                  deviceName,
+                  `${deviceName}작동에 통신 문제가 발생했습니다.`
+                );
+              }
+              this.loadActuatorRecord();
             }
             return finalResult;
           });
@@ -277,6 +464,7 @@ class ActuatorControl {
       return fn.fanInvalidRequestParameterError();
     }
   }
+
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
     const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");

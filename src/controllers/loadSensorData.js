@@ -111,6 +111,10 @@ const load = {
     const result = await sensorData.sensorDataYearly();
     res.json(result);
   },
+  actionLogic: async () => {
+    const sensorData = new SensorData();
+    await sensorData.actionLogic();
+  },
 };
 
 const socketIO = {
