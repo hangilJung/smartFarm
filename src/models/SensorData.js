@@ -881,7 +881,7 @@ class SensorData {
       }
 
       console.log(settingList);
-      let stage2Timer;
+      let stage2Timer = false;
 
       const sub =
         Number(sensorDataList["co2Temp"]) -
@@ -892,6 +892,7 @@ class SensorData {
       if (sub.toFixed(1) > 5) {
         ///여기서 환풍기 작동 명려 넣기
         if (detectStatus["fanStatus"] === "") {
+          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "oneTwoThree",
             active: "on",
@@ -899,6 +900,7 @@ class SensorData {
           actuatorControl.simpleActuatorControl();
           console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
         } else if (detectStatus["fanStatus"] === "1") {
+          stage2Timer = true;
           console.log("환풍기 1,3번 작동하여 2개의 환풍기 작동");
           const actuatorControl = new ActuatorControl({
             deviceName: "oneThree",
@@ -906,6 +908,7 @@ class SensorData {
           });
           actuatorControl.simpleActuatorControl();
         } else if (detectStatus["fanStatus"] === "2") {
+          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "fan3",
             active: "on",
@@ -960,6 +963,7 @@ class SensorData {
       } else if (sub.toFixed(1) > 3) {
         //여기서 환풍기 동작 명령 넣기
         if (detectStatus["level"] === "") {
+          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "oneTwo",
             active: "on",
@@ -967,6 +971,7 @@ class SensorData {
           actuatorControl.simpleActuatorControl();
           console.log("환풍기 1,2번 작동하여 2개의 환풍기 작동");
         } else if (detectStatus["fanStatus"] === "1") {
+          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "fan1",
             active: "on",
@@ -1022,6 +1027,7 @@ class SensorData {
       } else if (sub.toFixed(1) > 1) {
         //여기서 환풍기 동작 명령 넣기
         if (detectStatus["fanStatus"] === "") {
+          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "fan2",
             active: "on",
@@ -1073,7 +1079,7 @@ class SensorData {
           `${second} ${minute} ${hour} ${day} ${month} *`,
           async () => {
             detectFsWrite("stage", "2");
-            console.log("상태값 true 변환 스케줄 작동");
+            console.log("stage2로 변환 스케줄 작동");
           }
         );
       }
@@ -1096,13 +1102,15 @@ class SensorData {
               detectStatus["shutterTiming"]["level5"]
             );
 
-            schedule.scheduleJob(
-              `${second} ${minute} ${hour} ${day} ${month} *`,
-              async () => {
-                detectFsWrite("isLoop", true);
-                console.log("상태값 true 변환 스케줄 작동");
-              }
-            );
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            }
           } else if (sub.toFixed(1) > 4) {
             console.log("개폐기 실행4");
 
@@ -1110,13 +1118,15 @@ class SensorData {
               detectStatus["shutterTiming"]["level4"]
             );
 
-            schedule.scheduleJob(
-              `${second} ${minute} ${hour} ${day} ${month} *`,
-              async () => {
-                detectFsWrite("isLoop", true);
-                console.log("상태값 true 변환 스케줄 작동");
-              }
-            );
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            }
           } else if (sub.toFixed(1) > 3) {
             console.log("개폐기 실행3");
 
@@ -1124,13 +1134,15 @@ class SensorData {
               detectStatus["shutterTiming"]["level3"]
             );
 
-            schedule.scheduleJob(
-              `${second} ${minute} ${hour} ${day} ${month} *`,
-              async () => {
-                detectFsWrite("isLoop", true);
-                console.log("상태값 true 변환 스케줄 작동");
-              }
-            );
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            }
           } else if (sub.toFixed(1) > 2) {
             console.log("개폐기 실행2");
 
@@ -1138,13 +1150,15 @@ class SensorData {
               detectStatus["shutterTiming"]["level2"]
             );
 
-            schedule.scheduleJob(
-              `${second} ${minute} ${hour} ${day} ${month} *`,
-              async () => {
-                detectFsWrite("isLoop", true);
-                console.log("상태값 true 변환 스케줄 작동");
-              }
-            );
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            }
           } else if (sub.toFixed(1) > 1) {
             console.log("개폐기 실행1");
 
@@ -1152,13 +1166,15 @@ class SensorData {
               detectStatus["shutterTiming"]["level1"]
             );
 
-            schedule.scheduleJob(
-              `${second} ${minute} ${hour} ${day} ${month} *`,
-              async () => {
-                detectFsWrite("isLoop", true);
-                console.log("상태값 true 변환 스케줄 작동");
-              }
-            );
+            if (sensorDataList.co2Temp < settingList.settingTempMax) {
+              schedule.scheduleJob(
+                `${second} ${minute} ${hour} ${day} ${month} *`,
+                async () => {
+                  detectFsWrite("isLoop", true);
+                  console.log("상태값 true 변환 스케줄 작동");
+                }
+              );
+            }
           }
         }
       }
