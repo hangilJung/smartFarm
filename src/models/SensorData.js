@@ -43,11 +43,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-     try {
-     axios.post(process.env.TEST_LOCAL_SERVER, this.body);
-     } catch (error) {
-       console.log(error);
-     }
+    //  try {
+    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
+    //  } catch (error) {
+    //    console.log(error);
+    //  }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));
@@ -715,7 +715,6 @@ class SensorData {
           resDatetime
         );
       }
-
       const list = fn.selectActionData(this.body);
 
       for (let i of list) {
@@ -730,6 +729,9 @@ class SensorData {
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
+      const data = await this.readAction();
+      console.log(data);
+      io.mainData.emit("actionSettingValue", data);
 
       return response;
     } catch (error) {
@@ -871,13 +873,13 @@ class SensorData {
       for (let i of timeNameList) {
         if (result[i] != "") {
           if (result[i] == nowTime) {
-            let where ;
-            if(Number(nowTime.split(':')[0]) > 9){
-              where = i.slice(0,5)
-            }else {
+            let where;
+            if (Number(nowTime.split(":")[0]) > 9) {
+              where = i.slice(0, 5);
+            } else {
               where = i.slice(0, 4);
-            }            
-            
+            }
+
             const temp = where + "Temperature";
 
             const tempMin = result[temp].split("-")[0];
@@ -947,8 +949,6 @@ class SensorData {
               // detectStatus에서 level을 "" 으로 쓰기
               fn.detectFsWrite("fanStatus", "");
 
-              
-
               console.log("실내 온도가 낮아서 환풍기 중지");
 
               const actuatorControl = new ActuatorControl({
@@ -1004,7 +1004,7 @@ class SensorData {
         // detectStatus 에서 isLoop 상태값을 false로 변환
         fn.detectFsWrite("fanStatus", "2");
         fn.detectFsWrite("isLoop", false);
-        
+
         const actuatorControl = new ActuatorControl({
           deviceName: "oneTwo",
           active: "on",
@@ -1020,7 +1020,7 @@ class SensorData {
 
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
-              // detectStatus에서 level을 "" 으로 쓰기             
+              // detectStatus에서 level을 "" 으로 쓰기
 
               const actuatorControl = new ActuatorControl({
                 deviceName: "oneTwo",
@@ -1079,8 +1079,6 @@ class SensorData {
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
-
-              
 
               const actuatorControl = new ActuatorControl({
                 deviceName: "fan2",

@@ -753,7 +753,7 @@ function addCurrent(onList) {
   const oneFanValue = 0.2;
   const twoFanValue = 0.6;
   const threeFanValue = 0.9;
-  const nutrientValue = 5;
+  const nutrientValue = 4.2;
 
   if (onList.includes("fan1")) {
     curr += oneFanValue;
@@ -1384,6 +1384,11 @@ function invalidActionSettingValue(body) {
 
   const list = Object.keys(body);
   const checkList = [];
+
+  if (list.length === 0) {
+    result = true;
+    return result;
+  }
 
   for (let i of list) {
     if (invalidCheck.includes(i)) {

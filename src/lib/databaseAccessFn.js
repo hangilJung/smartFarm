@@ -243,8 +243,10 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
       if (
         current[0][0]["sensor_data_value"] > fn.addCurrent(fn.deviceStatus())
       ) {
-        console.log("양액기 전류값 확인 후 작동");
+        console.log("양액기 전류값 확인 후 작동 상태 확인");
+
         fn.currentValueFsWrite("nutrient", "on");
+
         nutrient.emit("nutrientStatus", {
           header: {
             resultCode: "00",

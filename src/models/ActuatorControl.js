@@ -59,13 +59,12 @@ class ActuatorControl {
             },
           ],
         };
-        if(active === "on"){
+        if (active === "on") {
           fn.currentValueFsWrite("fan1", "on");
           fn.currentValueFsWrite("fan3", "on");
-        } else if(active === 'off'){
+        } else if (active === "off") {
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan3", "off");
-
         }
       } else if (deviceName === "oneTwo") {
         ctrl = {
@@ -89,14 +88,13 @@ class ActuatorControl {
             },
           ],
         };
-        if(active === 'on'){
+        if (active === "on") {
           fn.currentValueFsWrite("fan1", "on");
-        fn.currentValueFsWrite("fan2", "on");
-        } else if( active === 'stop'){
+          fn.currentValueFsWrite("fan2", "on");
+        } else if (active === "stop") {
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan2", "off");
         }
-        
       } else if (deviceName === "twoThree") {
         ctrl = {
           farmland_id: 1,
@@ -119,12 +117,12 @@ class ActuatorControl {
             },
           ],
         };
-        if(active === 'on'){
+        if (active === "on") {
           fn.currentValueFsWrite("fan2", "on");
           fn.currentValueFsWrite("fan3", "on");
-        } else if(active === 'stop'){
+        } else if (active === "stop") {
           fn.currentValueFsWrite("fan2", "off");
-          fn.currentValueFsWrite("fan3", "off");          
+          fn.currentValueFsWrite("fan3", "off");
         }
       } else if (deviceName === "oneTwoThree") {
         ctrl = {
@@ -156,11 +154,11 @@ class ActuatorControl {
             },
           ],
         };
-        if(active === 'on') {
+        if (active === "on") {
           fn.currentValueFsWrite("fan1", "on");
           fn.currentValueFsWrite("fan2", "on");
           fn.currentValueFsWrite("fan3", "on");
-        } else if(active === 'stop') {
+        } else if (active === "stop") {
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan2", "off");
           fn.currentValueFsWrite("fan3", "off");
@@ -241,9 +239,9 @@ class ActuatorControl {
             },
           ],
         };
-        if(active === 'on') {
+        if (active === "on") {
           fn.currentValueFsWrite(deviceName, "on");
-        } else if(active === 'stop'){
+        } else if (active === "stop") {
           fn.currentValueFsWrite(deviceName, "off");
         }
       }
@@ -359,24 +357,20 @@ class ActuatorControl {
             });
           }
         } else if (active == "stop") {
-  
           if (resultCode == "00" && true) {
             await fn.sleep(3000).then(async () => {
               const result = await DataAccess.currentAmountOfChange();
               const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-              console.log("@@@@",result[0][0]["sensor_data_value"])
-              console.log("$$$$$",  fn.addCurrentOff(fn.deviceStatus()) )
+              console.log("@@@@", result[0][0]["sensor_data_value"]);
+              console.log("$$$$$", fn.addCurrentOff(fn.deviceStatus()));
               let invalid;
-              if(Number(result[0][0]["sensor_data_value"]) > 6.8){
+              if (Number(result[0][0]["sensor_data_value"]) > 6.8) {
                 invalid = 6.1;
               } else {
-                invalid = result[0][0]["sensor_data_value"]
+                invalid = result[0][0]["sensor_data_value"];
               }
-             
-              if (
-                invalid <
-                Number(fn.addCurrentOff(fn.deviceStatus()))
-              ) {
+
+              if (invalid < Number(fn.addCurrentOff(fn.deviceStatus()))) {
                 fn.currentValueFsWrite(deviceName, "off");
                 finalResult = fn.simpleResultStatusNormal(
                   reqDatetime,
@@ -1022,9 +1016,9 @@ class ActuatorControl {
           nt.whatDetailNumber(compareResult.list),
           bodyData
         );
-        await DataAccess.updateNutricultureMachinePageStatus(
-          compareResult.list
-        );
+        // await DataAccess.updateNutricultureMachinePageStatus(
+        //   compareResult.list
+        // );
       }
 
       return;
