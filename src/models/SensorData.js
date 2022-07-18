@@ -822,6 +822,7 @@ class SensorData {
       const sensorData = await DataAccess.detectAction();
 
       let sensorDataList = {};
+      let shutterSchedule;
 
       //외부 및 내부 메인 온도 값 가져오기
       for (let i of sensorData[0]) {
@@ -893,11 +894,14 @@ class SensorData {
         ///여기서 환풍기 작동 명려 넣기
         if (detectStatus["fanStatus"] === "") {
           stage2Timer = true;
+
           const actuatorControl = new ActuatorControl({
             deviceName: "oneTwoThree",
             active: "on",
           });
+
           actuatorControl.simpleActuatorControl();
+
           console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
         } else if (detectStatus["fanStatus"] === "1") {
           stage2Timer = true;
@@ -928,28 +932,35 @@ class SensorData {
         schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
           () => {
-            const actuatorControl = new ActuatorControl({
-              deviceName: "oneTwoThree",
-              active: "stop",
-            });
-            actuatorControl.simpleActuatorControl();
             console.log("레벨 3 스케줄 작동");
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
               fn.detectFsWrite("fanStatus", "");
+
+              shutterSchedule.cancel();
+
               console.log("실내 온도가 낮아서 환풍기 중지");
+
+              const actuatorControl = new ActuatorControl({
+                deviceName: "oneTwoThree",
+                active: "stop",
+              });
+              actuatorControl.simpleActuatorControl();
 
               const { month, day, hour, minute, second } = fn.endTime(
                 detectStatus["coolTime"]
               );
+
               console.log("현재시간", moment().format("YYYY-MM-DD HH:mm:ss"));
               console.log(`스케줄안의 스케줄에서 시간${minute}:${second}`);
+
               schedule.scheduleJob(
                 `${second} ${minute} ${hour} ${day} ${month} *`,
                 () => {
                   //상태값 true 변환
                   fn.detectFsWrite("isLoop", true);
+
                   console.log("상태값 true 변환 스케줄 작동");
                 }
               );
@@ -992,14 +1003,19 @@ class SensorData {
           `${second} ${minute} ${hour} ${day} ${month} *`,
           async () => {
             console.log("레벨 2 스케줄 작동");
-            const actuatorControl = new ActuatorControl({
-              deviceName: "oneTwo",
-              active: "stop",
-            });
-            actuatorControl.simpleActuatorControl();
+
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
+
+              shutterSchedule.cancel();
+
+              const actuatorControl = new ActuatorControl({
+                deviceName: "oneTwo",
+                active: "stop",
+              });
+              actuatorControl.simpleActuatorControl();
+
               fn.detectFsWrite("fanStatus", "");
 
               console.log("실내 온도가 낮아서 환풍기 중지");
@@ -1050,7 +1066,17 @@ class SensorData {
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
+
+              shutterSchedule.cancel();
+
+              const actuatorControl = new ActuatorControl({
+                deviceName: "oneTwo",
+                active: "stop",
+              });
+              actuatorControl.simpleActuatorControl();
+
               detectFsWrite("fanStatus", "");
+
               console.log("실내 온도가 낮아서 환풍기 중지");
 
               //상태값 true 변환
@@ -1075,15 +1101,16 @@ class SensorData {
 
       if (stage2Timer) {
         const { month, day, hour, minute, second } = fn.endTime("50");
-        schedule.scheduleJob(
+        shutterSchedule = schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
           async () => {
-            detectFsWrite("stage", "2");
+            fn.detectFsWrite("stage", "2");
             console.log("stage2로 변환 스케줄 작동");
           }
         );
       } else {
-        detectFsWrite("stage", "1");
+        fn.detectFsWrite("stage", "1");
+
         console.log("stge1로 변환");
       }
 
@@ -1107,7 +1134,7 @@ class SensorData {
             // });
             // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
-              detectStatus["shutterTiming"]["level5"]
+              detectStatus["shutterLevel5"]
             );
 
             schedule.scheduleJob(
@@ -1130,7 +1157,7 @@ class SensorData {
             // });
             // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
-              detectStatus["shutterTiming"]["level4"]
+              detectStatus["shutterLevel4"]
             );
 
             schedule.scheduleJob(
@@ -1174,7 +1201,7 @@ class SensorData {
             // });
             // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
-              detectStatus["shutterTiming"]["level2"]
+              detectStatus["shutterLevel2"]
             );
 
             schedule.scheduleJob(
@@ -1196,7 +1223,7 @@ class SensorData {
             // });
             // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
-              detectStatus["shutterTiming"]["level1"]
+              detectStatus["shutterLevel1"]
             );
 
             schedule.scheduleJob(
@@ -1218,7 +1245,7 @@ class SensorData {
         // });
         // actuatorControl.simpleActuatorControl();
         const { month, day, hour, minute, second } = fn.endTime(
-          detectStatus["shutterTiming"]["level1"]
+          detectStatus["shutterLevel1"]
         );
 
         schedule.scheduleJob(
