@@ -1,18 +1,1 @@
-{
-  "isLoop": true,
-  "coolTime": "60",
-  "fanStatus": "",
-  "fanLevel1": "1",
-  "fanLevel2": "3",
-  "fanLevel3": "5",
-  "outTemp": "10",
-  "rf": "20",
-  "ws": "3",
-  "shutterLevel1": "3",
-  "shutterLevel2": "5",
-  "shutterLevel3": "7",
-  "shutterLevel4": "9",
-  "shutterLevel5": "12",
-  "shutterStatus": "close",
-  "stage": "1"
-}
+{"isLoop":true,"coolTime":"60","fanStatus":"","fanLevel1":"1","fanLevel2":"3","fanLevel3":"5","outTemp":"10","rf":"20","ws":"3","shutterLevel1":"3","shutterLevel2":"5","shutterLevel3":"7","shutterLevel4":"9","shutterLevel5":"12","shutterStatus":"close","stage":"1"}

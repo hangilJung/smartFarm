@@ -749,7 +749,7 @@ function deviceStatus() {
 }
 
 function addCurrent(onList) {
-  let curr = 0.7;
+  let curr = 0.6;
   const oneFanValue = 0.2;
   const twoFanValue = 0.6;
   const threeFanValue = 0.9;
@@ -795,8 +795,8 @@ function addCurrent(onList) {
 }
 
 function addCurrentOff(onList) {
-  let curr = 0.7;
-  const oneFanValue = 0.4;
+  let curr = 0.9;
+  const oneFanValue = 0.6;
   const twoFanValue = 1.1;
   const threeFanValue = 1.7;
   const nutrientValue = 5.6;
@@ -837,7 +837,7 @@ function addCurrentOff(onList) {
     curr += nutrientValue;
   }
 
-  return curr.toFixed(1);
+  return Number(curr.toFixed(1));
 }
 
 function invalidInsideMainSensorData(list) {

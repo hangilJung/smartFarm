@@ -20,8 +20,8 @@ module.exports = () => {
   // setInterval(() => {
   //   const isBool = fn.detectStatusFsRead();
   //   if (isBool.isLoop === true) {
-  //     ctl.load.actionLogic();
   //     console.log("actionLogi 작동");
+  //     ctl.load.actionLogic();
   //   }
   // }, 2000);
 

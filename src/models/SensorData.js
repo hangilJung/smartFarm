@@ -43,11 +43,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-    //  try {
-    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
-    //  } catch (error) {
-    //    console.log(error);
-    //  }
+     try {
+     axios.post(process.env.TEST_LOCAL_SERVER, this.body);
+     } catch (error) {
+       console.log(error);
+     }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));
@@ -871,13 +871,20 @@ class SensorData {
       for (let i of timeNameList) {
         if (result[i] != "") {
           if (result[i] == nowTime) {
-            const where = i.slice(0, 4);
+            let where ;
+            if(Number(nowTime.split(':')[0]) > 9){
+              where = i.slice(0,5)
+            }else {
+              where = i.slice(0, 4);
+            }            
+            
             const temp = where + "Temperature";
 
             const tempMin = result[temp].split("-")[0];
             const tempMax = result[temp].split("-")[1];
 
             settingList = { settingTempMin: tempMin, settingTempMax: tempMax };
+            break;
           }
         }
       }
@@ -926,7 +933,7 @@ class SensorData {
         fn.detectFsWrite("fanStatus", "3");
         fn.detectFsWrite("isLoop", false);
 
-        const { month, day, hour, minute, second } = fn.endTime("10");
+        const { month, day, hour, minute, second } = fn.endTime("60");
 
         console.log("스케줄의 시간", minute, ":", second);
 
@@ -940,7 +947,7 @@ class SensorData {
               // detectStatus에서 level을 "" 으로 쓰기
               fn.detectFsWrite("fanStatus", "");
 
-              shutterSchedule.cancel();
+              
 
               console.log("실내 온도가 낮아서 환풍기 중지");
 
@@ -997,8 +1004,14 @@ class SensorData {
         // detectStatus 에서 isLoop 상태값을 false로 변환
         fn.detectFsWrite("fanStatus", "2");
         fn.detectFsWrite("isLoop", false);
+        
+        const actuatorControl = new ActuatorControl({
+          deviceName: "oneTwo",
+          active: "on",
+        });
+        actuatorControl.simpleActuatorControl();
 
-        const { month, day, hour, minute, second } = fn.endTime("10");
+        const { month, day, hour, minute, second } = fn.endTime("60");
 
         schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
@@ -1007,9 +1020,7 @@ class SensorData {
 
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
-              // detectStatus에서 level을 "" 으로 쓰기
-
-              shutterSchedule.cancel();
+              // detectStatus에서 level을 "" 으로 쓰기             
 
               const actuatorControl = new ActuatorControl({
                 deviceName: "oneTwo",
@@ -1058,7 +1069,7 @@ class SensorData {
         fn.detectFsWrite("fanStatus", "1");
         fn.detectFsWrite("isLoop", false);
 
-        const { month, day, hour, minute, second } = fn.endTime("5");
+        const { month, day, hour, minute, second } = fn.endTime("60");
 
         schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
@@ -1069,16 +1080,16 @@ class SensorData {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
 
-              shutterSchedule.cancel();
+              
 
               const actuatorControl = new ActuatorControl({
-                deviceName: "oneTwo",
+                deviceName: "fan2",
                 active: "stop",
               });
 
               actuatorControl.simpleActuatorControl();
 
-              detectFsWrite("fanStatus", "");
+              fn.detectFsWrite("fanStatus", "");
 
               console.log("실내 온도가 낮아서 환풍기 중지");
 
@@ -1089,13 +1100,13 @@ class SensorData {
               schedule.scheduleJob(
                 `${second} ${minute} ${hour} ${day} ${month} *`,
                 async () => {
-                  detectFsWrite("isLoop", true);
+                  fn.detectFsWrite("isLoop", true);
 
                   console.log("상태값 true 변환 스케줄 작동");
                 }
               );
             } else {
-              detectFsWrite("isLoop", true);
+              fn.detectFsWrite("isLoop", true);
 
               console.log("상태값 true 변환 스케줄 작동");
             }

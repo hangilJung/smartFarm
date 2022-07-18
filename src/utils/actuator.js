@@ -4,7 +4,7 @@ const time = moment().format("YYYY-MM-DD T HH:mm:ss");
 const deviceList = {
   fan1: "fan",
   fan2: "fan",
-  fna3: "fan",
+  fan3: "fan",
   shutter1: "shutter",
   shutter2: "shutter",
   shutter3: "shutter",
