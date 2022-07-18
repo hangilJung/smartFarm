@@ -7,19 +7,22 @@ const dsd = require("../controllers/index");
 const fn = require("../lib/fn");
 
 module.exports = () => {
-  // setInterval(async () => {
-  //   await nt.socketIO.detectNutrientData();
-  //   console.log("nutrient detect");
-  // }, 10 * 1000);
-  // nt.socketIO.detectNutrientData();
-  // console.log("detecting");
+  setInterval(async () => {
+    await nt.socketIO.detectNutrientData();
+    console.log("nutrient detect");
+  }, 10 * 1000);
+  nt.socketIO.detectNutrientData();
+  console.log("detecting");
 
   fn.detectFsWrite("isLoop", true);
   fn.detectFsWrite("fanStatus", "");
 
   // setInterval(() => {
-  //   ctl.load.actionLogic();
-  //   console.log("actionLogi 작동");
+  //   const isBool = fn.detectStatusFsRead();
+  //   if (isBool.isLoop === true) {
+  //     ctl.load.actionLogic();
+  //     console.log("actionLogi 작동");
+  //   }
   // }, 2000);
 
   schedule.scheduleJob("10 00 * * * *", async () => {

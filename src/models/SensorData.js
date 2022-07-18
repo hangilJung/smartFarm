@@ -774,7 +774,7 @@ class SensorData {
         requestDatetime: reqDatetime,
         responseDatetime: resDatetime,
       };
-      response.body = [sensorData];
+      response.body = sensorData;
 
       return response;
     } catch (error) {
