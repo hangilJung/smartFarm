@@ -864,6 +864,7 @@ class SensorData {
       }
 
       console.log(sensorDataList);
+
       let settingList = {};
 
       //세팅 온도 값 뽑아내기
@@ -904,7 +905,6 @@ class SensorData {
 
           console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
         } else if (detectStatus["fanStatus"] === "1") {
-          stage2Timer = true;
           console.log("환풍기 1,3번 작동하여 2개의 환풍기 작동");
           const actuatorControl = new ActuatorControl({
             deviceName: "oneThree",
@@ -912,7 +912,6 @@ class SensorData {
           });
           actuatorControl.simpleActuatorControl();
         } else if (detectStatus["fanStatus"] === "2") {
-          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "fan3",
             active: "on",
@@ -928,11 +927,14 @@ class SensorData {
         fn.detectFsWrite("isLoop", false);
 
         const { month, day, hour, minute, second } = fn.endTime("10");
+
         console.log("스케줄의 시간", minute, ":", second);
+
         schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
           () => {
             console.log("레벨 3 스케줄 작동");
+
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
@@ -982,7 +984,6 @@ class SensorData {
           actuatorControl.simpleActuatorControl();
           console.log("환풍기 1,2번 작동하여 2개의 환풍기 작동");
         } else if (detectStatus["fanStatus"] === "1") {
-          stage2Timer = true;
           const actuatorControl = new ActuatorControl({
             deviceName: "fan1",
             active: "on",
@@ -1063,6 +1064,7 @@ class SensorData {
           `${second} ${minute} ${hour} ${day} ${month} *`,
           async () => {
             console.log("레벨 1 스케줄 작동");
+
             if (sensorDataList.co2Temp < settingList.settingTempMax) {
               //환풍기 중지 명령 넣기
               // detectStatus에서 level을 "" 으로 쓰기
@@ -1073,6 +1075,7 @@ class SensorData {
                 deviceName: "oneTwo",
                 active: "stop",
               });
+
               actuatorControl.simpleActuatorControl();
 
               detectFsWrite("fanStatus", "");
@@ -1087,6 +1090,7 @@ class SensorData {
                 `${second} ${minute} ${hour} ${day} ${month} *`,
                 async () => {
                   detectFsWrite("isLoop", true);
+
                   console.log("상태값 true 변환 스케줄 작동");
                 }
               );
