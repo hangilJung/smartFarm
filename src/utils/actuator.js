@@ -17,6 +17,7 @@ const deviceList = {
   oneThree: "fan",
   twoThree: "fan",
   oneTwoThree: "fan",
+  shutter: "shutters",
 };
 
 const emergency = [

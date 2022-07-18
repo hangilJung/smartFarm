@@ -889,7 +889,7 @@ class SensorData {
       console.log(`sub 값은? ${sub.toFixed(1)}`);
 
       //환풍기
-      if (sub.toFixed(1) > 5) {
+      if (sub.toFixed(1) > Number(detectStatus["fanLevel3"])) {
         ///여기서 환풍기 작동 명려 넣기
         if (detectStatus["fanStatus"] === "") {
           stage2Timer = true;
@@ -960,7 +960,7 @@ class SensorData {
             }
           }
         );
-      } else if (sub.toFixed(1) > 3) {
+      } else if (sub.toFixed(1) > Number(detectStatus["fanLevel2"])) {
         //여기서 환풍기 동작 명령 넣기
         if (detectStatus["level"] === "") {
           stage2Timer = true;
@@ -1024,7 +1024,7 @@ class SensorData {
             }
           }
         );
-      } else if (sub.toFixed(1) > 1) {
+      } else if (sub.toFixed(1) > Number(detectStatus["fanLevel1"])) {
         //여기서 환풍기 동작 명령 넣기
         if (detectStatus["fanStatus"] === "") {
           stage2Timer = true;
@@ -1082,12 +1082,15 @@ class SensorData {
             console.log("stage2로 변환 스케줄 작동");
           }
         );
+      } else {
+        detectFsWrite("stage", "1");
+        console.log("stge1로 변환");
       }
 
       if (detectStatus["stage"] === "2") {
         if (
-          Number(sensorDataList["ws"]) < 3 &&
-          Number(sensorDataList["rf"]) < 20 &&
+          Number(sensorDataList["ws"]) < Number(detectStatus["ws"]) &&
+          Number(sensorDataList["rf"]) < Number(detectStatus["rf"]) &&
           Number(
             sensorDataList["outTemp"] - Number(sensorDataList["co2Temp"])
           ) < 10
@@ -1097,86 +1100,138 @@ class SensorData {
 
           if (sub.toFixed(1) > 5) {
             console.log("개폐기 실행5");
-
+            fn.detectFsWrite("shutterStatus", "level5");
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "open",
+            // });
+            // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
               detectStatus["shutterTiming"]["level5"]
             );
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  detectFsWrite("isLoop", true);
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            }
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                fn.detectFsWrite("shutterStatus", "level5");
+                // const actuatorControl = new ActuatorControl({
+                //   deviceName: "shutters",
+                //   active: "stop",
+                // });
+                // actuatorControl.simpleActuatorControl();
+              }
+            );
           } else if (sub.toFixed(1) > 4) {
             console.log("개폐기 실행4");
-
+            fn.detectFsWrite("shutterStatus", "level4");
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "open",
+            // });
+            // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
               detectStatus["shutterTiming"]["level4"]
             );
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  detectFsWrite("isLoop", true);
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            }
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                // const actuatorControl = new ActuatorControl({
+                //   deviceName: "shutters",
+                //   active: "stop",
+                // });
+                // actuatorControl.simpleActuatorControl();
+              }
+            );
           } else if (sub.toFixed(1) > 3) {
             console.log("개폐기 실행3");
-
+            fn.detectFsWrite("shutterStatus", "level3");
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "open",
+            // });
+            // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
               detectStatus["shutterTiming"]["level3"]
             );
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  detectFsWrite("isLoop", true);
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            }
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                // const actuatorControl = new ActuatorControl({
+                //   deviceName: "shutters",
+                //   active: "stop",
+                // });
+                // actuatorControl.simpleActuatorControl();
+              }
+            );
           } else if (sub.toFixed(1) > 2) {
             console.log("개폐기 실행2");
-
+            fn.detectFsWrite("shutterStatus", "level2");
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "open",
+            // });
+            // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
               detectStatus["shutterTiming"]["level2"]
             );
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  detectFsWrite("isLoop", true);
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            }
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                // const actuatorControl = new ActuatorControl({
+                //   deviceName: "shutters",
+                //   active: "stop",
+                // });
+                // actuatorControl.simpleActuatorControl();
+              }
+            );
           } else if (sub.toFixed(1) > 1) {
             console.log("개폐기 실행1");
-
+            fn.detectFsWrite("shutterStatus", "level1");
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "open",
+            // });
+            // actuatorControl.simpleActuatorControl();
             const { month, day, hour, minute, second } = fn.endTime(
               detectStatus["shutterTiming"]["level1"]
             );
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  detectFsWrite("isLoop", true);
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            }
+            schedule.scheduleJob(
+              `${second} ${minute} ${hour} ${day} ${month} *`,
+              async () => {
+                // const actuatorControl = new ActuatorControl({
+                //   deviceName: "shutters",
+                //   active: "stop",
+                // });
+                // actuatorControl.simpleActuatorControl();
+              }
+            );
           }
         }
+      } else {
+        // const actuatorControl = new ActuatorControl({
+        //   deviceName: "shutters",
+        //   active: "close",
+        // });
+        // actuatorControl.simpleActuatorControl();
+        const { month, day, hour, minute, second } = fn.endTime(
+          detectStatus["shutterTiming"]["level1"]
+        );
+
+        schedule.scheduleJob(
+          `${second} ${minute} ${hour} ${day} ${month} *`,
+          async () => {
+            // const actuatorControl = new ActuatorControl({
+            //   deviceName: "shutters",
+            //   active: "stop",
+            // });
+            // actuatorControl.simpleActuatorControl();
+            fn.detectFsWrite("shutterStatus", "close");
+          }
+        );
       }
     } catch (error) {
       console.log(error);
