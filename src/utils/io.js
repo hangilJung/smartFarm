@@ -56,7 +56,7 @@ mainData.on("disconnect", (reason) => {
   console.log("disconnect");
 });
 
-const nutrient = io(process.env.SOCKETIO_NUTRIENT_DATA_SERVER_HOST, {
+const nutrient = io(process.env.SOCKETIO_NUTRICULTURE_MACHINE_PAGE, {
   transports: ["websocket"],
 });
 

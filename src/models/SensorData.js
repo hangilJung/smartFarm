@@ -707,7 +707,7 @@ class SensorData {
         header: {},
       };
       const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-
+      console.log("!!!!", JSON.stringify(this.body));
       if (fn.invalidActionSettingValue(this.body)) {
         const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
         return fn.statisticsStatusCodeInvalidRequestPararmeterError(
@@ -752,23 +752,8 @@ class SensorData {
       const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
-      const result = await DataAccess.fiveMinuteAgoSensorData();
 
       let sensorData = fn.readActionStatus();
-
-      for (let i of result[0]) {
-        const value = Number(i["sensor_data_value"]);
-        if (i.sensor_name === "co2Humi") {
-          sensorData = { ...sensorData, fiveMinuteAgoInHumi: value.toFixed(1) };
-        } else if (i.sensor_name === "co2Temp") {
-          sensorData = { ...sensorData, fiveMinuteAgoInTemp: value.toFixed(1) };
-        } else if (i.sensor_name === "inInsol") {
-          sensorData = {
-            ...sensorData,
-            fiveMinuteAgoInInsol: value.toFixed(1),
-          };
-        }
-      }
 
       response.header = {
         resultCode: "00",

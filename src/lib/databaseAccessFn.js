@@ -243,7 +243,18 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
       if (
         current[0][0]["sensor_data_value"] > fn.addCurrent(fn.deviceStatus())
       ) {
+        logger.info(
+          `양액기 감지 측정 전류값 ${JSON.stringify(
+            current[0][0]["sensor_data_value"]
+          )}`
+        );
+        logger.info(
+          `양액기 예측 전류값 ${JSON.stringify(
+            fn.addCurrent(fn.deviceStatus())
+          )}`
+        );
         console.log("양액기 전류값 확인 후 작동 상태 확인");
+        logger.info("양액기 on 상태 감지");
 
         fn.currentValueFsWrite("nutrient", "on");
 
@@ -259,6 +270,7 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
           ],
         });
       } else {
+        logger.info("양액기 off 상태 감지");
         fn.currentValueFsWrite("nutrient", "off");
       }
 
@@ -268,6 +280,7 @@ async function compareNutricultureMachinePageStatusValue(nutrientData, dbData) {
     } else {
       console.log("보내라 소켓통신");
       fn.currentValueFsWrite("nutrient", "off");
+      logger.info("양액기 off 상태 감지");
       nutrient.emit("nutrientStatus", {
         header: {
           resultCode: "00",

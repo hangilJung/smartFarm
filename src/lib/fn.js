@@ -751,9 +751,9 @@ function deviceStatus() {
 function addCurrent(onList) {
   let curr = 0.6;
   const oneFanValue = 0.2;
-  const twoFanValue = 0.6;
-  const threeFanValue = 0.9;
-  const nutrientValue = 4.2;
+  const twoFanValue = 0.2;
+  const threeFanValue = 0.2;
+  const nutrientValue = 4;
 
   if (onList.includes("fan1")) {
     curr += oneFanValue;
@@ -1380,6 +1380,22 @@ function invalidActionSettingValue(body) {
     "num18Insolation",
     "num19Insolation",
     "num20Insolation",
+    "num21Time",
+    "num21Temperature",
+    "num21Humidity",
+    "num21Insolation",
+    "num22Time",
+    "num22Temperature",
+    "num22Humidity",
+    "num22Insolation",
+    "num23Time",
+    "num23Temperature",
+    "num23Humidity",
+    "num23Insolation",
+    "num0Time",
+    "num0Temperature",
+    "num0Humidity",
+    "num0Insolation",
   ];
 
   const list = Object.keys(body);
