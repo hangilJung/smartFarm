@@ -338,6 +338,25 @@ class SensorData {
     }
   }
 
+  async dayMaxValue() {
+    const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    try {
+      const result = await DataAccess.dayMaxValue();
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function dayConsumptionData() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      return fn.invalidRequestParameterError;
+    }
+  }
   async monthConsumptionData() {
     const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 

@@ -203,2201 +203,1402 @@ function filteringDetailSettingData(body) {
   } = body;
   const list = [];
   const par = "";
-  if (
-    detail1Hour !== par ||
-    detail1Hour !== undefined ||
-    detail1Hour !== null
-  ) {
+
+  console.log(detail1Hour !== par);
+  if (detail1Hour !== par) {
     list.push({
       modbus_address: "44200",
       description: detail1Hour,
       property: "write",
     });
   }
-  if (
-    detail1Minute !== par ||
-    detail1Minute !== undefined ||
-    detail1Minute !== null
-  ) {
+  if (detail1Minute !== par) {
     list.push({
       modbus_address: "44201",
       description: detail1Minute,
       property: "write",
     });
   }
-  if (
-    detail1Matter !== par ||
-    detail1Matter !== undefined ||
-    detail1Matter !== null
-  ) {
+  if (detail1Matter !== par) {
     list.push({
       modbus_address: "16",
       description: detail1Matter,
       property: "write",
     });
   }
-  if (
-    detail1IsUse !== par ||
-    detail1IsUse !== undefined ||
-    detail1IsUse !== null
-  ) {
+  if (detail1IsUse !== par) {
     list.push({
       modbus_address: "48",
       description: detail1IsUse,
       property: "write",
     });
   }
-  if (
-    detail1Tray1IsUse !== par ||
-    detail1Tray1IsUse !== undefined ||
-    detail1Tray1IsUse !== null
-  ) {
+  if (detail1Tray1IsUse !== par) {
     list.push({
       modbus_address: "160",
       description: detail1Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail1Tray2IsUse !== par ||
-    detail1Tray2IsUse !== undefined ||
-    detail1Tray2IsUse !== null
-  ) {
+  if (detail1Tray2IsUse !== par) {
     list.push({
       modbus_address: "161",
       description: detail1Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail1Tray3IsUse !== par ||
-    detail1Tray3IsUse !== undefined ||
-    detail1Tray3IsUse !== null
-  ) {
+  if (detail1Tray3IsUse !== par) {
     list.push({
       modbus_address: "162",
       description: detail1Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail1Tray4IsUse !== par ||
-    detail1Tray4IsUse !== undefined ||
-    detail1Tray4IsUse !== null
-  ) {
+  if (detail1Tray4IsUse !== par) {
     list.push({
       modbus_address: "163",
       description: detail1Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail2Hour !== par ||
-    detail2Hour !== undefined ||
-    detail2Hour !== null
-  ) {
+  if (detail2Hour !== par) {
     list.push({
       modbus_address: "44202",
       description: detail2Hour,
       property: "write",
     });
   }
-  if (
-    detail2Minute !== par ||
-    detail2Minute !== undefined ||
-    detail2Minute !== null
-  ) {
+  if (detail2Minute !== par) {
     list.push({
       modbus_address: "44203",
       description: detail2Minute,
       property: "write",
     });
   }
-  if (
-    detail2Matter !== par ||
-    detail2Matter !== undefined ||
-    detail2Matter !== null
-  ) {
+  if (detail2Matter !== par) {
     list.push({
       modbus_address: "17",
       description: detail2Matter,
       property: "write",
     });
   }
-  if (
-    detail2IsUse !== par ||
-    detail2IsUse !== undefined ||
-    detail2IsUse !== null
-  ) {
+  if (detail2IsUse !== par) {
     list.push({
       modbus_address: "49",
       description: detail2IsUse,
       property: "write",
     });
   }
-  if (
-    detail2Tray1IsUse !== par ||
-    detail2Tray1IsUse !== undefined ||
-    detail2Tray1IsUse !== null
-  ) {
+  if (detail2Tray1IsUse !== par) {
     list.push({
       modbus_address: "176",
       description: detail2Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail2Tray2IsUse !== par ||
-    detail2Tray2IsUse !== undefined ||
-    detail2Tray2IsUse !== null
-  ) {
+  if (detail2Tray2IsUse !== par) {
     list.push({
       modbus_address: "177",
       description: detail2Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail2Tray3IsUse !== par ||
-    detail2Tray3IsUse !== undefined ||
-    detail2Tray3IsUse !== null
-  ) {
+  if (detail2Tray3IsUse !== par) {
     list.push({
       modbus_address: "178",
       description: detail2Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail2Tray4IsUse !== par ||
-    detail2Tray4IsUse !== undefined ||
-    detail2Tray4IsUse !== null
-  ) {
+  if (detail2Tray4IsUse !== par) {
     list.push({
       modbus_address: "179",
       description: detail2Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail3Hour !== par ||
-    detail3Hour !== undefined ||
-    detail3Hour !== null
-  ) {
+  if (detail3Hour !== par) {
     list.push({
       modbus_address: "44204",
       description: detail3Hour,
       property: "write",
     });
   }
-  if (
-    detail3Minute !== par ||
-    detail3Minute !== undefined ||
-    detail3Minute !== null
-  ) {
+  if (detail3Minute !== par) {
     list.push({
       modbus_address: "44205",
       description: detail3Minute,
       property: "write",
     });
   }
-  if (
-    detail3Matter !== par ||
-    detail3Matter !== undefined ||
-    detail3Matter !== null
-  ) {
+  if (detail3Matter !== par) {
     list.push({
       modbus_address: "18",
       description: detail3Matter,
       property: "write",
     });
   }
-  if (
-    detail3IsUse !== par ||
-    detail3IsUse !== undefined ||
-    detail3IsUse !== null
-  ) {
+  if (detail3IsUse !== par) {
     list.push({
       modbus_address: "50",
       description: detail3IsUse,
       property: "write",
     });
   }
-  if (
-    detail3Tray1IsUse !== par ||
-    detail3Tray1IsUse !== undefined ||
-    detail3Tray1IsUse !== null
-  ) {
+  if (detail3Tray1IsUse !== par) {
     list.push({
       modbus_address: "192",
       description: detail3Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail3Tray2IsUse !== par ||
-    detail3Tray2IsUse !== undefined ||
-    detail3Tray2IsUse !== null
-  ) {
+  if (detail3Tray2IsUse !== par) {
     list.push({
       modbus_address: "193",
       description: detail3Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail3Tray3IsUse !== par ||
-    detail3Tray3IsUse !== undefined ||
-    detail3Tray3IsUse !== null
-  ) {
+  if (detail3Tray3IsUse !== par) {
     list.push({
       modbus_address: "194",
       description: detail3Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail3Tray4IsUse !== par ||
-    detail3Tray4IsUse !== undefined ||
-    detail3Tray4IsUse !== null
-  ) {
+  if (detail3Tray4IsUse !== par) {
     list.push({
       modbus_address: "195",
       description: detail3Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail4Hour !== par ||
-    detail4Hour !== undefined ||
-    detail4Hour !== null
-  ) {
+  if (detail4Hour !== par) {
     list.push({
       modbus_address: "44206",
       description: detail4Hour,
       property: "write",
     });
   }
-  if (
-    detail4Minute !== par ||
-    detail4Minute !== undefined ||
-    detail4Minute !== null
-  ) {
+  if (detail4Minute !== par) {
     list.push({
       modbus_address: "44207",
       description: detail4Minute,
       property: "write",
     });
   }
-  if (
-    detail4Matter !== par ||
-    detail4Matter !== undefined ||
-    detail4Matter !== null
-  ) {
+  if (detail4Matter !== par) {
     list.push({
       modbus_address: "19",
       description: detail4Matter,
       property: "write",
     });
   }
-  if (
-    detail4IsUse !== par ||
-    detail4IsUse !== undefined ||
-    detail4IsUse !== null
-  ) {
+  if (detail4IsUse !== par) {
     list.push({
       modbus_address: "51",
       description: detail4IsUse,
       property: "write",
     });
   }
-  if (
-    detail4Tray1IsUse !== par ||
-    detail4Tray1IsUse !== undefined ||
-    detail4Tray1IsUse !== null
-  ) {
+  if (detail4Tray1IsUse !== par) {
     list.push({
       modbus_address: "208",
       description: detail4Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail4Tray2IsUse !== par ||
-    detail4Tray2IsUse !== undefined ||
-    detail4Tray2IsUse !== null
-  ) {
+  if (detail4Tray2IsUse !== par) {
     list.push({
       modbus_address: "209",
       description: detail4Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail4Tray3IsUse !== par ||
-    detail4Tray3IsUse !== undefined ||
-    detail4Tray3IsUse !== null
-  ) {
+  if (detail4Tray3IsUse !== par) {
     list.push({
       modbus_address: "210",
       description: detail4Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail4Tray4IsUse !== par ||
-    detail4Tray4IsUse !== undefined ||
-    detail4Tray4IsUse !== null
-  ) {
+  if (detail4Tray4IsUse !== par) {
     list.push({
       modbus_address: "211",
       description: detail4Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail5Hour !== par ||
-    detail5Hour !== undefined ||
-    detail5Hour !== null
-  ) {
+  if (detail5Hour !== par) {
     list.push({
       modbus_address: "44208",
       description: detail5Hour,
       property: "write",
     });
   }
-  if (
-    detail5Minute !== par ||
-    detail5Minute !== undefined ||
-    detail5Minute !== null
-  ) {
+  if (detail5Minute !== par) {
     list.push({
       modbus_address: "44209",
       description: detail5Minute,
       property: "write",
     });
   }
-  if (
-    detail5Matter !== par ||
-    detail5Matter !== undefined ||
-    detail5Matter !== null
-  ) {
+  if (detail5Matter !== par) {
     list.push({
       modbus_address: "20",
       description: detail5Matter,
       property: "write",
     });
   }
-  if (
-    detail5IsUse !== par ||
-    detail5IsUse !== undefined ||
-    detail5IsUse !== null
-  ) {
+  if (detail5IsUse !== par) {
     list.push({
       modbus_address: "52",
       description: detail5IsUse,
       property: "write",
     });
   }
-  if (
-    detail5Tray1IsUse !== par ||
-    detail5Tray1IsUse !== undefined ||
-    detail5Tray1IsUse !== null
-  ) {
+  if (detail5Tray1IsUse !== par) {
     list.push({
       modbus_address: "224",
       description: detail5Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail5Tray2IsUse !== par ||
-    detail5Tray2IsUse !== undefined ||
-    detail5Tray2IsUse !== null
-  ) {
+  if (detail5Tray2IsUse !== par) {
     list.push({
       modbus_address: "225",
       description: detail5Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail5Tray3IsUse !== par ||
-    detail5Tray3IsUse !== undefined ||
-    detail5Tray3IsUse !== null
-  ) {
+  if (detail5Tray3IsUse !== par) {
     list.push({
       modbus_address: "226",
       description: detail5Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail5Tray4IsUse !== par ||
-    detail5Tray4IsUse !== undefined ||
-    detail5Tray4IsUse !== null
-  ) {
+  if (detail5Tray4IsUse !== par) {
     list.push({
       modbus_address: "227",
       description: detail5Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail6Hour !== par ||
-    detail6Hour !== undefined ||
-    detail6Hour !== null
-  ) {
+  if (detail6Hour !== par) {
     list.push({
       modbus_address: "44210",
       description: detail6Hour,
       property: "write",
     });
   }
-  if (
-    detail6Minute !== par ||
-    detail6Minute !== undefined ||
-    detail6Minute !== null
-  ) {
+  if (detail6Minute !== par) {
     list.push({
       modbus_address: "44211",
       description: detail6Minute,
       property: "write",
     });
   }
-  if (
-    detail6Matter !== par ||
-    detail6Matter !== undefined ||
-    detail6Matter !== null
-  ) {
+  if (detail6Matter !== par) {
     list.push({
       modbus_address: "21",
       description: detail6Matter,
       property: "write",
     });
   }
-  if (
-    detail6IsUse !== par ||
-    detail6IsUse !== undefined ||
-    detail6IsUse !== null
-  ) {
+  if (detail6IsUse !== par) {
     list.push({
       modbus_address: "53",
       description: detail6IsUse,
       property: "write",
     });
   }
-  if (
-    detail6Tray1IsUse !== par ||
-    detail6Tray1IsUse !== undefined ||
-    detail6Tray1IsUse !== null
-  ) {
+  if (detail6Tray1IsUse !== par) {
     list.push({
       modbus_address: "240",
       description: detail6Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail6Tray2IsUse !== par ||
-    detail6Tray2IsUse !== undefined ||
-    detail6Tray2IsUse !== null
-  ) {
+  if (detail6Tray2IsUse !== par) {
     list.push({
       modbus_address: "241",
       description: detail6Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail6Tray3IsUse !== par ||
-    detail6Tray3IsUse !== undefined ||
-    detail6Tray3IsUse !== null
-  ) {
+  if (detail6Tray3IsUse !== par) {
     list.push({
       modbus_address: "242",
       description: detail6Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail6Tray4IsUse !== par ||
-    detail6Tray4IsUse !== undefined ||
-    detail6Tray4IsUse !== null
-  ) {
+  if (detail6Tray4IsUse !== par) {
     list.push({
       modbus_address: "243",
       description: detail6Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail7Hour !== par ||
-    detail7Hour !== undefined ||
-    detail7Hour !== null
-  ) {
+  if (detail7Hour !== par) {
     list.push({
       modbus_address: "44212",
       description: detail7Hour,
       property: "write",
     });
   }
-  if (
-    detail7Minute !== par ||
-    detail7Minute !== undefined ||
-    detail7Minute !== null
-  ) {
+  if (detail7Minute !== par) {
     list.push({
       modbus_address: "44213",
       description: detail7Minute,
       property: "write",
     });
   }
-  if (
-    detail7Matter !== par ||
-    detail7Matter !== undefined ||
-    detail7Matter !== null
-  ) {
+  if (detail7Matter !== par) {
     list.push({
       modbus_address: "22",
       description: detail7Matter,
       property: "write",
     });
   }
-  if (
-    detail7IsUse !== par ||
-    detail7IsUse !== undefined ||
-    detail7IsUse !== null
-  ) {
+  if (detail7IsUse !== par) {
     list.push({
       modbus_address: "54",
       description: detail7IsUse,
       property: "write",
     });
   }
-  if (
-    detail7Tray1IsUse !== par ||
-    detail7Tray1IsUse !== undefined ||
-    detail7Tray1IsUse !== null
-  ) {
+  if (detail7Tray1IsUse !== par) {
     list.push({
       modbus_address: "256",
       description: detail7Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail7Tray2IsUse !== par ||
-    detail7Tray2IsUse !== undefined ||
-    detail7Tray2IsUse !== null
-  ) {
+  if (detail7Tray2IsUse !== par) {
     list.push({
       modbus_address: "257",
       description: detail7Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail7Tray3IsUse !== par ||
-    detail7Tray3IsUse !== undefined ||
-    detail7Tray3IsUse !== null
-  ) {
+  if (detail7Tray3IsUse !== par) {
     list.push({
       modbus_address: "258",
       description: detail7Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail7Tray4IsUse !== par ||
-    detail7Tray4IsUse !== undefined ||
-    detail7Tray4IsUse !== null
-  ) {
+  if (detail7Tray4IsUse !== par) {
     list.push({
       modbus_address: "259",
       description: detail7Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail8Hour !== par ||
-    detail8Hour !== undefined ||
-    detail8Hour !== null
-  ) {
+  if (detail8Hour !== par) {
     list.push({
       modbus_address: "44214",
       description: detail8Hour,
       property: "write",
     });
   }
-  if (
-    detail8Minute !== par ||
-    detail8Minute !== undefined ||
-    detail8Minute !== null
-  ) {
+  if (detail8Minute !== par) {
     list.push({
       modbus_address: "44215",
       description: detail8Minute,
       property: "write",
     });
   }
-  if (
-    detail8Matter !== par ||
-    detail8Matter !== undefined ||
-    detail8Matter !== null
-  ) {
+  if (detail8Matter !== par) {
     list.push({
       modbus_address: "23",
       description: detail8Matter,
       property: "write",
     });
   }
-  if (
-    detail8IsUse !== par ||
-    detail8IsUse !== undefined ||
-    detail8IsUse !== null
-  ) {
+  if (detail8IsUse !== par) {
     list.push({
       modbus_address: "55",
       description: detail8IsUse,
       property: "write",
     });
   }
-  if (
-    detail8Tray1IsUse !== par ||
-    detail8Tray1IsUse !== undefined ||
-    detail8Tray1IsUse !== null
-  ) {
+  if (detail8Tray1IsUse !== par) {
     list.push({
       modbus_address: "272",
       description: detail8Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail8Tray2IsUse !== par ||
-    detail8Tray2IsUse !== undefined ||
-    detail8Tray2IsUse !== null
-  ) {
+  if (detail8Tray2IsUse !== par) {
     list.push({
       modbus_address: "273",
       description: detail8Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail8Tray3IsUse !== par ||
-    detail8Tray3IsUse !== undefined ||
-    detail8Tray3IsUse !== null
-  ) {
+  if (detail8Tray3IsUse !== par) {
     list.push({
       modbus_address: "274",
       description: detail8Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail8Tray4IsUse !== par ||
-    detail8Tray4IsUse !== undefined ||
-    detail8Tray4IsUse !== null
-  ) {
+  if (detail8Tray4IsUse !== par) {
     list.push({
       modbus_address: "275",
       description: detail8Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail9Hour !== par ||
-    detail9Hour !== undefined ||
-    detail9Hour !== null
-  ) {
+  if (detail9Hour !== par) {
     list.push({
       modbus_address: "44216",
       description: detail9Hour,
       property: "write",
     });
   }
-  if (
-    detail9Minute !== par ||
-    detail9Minute !== undefined ||
-    detail9Minute !== null
-  ) {
+  if (detail9Minute !== par) {
     list.push({
       modbus_address: "44217",
       description: detail9Minute,
       property: "write",
     });
   }
-  if (
-    detail9Matter !== par ||
-    detail9Matter !== undefined ||
-    detail9Matter !== null
-  ) {
+  if (detail9Matter !== par) {
     list.push({
       modbus_address: "24",
       description: detail9Matter,
       property: "write",
     });
   }
-  if (
-    detail9IsUse !== par ||
-    detail9IsUse !== undefined ||
-    detail9IsUse !== null
-  ) {
+  if (detail9IsUse !== par) {
     list.push({
       modbus_address: "56",
       description: detail9IsUse,
       property: "write",
     });
   }
-  if (
-    detail9Tray1IsUse !== par ||
-    detail9Tray1IsUse !== undefined ||
-    detail9Tray1IsUse !== null
-  ) {
+  if (detail9Tray1IsUse !== par) {
     list.push({
       modbus_address: "288",
       description: detail9Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail9Tray2IsUse !== par ||
-    detail9Tray2IsUse !== undefined ||
-    detail9Tray2IsUse !== null
-  ) {
+  if (detail9Tray2IsUse !== par) {
     list.push({
       modbus_address: "289",
       description: detail9Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail9Tray3IsUse !== par ||
-    detail9Tray3IsUse !== undefined ||
-    detail9Tray3IsUse !== null
-  ) {
+  if (detail9Tray3IsUse !== par) {
     list.push({
       modbus_address: "290",
       description: detail9Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail9Tray4IsUse !== par ||
-    detail9Tray4IsUse !== undefined ||
-    detail9Tray4IsUse !== null
-  ) {
+  if (detail9Tray4IsUse !== par) {
     list.push({
       modbus_address: "291",
       description: detail9Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail10Hour !== par ||
-    detail10Hour !== undefined ||
-    detail10Hour !== null
-  ) {
+  if (detail10Hour !== par) {
     list.push({
       modbus_address: "44218",
       description: detail10Hour,
       property: "write",
     });
   }
-  if (
-    detail10Minute !== par ||
-    detail10Minute !== undefined ||
-    detail10Minute !== null
-  ) {
+  if (detail10Minute !== par) {
     list.push({
       modbus_address: "44219",
       description: detail10Minute,
       property: "write",
     });
   }
-  if (
-    detail10Matter !== par ||
-    detail10Matter !== undefined ||
-    detail10Matter !== null
-  ) {
+  if (detail10Matter !== par) {
     list.push({
       modbus_address: "25",
       description: detail10Matter,
       property: "write",
     });
   }
-  if (
-    detail10IsUse !== par ||
-    detail10IsUse !== undefined ||
-    detail10IsUse !== null
-  ) {
+  if (detail10IsUse !== par) {
     list.push({
       modbus_address: "57",
       description: detail10IsUse,
       property: "write",
     });
   }
-  if (
-    detail10Tray1IsUse !== par ||
-    detail10Tray1IsUse !== undefined ||
-    detail10Tray1IsUse !== null
-  ) {
+  if (detail10Tray1IsUse !== par) {
     list.push({
       modbus_address: "304",
       description: detail10Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail10Tray2IsUse !== par ||
-    detail10Tray2IsUse !== undefined ||
-    detail10Tray2IsUse !== null
-  ) {
+  if (detail10Tray2IsUse !== par) {
     list.push({
       modbus_address: "305",
       description: detail10Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail10Tray3IsUse !== par ||
-    detail10Tray3IsUse !== undefined ||
-    detail10Tray3IsUse !== null
-  ) {
+  if (detail10Tray3IsUse !== par) {
     list.push({
       modbus_address: "306",
       description: detail10Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail10Tray4IsUse !== par ||
-    detail10Tray4IsUse !== undefined ||
-    detail10Tray4IsUse !== null
-  ) {
+  if (detail10Tray4IsUse !== par) {
     list.push({
       modbus_address: "307",
       description: detail10Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail11Hour !== par ||
-    detail11Hour !== undefined ||
-    detail11Hour !== null
-  ) {
+  if (detail11Hour !== par) {
     list.push({
       modbus_address: "44220",
       description: detail11Hour,
       property: "write",
     });
   }
-  if (
-    detail11Minute !== par ||
-    detail11Minute !== undefined ||
-    detail11Minute !== null
-  ) {
+  if (detail11Minute !== par) {
     list.push({
       modbus_address: "44221",
       description: detail11Minute,
       property: "write",
     });
   }
-  if (
-    detail11Matter !== par ||
-    detail11Matter !== undefined ||
-    detail11Matter !== null
-  ) {
+  if (detail11Matter !== par) {
     list.push({
       modbus_address: "26",
       description: detail11Matter,
       property: "write",
     });
   }
-  if (
-    detail11IsUse !== par ||
-    detail11IsUse !== undefined ||
-    detail11IsUse !== null
-  ) {
+  if (detail11IsUse !== par) {
     list.push({
       modbus_address: "58",
       description: detail11IsUse,
       property: "write",
     });
   }
-  if (
-    detail11Tray1IsUse !== par ||
-    detail11Tray1IsUse !== undefined ||
-    detail11Tray1IsUse !== null
-  ) {
+  if (detail11Tray1IsUse !== par) {
     list.push({
       modbus_address: "320",
       description: detail11Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail11Tray2IsUse !== par ||
-    detail11Tray2IsUse !== undefined ||
-    detail11Tray2IsUse !== null
-  ) {
+  if (detail11Tray2IsUse !== par) {
     list.push({
       modbus_address: "321",
       description: detail11Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail11Tray3IsUse !== par ||
-    detail11Tray3IsUse !== undefined ||
-    detail11Tray3IsUse !== null
-  ) {
+  if (detail11Tray3IsUse !== par) {
     list.push({
       modbus_address: "322",
       description: detail11Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail11Tray4IsUse !== par ||
-    detail11Tray4IsUse !== undefined ||
-    detail11Tray4IsUse !== null
-  ) {
+  if (detail11Tray4IsUse !== par) {
     list.push({
       modbus_address: "323",
       description: detail11Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail12Hour !== par ||
-    detail12Hour !== undefined ||
-    detail12Hour !== null
-  ) {
+  if (detail12Hour !== par) {
     list.push({
       modbus_address: "44222",
       description: detail12Hour,
       property: "write",
     });
   }
-  if (
-    detail12Minute !== par ||
-    detail12Minute !== undefined ||
-    detail12Minute !== null
-  ) {
+  if (detail12Minute !== par) {
     list.push({
       modbus_address: "44223",
       description: detail12Minute,
       property: "write",
     });
   }
-  if (
-    detail12Matter !== par ||
-    detail12Matter !== undefined ||
-    detail12Matter !== null
-  ) {
+  if (detail12Matter !== par) {
     list.push({
       modbus_address: "27",
       description: detail12Matter,
       property: "write",
     });
   }
-  if (
-    detail12IsUse !== par ||
-    detail12IsUse !== undefined ||
-    detail12IsUse !== null
-  ) {
+  if (detail12IsUse !== par) {
     list.push({
       modbus_address: "59",
       description: detail12IsUse,
       property: "write",
     });
   }
-  if (
-    detail12Tray1IsUse !== par ||
-    detail12Tray1IsUse !== undefined ||
-    detail12Tray1IsUse !== null
-  ) {
+  if (detail12Tray1IsUse !== par) {
     list.push({
       modbus_address: "336",
       description: detail12Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail12Tray2IsUse !== par ||
-    detail12Tray2IsUse !== undefined ||
-    detail12Tray2IsUse !== null
-  ) {
+  if (detail12Tray2IsUse !== par) {
     list.push({
       modbus_address: "337",
       description: detail12Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail12Tray3IsUse !== par ||
-    detail12Tray3IsUse !== undefined ||
-    detail12Tray3IsUse !== null
-  ) {
+  if (detail12Tray3IsUse !== par) {
     list.push({
       modbus_address: "338",
       description: detail12Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail12Tray4IsUse !== par ||
-    detail12Tray4IsUse !== undefined ||
-    detail12Tray4IsUse !== null
-  ) {
+  if (detail12Tray4IsUse !== par) {
     list.push({
       modbus_address: "339",
       description: detail12Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail13Hour !== par ||
-    detail13Hour !== undefined ||
-    detail13Hour !== null
-  ) {
+  if (detail13Hour !== par) {
     list.push({
       modbus_address: "44224",
       description: detail13Hour,
       property: "write",
     });
   }
-  if (
-    detail13Minute !== par ||
-    detail13Minute !== undefined ||
-    detail13Minute !== null
-  ) {
+  if (detail13Minute !== par) {
     list.push({
       modbus_address: "44225",
       description: detail13Minute,
       property: "write",
     });
   }
-  if (
-    detail13Matter !== par ||
-    detail13Matter !== undefined ||
-    detail13Matter !== null
-  ) {
+  if (detail13Matter !== par) {
     list.push({
       modbus_address: "28",
       description: detail13Matter,
       property: "write",
     });
   }
-  if (
-    detail13IsUse !== par ||
-    detail13IsUse !== undefined ||
-    detail13IsUse !== null
-  ) {
+  if (detail13IsUse !== par) {
     list.push({
       modbus_address: "60",
       description: detail13IsUse,
       property: "write",
     });
   }
-  if (
-    detail13Tray1IsUse !== par ||
-    detail13Tray1IsUse !== undefined ||
-    detail13Tray1IsUse !== null
-  ) {
+  if (detail13Tray1IsUse !== par) {
     list.push({
       modbus_address: "352",
       description: detail13Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail13Tray2IsUse !== par ||
-    detail13Tray2IsUse !== undefined ||
-    detail13Tray2IsUse !== null
-  ) {
+  if (detail13Tray2IsUse !== par) {
     list.push({
       modbus_address: "353",
       description: detail13Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail13Tray3IsUse !== par ||
-    detail13Tray3IsUse !== undefined ||
-    detail13Tray3IsUse !== null
-  ) {
+  if (detail13Tray3IsUse !== par) {
     list.push({
       modbus_address: "354",
       description: detail13Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail13Tray4IsUse !== par ||
-    detail13Tray4IsUse !== undefined ||
-    detail13Tray4IsUse !== null
-  ) {
+  if (detail13Tray4IsUse !== par) {
     list.push({
       modbus_address: "355",
       description: detail13Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail14Hour !== par ||
-    detail14Hour !== undefined ||
-    detail14Hour !== null
-  ) {
+  if (detail14Hour !== par) {
     list.push({
       modbus_address: "44226",
       description: detail14Hour,
       property: "write",
     });
   }
-  if (
-    detail14Minute !== par ||
-    detail14Minute !== undefined ||
-    detail14Minute !== null
-  ) {
+  if (detail14Minute !== par) {
     list.push({
       modbus_address: "44227",
       description: detail14Minute,
       property: "write",
     });
   }
-  if (
-    detail14Matter !== par ||
-    detail14Matter !== undefined ||
-    detail14Matter !== null
-  ) {
+  if (detail14Matter !== par) {
     list.push({
       modbus_address: "29",
       description: detail14Matter,
       property: "write",
     });
   }
-  if (
-    detail14IsUse !== par ||
-    detail14IsUse !== undefined ||
-    detail14IsUse !== null
-  ) {
+  if (detail14IsUse !== par) {
     list.push({
       modbus_address: "61",
       description: detail14IsUse,
       property: "write",
     });
   }
-  if (
-    detail14Tray1IsUse !== par ||
-    detail14Tray1IsUse !== undefined ||
-    detail14Tray1IsUse !== null
-  ) {
+  if (detail14Tray1IsUse !== par) {
     list.push({
       modbus_address: "368",
       description: detail14Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail14Tray2IsUse !== par ||
-    detail14Tray2IsUse !== undefined ||
-    detail14Tray2IsUse !== null
-  ) {
+  if (detail14Tray2IsUse !== par) {
     list.push({
       modbus_address: "369",
       description: detail14Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail14Tray3IsUse !== par ||
-    detail14Tray3IsUse !== undefined ||
-    detail14Tray3IsUse !== null
-  ) {
+  if (detail14Tray3IsUse !== par) {
     list.push({
       modbus_address: "370",
       description: detail14Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail14Tray4IsUse !== par ||
-    detail14Tray4IsUse !== undefined ||
-    detail14Tray4IsUse !== null
-  ) {
+  if (detail14Tray4IsUse !== par) {
     list.push({
       modbus_address: "371",
       description: detail14Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail15Hour !== par ||
-    detail15Hour !== undefined ||
-    detail15Hour !== null
-  ) {
+  if (detail15Hour !== par) {
     list.push({
       modbus_address: "44228",
       description: detail15Hour,
       property: "write",
     });
   }
-  if (
-    detail15Minute !== par ||
-    detail15Minute !== undefined ||
-    detail15Minute !== null
-  ) {
+  if (detail15Minute !== par) {
     list.push({
       modbus_address: "44229",
       description: detail15Minute,
       property: "write",
     });
   }
-  if (
-    detail15Matter !== par ||
-    detail15Matter !== undefined ||
-    detail15Matter !== null
-  ) {
+  if (detail15Matter !== par) {
     list.push({
       modbus_address: "30",
       description: detail15Matter,
       property: "write",
     });
   }
-  if (
-    detail15IsUse !== par ||
-    detail15IsUse !== undefined ||
-    detail15IsUse !== null
-  ) {
+  if (detail15IsUse !== par) {
     list.push({
       modbus_address: "62",
       description: detail15IsUse,
       property: "write",
     });
   }
-  if (
-    detail15Tray1IsUse !== par ||
-    detail15Tray1IsUse !== undefined ||
-    detail15Tray1IsUse !== null
-  ) {
+  if (detail15Tray1IsUse !== par) {
     list.push({
       modbus_address: "384",
       description: detail15Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail15Tray2IsUse !== par ||
-    detail15Tray2IsUse !== undefined ||
-    detail15Tray2IsUse !== null
-  ) {
+  if (detail15Tray2IsUse !== par) {
     list.push({
       modbus_address: "385",
       description: detail15Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail15Tray3IsUse !== par ||
-    detail15Tray3IsUse !== undefined ||
-    detail15Tray3IsUse !== null
-  ) {
+  if (detail15Tray3IsUse !== par) {
     list.push({
       modbus_address: "386",
       description: detail15Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail15Tray4IsUse !== par ||
-    detail15Tray4IsUse !== undefined ||
-    detail15Tray4IsUse !== null
-  ) {
+  if (detail15Tray4IsUse !== par) {
     list.push({
       modbus_address: "387",
       description: detail15Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail16Hour !== par ||
-    detail16Hour !== undefined ||
-    detail16Hour !== null
-  ) {
+  if (detail16Hour !== par) {
     list.push({
       modbus_address: "44230",
       description: detail16Hour,
       property: "write",
     });
   }
-  if (
-    detail16Minute !== par ||
-    detail16Minute !== undefined ||
-    detail16Minute !== null
-  ) {
+  if (detail16Minute !== par) {
     list.push({
       modbus_address: "44231",
       description: detail16Minute,
       property: "write",
     });
   }
-  if (
-    detail16Matter !== par ||
-    detail16Matter !== undefined ||
-    detail16Matter !== null
-  ) {
+  if (detail16Matter !== par) {
     list.push({
       modbus_address: "31",
       description: detail16Matter,
       property: "write",
     });
   }
-  if (
-    detail16IsUse !== par ||
-    detail16IsUse !== undefined ||
-    detail16IsUse !== null
-  ) {
+  if (detail16IsUse !== par) {
     list.push({
       modbus_address: "63",
       description: detail16IsUse,
       property: "write",
     });
   }
-  if (
-    detail16Tray1IsUse !== par ||
-    detail16Tray1IsUse !== undefined ||
-    detail16Tray1IsUse !== null
-  ) {
+  if (detail16Tray1IsUse !== par) {
     list.push({
       modbus_address: "400",
       description: detail16Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail16Tray2IsUse !== par ||
-    detail16Tray2IsUse !== undefined ||
-    detail16Tray2IsUse !== null
-  ) {
+  if (detail16Tray2IsUse !== par) {
     list.push({
       modbus_address: "401",
       description: detail16Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail16Tray3IsUse !== par ||
-    detail16Tray3IsUse !== undefined ||
-    detail16Tray3IsUse !== null
-  ) {
+  if (detail16Tray3IsUse !== par) {
     list.push({
       modbus_address: "402",
       description: detail16Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail16Tray4IsUse !== par ||
-    detail16Tray4IsUse !== undefined ||
-    detail16Tray4IsUse !== null
-  ) {
+  if (detail16Tray4IsUse !== par) {
     list.push({
       modbus_address: "403",
       description: detail16Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail17Hour !== par ||
-    detail17Hour !== undefined ||
-    detail17Hour !== null
-  ) {
+  if (detail17Hour !== par) {
     list.push({
       modbus_address: "44232",
       description: detail17Hour,
       property: "write",
     });
   }
-  if (
-    detail17Minute !== par ||
-    detail17Minute !== undefined ||
-    detail17Minute !== null
-  ) {
+  if (detail17Minute !== par) {
     list.push({
       modbus_address: "44233",
       description: detail17Minute,
       property: "write",
     });
   }
-  if (
-    detail17Matter !== par ||
-    detail17Matter !== undefined ||
-    detail17Matter !== null
-  ) {
+  if (detail17Matter !== par) {
     list.push({
       modbus_address: "32",
       description: detail17Matter,
       property: "write",
     });
   }
-  if (
-    detail17IsUse !== par ||
-    detail17IsUse !== undefined ||
-    detail17IsUse !== null
-  ) {
+  if (detail17IsUse !== par) {
     list.push({
       modbus_address: "64",
       description: detail17IsUse,
       property: "write",
     });
   }
-  if (
-    detail17Tray1IsUse !== par ||
-    detail17Tray1IsUse !== undefined ||
-    detail17Tray1IsUse !== null
-  ) {
+  if (detail17Tray1IsUse !== par) {
     list.push({
       modbus_address: "416",
       description: detail17Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail17Tray2IsUse !== par ||
-    detail17Tray2IsUse !== undefined ||
-    detail17Tray2IsUse !== null
-  ) {
+  if (detail17Tray2IsUse !== par) {
     list.push({
       modbus_address: "417",
       description: detail17Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail17Tray3IsUse !== par ||
-    detail17Tray3IsUse !== undefined ||
-    detail17Tray3IsUse !== null
-  ) {
+  if (detail17Tray3IsUse !== par) {
     list.push({
       modbus_address: "418",
       description: detail17Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail17Tray4IsUse !== par ||
-    detail17Tray4IsUse !== undefined ||
-    detail17Tray4IsUse !== null
-  ) {
+  if (detail17Tray4IsUse !== par) {
     list.push({
       modbus_address: "419",
       description: detail17Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail18Hour !== par ||
-    detail18Hour !== undefined ||
-    detail18Hour !== null
-  ) {
+  if (detail18Hour !== par) {
     list.push({
       modbus_address: "44234",
       description: detail18Hour,
       property: "write",
     });
   }
-  if (
-    detail18Minute !== par ||
-    detail18Minute !== undefined ||
-    detail18Minute !== null
-  ) {
+  if (detail18Minute !== par) {
     list.push({
       modbus_address: "44235",
       description: detail18Minute,
       property: "write",
     });
   }
-  if (
-    detail18Matter !== par ||
-    detail18Matter !== undefined ||
-    detail18Matter !== null
-  ) {
+  if (detail18Matter !== par) {
     list.push({
       modbus_address: "33",
       description: detail18Matter,
       property: "write",
     });
   }
-  if (
-    detail18IsUse !== par ||
-    detail18IsUse !== undefined ||
-    detail18IsUse !== null
-  ) {
+  if (detail18IsUse !== par) {
     list.push({
       modbus_address: "65",
       description: detail18IsUse,
       property: "write",
     });
   }
-  if (
-    detail18Tray1IsUse !== par ||
-    detail18Tray1IsUse !== undefined ||
-    detail18Tray1IsUse !== null
-  ) {
+  if (detail18Tray1IsUse !== par) {
     list.push({
       modbus_address: "432",
       description: detail18Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail18Tray2IsUse !== par ||
-    detail18Tray2IsUse !== undefined ||
-    detail18Tray2IsUse !== null
-  ) {
+  if (detail18Tray2IsUse !== par) {
     list.push({
       modbus_address: "433",
       description: detail18Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail18Tray3IsUse !== par ||
-    detail18Tray3IsUse !== undefined ||
-    detail18Tray3IsUse !== null
-  ) {
+  if (detail18Tray3IsUse !== par) {
     list.push({
       modbus_address: "434",
       description: detail18Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail18Tray4IsUse !== par ||
-    detail18Tray4IsUse !== undefined ||
-    detail18Tray4IsUse !== null
-  ) {
+  if (detail18Tray4IsUse !== par) {
     list.push({
       modbus_address: "435",
       description: detail18Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail19Hour !== par ||
-    detail19Hour !== undefined ||
-    detail19Hour !== null
-  ) {
+  if (detail19Hour !== par) {
     list.push({
       modbus_address: "44236",
       description: detail19Hour,
       property: "write",
     });
   }
-  if (
-    detail19Minute !== par ||
-    detail19Minute !== undefined ||
-    detail19Minute !== null
-  ) {
+  if (detail19Minute !== par) {
     list.push({
       modbus_address: "44237",
       description: detail19Minute,
       property: "write",
     });
   }
-  if (
-    detail19Matter !== par ||
-    detail19Matter !== undefined ||
-    detail19Matter !== null
-  ) {
+  if (detail19Matter !== par) {
     list.push({
       modbus_address: "34",
       description: detail19Matter,
       property: "write",
     });
   }
-  if (
-    detail19IsUse !== par ||
-    detail19IsUse !== undefined ||
-    detail19IsUse !== null
-  ) {
+  if (detail19IsUse !== par) {
     list.push({
       modbus_address: "66",
       description: detail19IsUse,
       property: "write",
     });
   }
-  if (
-    detail19Tray1IsUse !== par ||
-    detail19Tray1IsUse !== undefined ||
-    detail19Tray1IsUse !== null
-  ) {
+  if (detail19Tray1IsUse !== par) {
     list.push({
       modbus_address: "448",
       description: detail19Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail19Tray2IsUse !== par ||
-    detail19Tray2IsUse !== undefined ||
-    detail19Tray2IsUse !== null
-  ) {
+  if (detail19Tray2IsUse !== par) {
     list.push({
       modbus_address: "449",
       description: detail19Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail19Tray3IsUse !== par ||
-    detail19Tray3IsUse !== undefined ||
-    detail19Tray3IsUse !== null
-  ) {
+  if (detail19Tray3IsUse !== par) {
     list.push({
       modbus_address: "450",
       description: detail19Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail19Tray4IsUse !== par ||
-    detail19Tray4IsUse !== undefined ||
-    detail19Tray4IsUse !== null
-  ) {
+  if (detail19Tray4IsUse !== par) {
     list.push({
       modbus_address: "451",
       description: detail19Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail20Hour !== par ||
-    detail20Hour !== undefined ||
-    detail20Hour !== null
-  ) {
+  if (detail20Hour !== par) {
     list.push({
       modbus_address: "44238",
       description: detail20Hour,
       property: "write",
     });
   }
-  if (
-    detail20Minute !== par ||
-    detail20Minute !== undefined ||
-    detail20Minute !== null
-  ) {
+  if (detail20Minute !== par) {
     list.push({
       modbus_address: "44239",
       description: detail20Minute,
       property: "write",
     });
   }
-  if (
-    detail20Matter !== par ||
-    detail20Matter !== undefined ||
-    detail20Matter !== null
-  ) {
+  if (detail20Matter !== par) {
     list.push({
       modbus_address: "35",
       description: detail20Matter,
       property: "write",
     });
   }
-  if (
-    detail20IsUse !== par ||
-    detail20IsUse !== undefined ||
-    detail20IsUse !== null
-  ) {
+  if (detail20IsUse !== par) {
     list.push({
       modbus_address: "67",
       description: detail20IsUse,
       property: "write",
     });
   }
-  if (
-    detail20Tray1IsUse !== par ||
-    detail20Tray1IsUse !== undefined ||
-    detail20Tray1IsUse !== null
-  ) {
+  if (detail20Tray1IsUse !== par) {
     list.push({
       modbus_address: "464",
       description: detail20Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail20Tray2IsUse !== par ||
-    detail20Tray2IsUse !== undefined ||
-    detail20Tray2IsUse !== null
-  ) {
+  if (detail20Tray2IsUse !== par) {
     list.push({
       modbus_address: "465",
       description: detail20Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail20Tray3IsUse !== par ||
-    detail20Tray3IsUse !== undefined ||
-    detail20Tray3IsUse !== null
-  ) {
+  if (detail20Tray3IsUse !== par) {
     list.push({
       modbus_address: "466",
       description: detail20Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail20Tray4IsUse !== par ||
-    detail20Tray4IsUse !== undefined ||
-    detail20Tray4IsUse !== null
-  ) {
+  if (detail20Tray4IsUse !== par) {
     list.push({
       modbus_address: "467",
       description: detail20Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail21Hour !== par ||
-    detail21Hour !== undefined ||
-    detail21Hour !== null
-  ) {
+  if (detail21Hour !== par) {
     list.push({
       modbus_address: "44240",
       description: detail21Hour,
       property: "write",
     });
   }
-  if (
-    detail21Minute !== par ||
-    detail21Minute !== undefined ||
-    detail21Minute !== null
-  ) {
+  if (detail21Minute !== par) {
     list.push({
       modbus_address: "44241",
       description: detail21Minute,
       property: "write",
     });
   }
-  if (
-    detail21Matter !== par ||
-    detail21Matter !== undefined ||
-    detail21Matter !== null
-  ) {
+  if (detail21Matter !== par) {
     list.push({
       modbus_address: "36",
       description: detail21Matter,
       property: "write",
     });
   }
-  if (
-    detail21IsUse !== par ||
-    detail21IsUse !== undefined ||
-    detail21IsUse !== null
-  ) {
+  if (detail21IsUse !== par) {
     list.push({
       modbus_address: "68",
       description: detail21IsUse,
       property: "write",
     });
   }
-  if (
-    detail21Tray1IsUse !== par ||
-    detail21Tray1IsUse !== undefined ||
-    detail21Tray1IsUse !== null
-  ) {
+  if (detail21Tray1IsUse !== par) {
     list.push({
       modbus_address: "480",
       description: detail21Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail21Tray2IsUse !== par ||
-    detail21Tray2IsUse !== undefined ||
-    detail21Tray2IsUse !== null
-  ) {
+  if (detail21Tray2IsUse !== par) {
     list.push({
       modbus_address: "481",
       description: detail21Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail21Tray3IsUse !== par ||
-    detail21Tray3IsUse !== undefined ||
-    detail21Tray3IsUse !== null
-  ) {
+  if (detail21Tray3IsUse !== par) {
     list.push({
       modbus_address: "482",
       description: detail21Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail21Tray4IsUse !== par ||
-    detail21Tray4IsUse !== undefined ||
-    detail21Tray4IsUse !== null
-  ) {
+  if (detail21Tray4IsUse !== par) {
     list.push({
       modbus_address: "483",
       description: detail21Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail22Hour !== par ||
-    detail22Hour !== undefined ||
-    detail22Hour !== null
-  ) {
+  if (detail22Hour !== par) {
     list.push({
       modbus_address: "44242",
       description: detail22Hour,
       property: "write",
     });
   }
-  if (
-    detail22Minute !== par ||
-    detail22Minute !== undefined ||
-    detail22Minute !== null
-  ) {
+  if (detail22Minute !== par) {
     list.push({
       modbus_address: "44243",
       description: detail22Minute,
       property: "write",
     });
   }
-  if (
-    detail22Matter !== par ||
-    detail22Matter !== undefined ||
-    detail22Matter !== null
-  ) {
+  if (detail22Matter !== par) {
     list.push({
       modbus_address: "37",
       description: detail22Matter,
       property: "write",
     });
   }
-  if (
-    detail22IsUse !== par ||
-    detail22IsUse !== undefined ||
-    detail22IsUse !== null
-  ) {
+  if (detail22IsUse !== par) {
     list.push({
       modbus_address: "69",
       description: detail22IsUse,
       property: "write",
     });
   }
-  if (
-    detail22Tray1IsUse !== par ||
-    detail22Tray1IsUse !== undefined ||
-    detail22Tray1IsUse !== null
-  ) {
+  if (detail22Tray1IsUse !== par) {
     list.push({
       modbus_address: "496",
       description: detail22Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail22Tray2IsUse !== par ||
-    detail22Tray2IsUse !== undefined ||
-    detail22Tray2IsUse !== null
-  ) {
+  if (detail22Tray2IsUse !== par) {
     list.push({
       modbus_address: "497",
       description: detail22Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail22Tray3IsUse !== par ||
-    detail22Tray3IsUse !== undefined ||
-    detail22Tray3IsUse !== null
-  ) {
+  if (detail22Tray3IsUse !== par) {
     list.push({
       modbus_address: "498",
       description: detail22Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail22Tray4IsUse !== par ||
-    detail22Tray4IsUse !== undefined ||
-    detail22Tray4IsUse !== null
-  ) {
+  if (detail22Tray4IsUse !== par) {
     list.push({
       modbus_address: "499",
       description: detail22Tray4IsUse,
       property: "write",
     });
   }
-  if (
-    detail23Hour !== par ||
-    detail23Hour !== undefined ||
-    detail23Hour !== null
-  ) {
+  if (detail23Hour !== par) {
     list.push({
       modbus_address: "44244",
       description: detail23Hour,
       property: "write",
     });
   }
-  if (
-    detail23Minute !== par ||
-    detail23Minute !== undefined ||
-    detail23Minute !== null
-  ) {
+  if (detail23Minute !== par) {
     list.push({
       modbus_address: "44245",
       description: detail23Minute,
       property: "write",
     });
   }
-  if (
-    detail23Matter !== par ||
-    detail23Matter !== undefined ||
-    detail23Matter !== null
-  ) {
+  if (detail23Matter !== par) {
     list.push({
       modbus_address: "38",
       description: detail23Matter,
       property: "write",
     });
   }
-  if (
-    detail23IsUse !== par ||
-    detail23IsUse !== undefined ||
-    detail23IsUse !== null
-  ) {
+  if (detail23IsUse !== par) {
     list.push({
       modbus_address: "70",
       description: detail23IsUse,
       property: "write",
     });
   }
-  if (
-    detail23Tray1IsUse !== par ||
-    detail23Tray1IsUse !== undefined ||
-    detail23Tray1IsUse !== null
-  ) {
+  if (detail23Tray1IsUse !== par) {
     list.push({
       modbus_address: "512",
       description: detail23Tray1IsUse,
       property: "write",
     });
   }
-  if (
-    detail23Tray2IsUse !== par ||
-    detail23Tray2IsUse !== undefined ||
-    detail23Tray2IsUse !== null
-  ) {
+  if (detail23Tray2IsUse !== par) {
     list.push({
       modbus_address: "513",
       description: detail23Tray2IsUse,
       property: "write",
     });
   }
-  if (
-    detail23Tray3IsUse !== par ||
-    detail23Tray3IsUse !== undefined ||
-    detail23Tray3IsUse !== null
-  ) {
+  if (detail23Tray3IsUse !== par) {
     list.push({
       modbus_address: "514",
       description: detail23Tray3IsUse,
       property: "write",
     });
   }
-  if (
-    detail23Tray4IsUse !== par ||
-    detail23Tray4IsUse !== undefined ||
-    detail23Tray4IsUse !== null
-  ) {
+  if (detail23Tray4IsUse !== par) {
     list.push({
       modbus_address: "515",
       description: detail23Tray4IsUse,
       property: "write",
     });
   }
-
-  if (
-    detailTray1SupplySettingMinute !== par ||
-    detailTray1SupplySettingMinute !== undefined ||
-    detailTray1SupplySettingMinute !== null
-  ) {
+  if (detailTray1SupplySettingMinute !== par) {
     list.push({
       modbus_address: "44300",
       description: detailTray1SupplySettingMinute,
       property: "write",
     });
   }
-  if (
-    detailTray1SupplySettingSecond !== par ||
-    detailTray1SupplySettingSecond !== undefined ||
-    detailTray1SupplySettingSecond !== null
-  ) {
+  if (detailTray1SupplySettingSecond !== par) {
     list.push({
       modbus_address: "44301",
       description: detailTray1SupplySettingSecond,
       property: "write",
     });
   }
-  if (
-    detailTray2SupplySettingMinute !== par ||
-    detailTray2SupplySettingMinute !== undefined ||
-    detailTray2SupplySettingMinute !== null
-  ) {
+  if (detailTray2SupplySettingMinute !== par) {
     list.push({
       modbus_address: "44302",
       description: detailTray2SupplySettingMinute,
       property: "write",
     });
   }
-  if (
-    detailTray2SupplySettingSecond !== par ||
-    detailTray2SupplySettingSecond !== undefined ||
-    detailTray2SupplySettingSecond !== null
-  ) {
+  if (detailTray2SupplySettingSecond !== par) {
     list.push({
       modbus_address: "44303",
       description: detailTray2SupplySettingSecond,
       property: "write",
     });
   }
-  if (
-    detailTray3SupplySettingMinute !== par ||
-    detailTray3SupplySettingMinute !== undefined ||
-    detailTray3SupplySettingMinute !== null
-  ) {
+  if (detailTray3SupplySettingMinute !== par) {
     list.push({
       modbus_address: "44304",
       description: detailTray3SupplySettingMinute,
       property: "write",
     });
   }
-  if (
-    detailTray3SupplySettingSecond !== par ||
-    detailTray3SupplySettingSecond !== undefined ||
-    detailTray3SupplySettingSecond !== null
-  ) {
+  if (detailTray3SupplySettingSecond !== par) {
     list.push({
       modbus_address: "44305",
       description: detailTray3SupplySettingSecond,
       property: "write",
     });
   }
-  if (
-    detailTray4SupplySettingMinute !== par ||
-    detailTray4SupplySettingMinute !== undefined ||
-    detailTray4SupplySettingMinute !== null
-  ) {
+  if (detailTray4SupplySettingMinute !== par) {
     list.push({
       modbus_address: "44306",
       description: detailTray4SupplySettingMinute,
       property: "write",
     });
   }
-  if (
-    detailTray4SupplySettingSecond !== par ||
-    detailTray4SupplySettingSecond !== undefined ||
-    detailTray4SupplySettingSecond !== null
-  ) {
+  if (detailTray4SupplySettingSecond !== par) {
     list.push({
       modbus_address: "44307",
       description: detailTray4SupplySettingSecond,
       property: "write",
     });
   }
-  if (
-    tray1EcSetting !== par ||
-    tray1EcSetting !== undefined ||
-    tray1EcSetting !== null
-  ) {
+  if (tray1EcSetting !== par) {
     list.push({
       modbus_address: "44360",
       description: String(Number(tray1EcSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray2EcSetting !== par ||
-    tray2EcSetting !== undefined ||
-    tray2EcSetting !== null
-  ) {
+  if (tray2EcSetting !== par) {
     list.push({
       modbus_address: "44361",
       description: String(Number(tray2EcSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray3EcSetting !== par ||
-    tray3EcSetting !== undefined ||
-    tray3EcSetting !== null
-  ) {
+  if (tray3EcSetting !== par) {
     list.push({
       modbus_address: "44362",
       description: String(Number(tray3EcSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray4EcSetting !== par ||
-    tray4EcSetting !== undefined ||
-    tray4EcSetting !== null
-  ) {
+  if (tray4EcSetting !== par) {
     list.push({
       modbus_address: "44363",
       description: String(Number(tray4EcSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray1PhSetting !== par ||
-    tray1PhSetting !== undefined ||
-    tray1PhSetting !== null
-  ) {
+  if (tray1PhSetting !== par) {
     list.push({
       modbus_address: "44380",
       description: String(Number(tray1PhSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray2PhSetting !== par ||
-    tray2PhSetting !== undefined ||
-    tray2PhSetting !== null
-  ) {
+  if (tray2PhSetting !== par) {
     list.push({
       modbus_address: "44381",
       description: String(Number(tray2PhSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray3PhSetting !== par ||
-    tray3PhSetting !== undefined ||
-    tray3PhSetting !== null
-  ) {
+  if (tray3PhSetting !== par) {
     list.push({
       modbus_address: "44382",
       description: String(Number(tray3PhSetting) * 1000),
       property: "write",
     });
   }
-  if (
-    tray4PhSetting !== par ||
-    tray4PhSetting !== undefined ||
-    tray4PhSetting !== null
-  ) {
+  if (tray4PhSetting !== par) {
     list.push({
       modbus_address: "44383",
       description: String(Number(tray4PhSetting) * 1000),
@@ -2754,6 +1955,7 @@ function invalidDetailSettingData(body) {
   ];
 
   const validString = ["0", "1", ""];
+
   if (
     Number(detail1Minute) < 0 ||
     Number(detail1Minute) > 59 ||

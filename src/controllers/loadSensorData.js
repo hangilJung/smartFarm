@@ -66,6 +66,11 @@ const load = {
     const result = await sensorData.dayConsumptionData();
     res.json(result);
   },
+  dayMaxValue: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.dayMaxValue();
+    res.json(result);
+  },
   monthConsumptionData: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.monthConsumptionData();

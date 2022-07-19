@@ -304,6 +304,13 @@ class DataAccess {
     return this.#databaseAcess(sql, condition);
   }
 
+  static async dayMaxValue() {
+    const sql = query.dayMaxValue;
+    const condition = [];
+
+    return this.#databaseAcess(sql, condition);
+  }
+
   static async monthConsumptionData() {
     const sql = query.monthConsumptionData;
     const condition = [];

@@ -12,6 +12,7 @@ router.post("/bed-data", ipAndUrl, ctrl.load.bedData);
 router.post("/hour-consum", ipAndUrl, ctrl.load.hourConsumptionData);
 router.post("/day-consum", ipAndUrl, ctrl.load.dayConsumptionData);
 router.post("/month-consum", ipAndUrl, ctrl.load.monthConsumptionData);
+router.post("/day-max-value", ipAndUrl, ctrl.load.dayMaxValue);
 router.post("/year-consum", ipAndUrl, ctrl.load.yearConsumptionData);
 router.post("/accum-consum", ipAndUrl, ctrl.load.accumulateConsumptionData);
 router.post(

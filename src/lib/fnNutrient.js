@@ -398,7 +398,6 @@ function easySetting(body) {
   } = body;
   const list = [];
   const par = "";
-
   if (easyStartHour !== par) {
     list.push({
       modbus_address: "44100",
@@ -437,7 +436,7 @@ function easySetting(body) {
   if (easyEcSetting !== par) {
     list.push({
       modbus_address: "44105",
-      description: String(Number(easyEcSetting * 1000)),
+      description: String(Number(easyEcSetting) * 1000),
       property: "write",
     });
   }

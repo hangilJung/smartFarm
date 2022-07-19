@@ -60,6 +60,11 @@ const process = {
     const result = await actuatorControl.fanStatus();
     res.json(result);
   },
+  fanStatusGw: async (req, res) => {
+    const actuatorControl = new ActuatorControl();
+    const result = await actuatorControl.fanStatusGw();
+    res.json(result);
+  },
   setAction: async (req, res) => {
     const sensorData = new SensorData(req.body);
     const result = await sensorData.setAction();

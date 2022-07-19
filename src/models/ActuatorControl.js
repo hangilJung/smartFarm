@@ -571,6 +571,51 @@ class ActuatorControl {
     }
   }
 
+  async fanStatusGw() {
+    try {
+      const ctrl = {
+        farmland_id: 1,
+        data: [
+          {
+            bed_id: 5,
+            device: "fan",
+            active: "status",
+            device_name: "fan_status",
+            datetime: "2022-05-11 T 10:04:00",
+            dev_data: [],
+          },
+        ],
+      };
+      const result = await axios.post(process.env.GATEWAY_SERVER, ctrl, {
+        timeout: timeoutSettingValue,
+      });
+      const data = result.data.body.data[0].dev_data;
+
+      const list = data.map((data) => {
+        return { device: data.device_name, status: data.status };
+      });
+
+      return {
+        header: {
+          resultCode: "00",
+          resultMsg: "NORMAL_SERVICE",
+        },
+        body: list,
+      };
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/ActuatorControl.js function fanStatusGw() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+      if (error?.code === "ECONNABORTED") {
+        return fn.timeOutError();
+      }
+      return fn.fanInvalidRequestParameterError();
+    }
+  }
+
   async nutrientStop() {
     const dataFormat = fn.deliverDataFormatWrite(actu);
     const nowTime = moment().format("YYYY-MM-DD HH:mm:ss");

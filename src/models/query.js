@@ -621,7 +621,21 @@ const query = {
                             year(created_at),
                             month(created_at),
                             day(created_at);`,
-
+  dayMaxValue: `
+                select 
+                    max(a.value) as value
+                from
+                (	
+                    select
+                        cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
+                        created_at
+                    from
+                        power_consumption_data pcd
+                    group by
+                        year(created_at),
+                        month(created_at),
+                        day(created_at)
+                ) a;`,
   monthConsumptionData: `
                         select
                             cast((sum(hour_value)/1000 ) as decimal(8,1)) as value,
