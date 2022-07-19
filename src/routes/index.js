@@ -21,5 +21,7 @@ router.post(
 router.post("/token-v1", ipAndUrl, verifyToken, ctrl.process.tokenV1);
 router.post("/set-action", ipAndUrl, ctrl.process.setAction);
 router.post("/read-action", ipAndUrl, ctrl.process.readAction);
+router.post("/set-condition", ipAndUrl, ctrl.process.setCondition);
+router.post("/get-condition", ipAndUrl, ctrl.process.getCondition);
 
 module.exports = router;

@@ -1594,7 +1594,111 @@ function endTime(value) {
   return { month, day, hour, minute, second };
 }
 
+function actionStatusFsRead() {
+  return JSON.parse(
+    fs.readFileSync(__dirname + "/../utils/detectStatus.json", "utf8")
+  );
+}
+
+function actionStatusFsWrite(what, status) {
+  const currentFile = actionStatusFsRead();
+  currentFile[what] = status;
+  fs.writeFileSync(
+    __dirname + "/../utils/detectStatus.json",
+    JSON.stringify(currentFile)
+  );
+}
+
+function invalidActionStatus(body) {
+  const invalidList = [
+    "run",
+    "coolTime",
+    "fanLevel1",
+    "fanLevel2",
+    "fanLevel3",
+    "outTemp",
+    "rf",
+    "ws",
+  ];
+
+  const list = Object.keys(body);
+  const checkList = [];
+  let result = false;
+
+  for (let i of list) {
+    if (invalidList.includes(i)) {
+      checkList.push(i);
+    }
+  }
+
+  if (body["run"] < 0 || body["run"] > 99) {
+    console.log("run 유효성");
+    result = true;
+    return result;
+  }
+  if (body["coolTime"] < 0 || body["coolTime"] > 99) {
+    console.log("coolTime 유효성");
+    result = true;
+    return result;
+  }
+  if (body["fanLevel1"] < 0 || body["fanLevel1"] > 99) {
+    console.log("fanLevel1 유효성");
+    result = true;
+    return result;
+  }
+  if (body["fanLevel2"] < 0 || body["fanLevel2"] > 99) {
+    console.log("fanLevel2 유효성");
+    result = true;
+    return result;
+  }
+  if (body["fanLevel3"] < 0 || body["fanLevel3"] > 99) {
+    console.log("fanLevel3 유효성");
+    result = true;
+    return result;
+  }
+  if (body["outTemp"] < -25 || body["outTemp"] > 85) {
+    console.log("outTemp 유효성");
+    result = true;
+    return result;
+  }
+  if (body["rf"] < 0 || body["rf"] > 400) {
+    console.log("rf 유효성");
+    result = true;
+    return result;
+  }
+  if (body["ws"] < 0 || body["ws"] > 60) {
+    console.log("ws 유효성");
+    result = true;
+    return result;
+  }
+
+  if (checkList.length !== list.length) {
+    console.log("JSON 키값 유효성");
+    result = true;
+    return result;
+  }
+}
+
+function selectActionStatus(body) {
+  const list = [];
+
+  for (let i of Object.keys(body)) {
+    if (body[i] != "") {
+      list.push({
+        where: i,
+        value: body[i],
+      });
+    }
+  }
+
+  return list;
+}
+
 module.exports = {
+  selectActionStatus,
+  invalidActionStatus,
+  actionStatusFsRead,
+  actionStatusFsWrite,
   endTime,
   detectFsWrite,
   detectStatusFsRead,

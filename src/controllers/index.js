@@ -75,6 +75,16 @@ const process = {
     const result = await sensorData.readAction();
     res.json(result);
   },
+  setCondition: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.setCondition();
+    res.json(result);
+  },
+  getCondition: async (req, res) => {
+    const sensorData = new SensorData(req.body);
+    const result = await sensorData.getCondition();
+    res.json(result);
+  },
 };
 
 const socketIO = {};

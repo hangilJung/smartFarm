@@ -801,6 +801,7 @@ class SensorData {
       const detectStatus = fn.detectStatusFsRead();
       //시간뽑을 키값 배열
       const timeNameList = [
+        "num0Time",
         "num1Time",
         "num2Time",
         "num3Time",
@@ -821,6 +822,9 @@ class SensorData {
         "num18Time",
         "num19Time",
         "num20Time",
+        "num21Time",
+        "num22Time",
+        "num23Time",
       ];
       const result = fn.readActionStatus();
 
@@ -1281,6 +1285,98 @@ class SensorData {
       console.log(error);
       logger.error(
         `src/models/SensorData.js function actionLogic() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
+
+  async setCondition() {
+    try {
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const response = {
+        header: {},
+      };
+
+      if (fn.invalidActionStatus(this.body)) {
+        const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+        return fn.statisticsStatusCodeInvalidRequestPararmeterError(
+          reqDatetime,
+          resDatetime
+        );
+      }
+
+      const setData = fn.selectActionStatus(this.body);
+
+      for (let i of setData) {
+        fn.actionStatusFsWrite(i.where, i.value);
+      }
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function setCondition() error : ${
+          error ?? "not load error contents"
+        }`
+      );
+    }
+  }
+
+  async getCondition() {
+    try {
+      const reqDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+      const response = {
+        header: {},
+      };
+
+      const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
+
+      const data = fn.actionStatusFsRead();
+      let dataList = {};
+
+      for (let i of Object.keys(data)) {
+        if (i === "run") {
+          dataList = { ...dataList, run: data[i] };
+        } else if (i === "coolTime") {
+          dataList = { ...dataList, coolTime: data[i] };
+        } else if (i === "fanLevel1") {
+          dataList = { ...dataList, fanLevel1: data[i] };
+        } else if (i === "fanLevel2") {
+          dataList = { ...dataList, fanLevel2: data[i] };
+        } else if (i === "fanLevel3") {
+          dataList = { ...dataList, fanLevel3: data[i] };
+        } else if (i === "outTemp") {
+          dataList = { ...dataList, outTemp: data[i] };
+        } else if (i === "ws") {
+          dataList = { ...dataList, ws: data[i] };
+        } else if (i === "rf") {
+          dataList = { ...dataList, rf: data[i] };
+        }
+      }
+
+      response.header = {
+        resultCode: "00",
+        resultMsg: "NORMAL_SERVICE",
+        requestDatetime: reqDatetime,
+        responseDatetime: resDatetime,
+      };
+      response.body = dataList;
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      logger.error(
+        `src/models/SensorData.js function getCondition() error : ${
           error ?? "not load error contents"
         }`
       );
