@@ -204,13 +204,13 @@ function createCharacter(deviceName, active) {
   let content;
 
   if (deviceName === "oneTwo") {
-    content = "fan1, fan2을(를)";
+    content = "팬1, 팬2을(를)";
   } else if (deviceName === "oneThree") {
-    content = "fan1, fan3을(를)";
+    content = "팬1, 팬3을(를)";
   } else if (deviceName === "twoThree") {
-    content = "fan2, fan3을(를)";
+    content = "팬2, 팬3을(를)";
   } else if (deviceName === "oneTwoThree") {
-    content = "fan1, fan2, fan3을(를)";
+    content = "팬1, 팬2, 팬3을(를)";
   } else {
   }
   content = deviceName + " 을(를)";
@@ -1582,7 +1582,7 @@ function detectFsWrite(where, value) {
 
 function endTime(value) {
   let endTime = moment()
-    .add(Number(value), "seconds")
+    .add(Number(value), "minutes")
     .format("YYYY-MM-DD HH:mm:ss");
 
   const spaceSplit = endTime.split(" ");

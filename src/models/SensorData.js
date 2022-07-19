@@ -907,214 +907,277 @@ class SensorData {
         Number(settingList["settingTempMax"]);
       console.log(`sub 값은? ${sub.toFixed(1)}`);
 
-      //환풍기
-      if (sub.toFixed(1) > Number(detectStatus["fanLevel3"])) {
-        ///여기서 환풍기 작동 명려 넣기
-        if (detectStatus["fanStatus"] === "") {
-          stage2Timer = true;
-
-          const actuatorControl = new ActuatorControl({
-            deviceName: "oneTwoThree",
-            active: "on",
-          });
-
-          actuatorControl.simpleActuatorControl();
-
-          console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
-        } else if (detectStatus["fanStatus"] === "1") {
-          console.log("환풍기 1,3번 작동하여 2개의 환풍기 작동");
-          const actuatorControl = new ActuatorControl({
-            deviceName: "oneThree",
-            active: "on",
-          });
-          actuatorControl.simpleActuatorControl();
-        } else if (detectStatus["fanStatus"] === "2") {
-          const actuatorControl = new ActuatorControl({
-            deviceName: "fan3",
-            active: "on",
-          });
-          actuatorControl.simpleActuatorControl();
-          console.log("환풍기 3번 작동하여 1개의 환풍기 작동");
-        } else if (detectStatus["fanStatus"] === "3") {
-          console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
-        }
-
-        // detectStatus 에서 isLoop 상태값을 false로 변환
-        fn.detectFsWrite("fanStatus", "3");
+      if (sub.toFixed(1) > 1) {
         fn.detectFsWrite("isLoop", false);
 
-        const { month, day, hour, minute, second } = fn.endTime("60");
-
-        console.log("스케줄의 시간", minute, ":", second);
-
-        schedule.scheduleJob(
-          `${second} ${minute} ${hour} ${day} ${month} *`,
-          () => {
-            console.log("레벨 3 스케줄 작동");
-
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              //환풍기 중지 명령 넣기
-              // detectStatus에서 level을 "" 으로 쓰기
-              fn.detectFsWrite("fanStatus", "");
-
-              console.log("실내 온도가 낮아서 환풍기 중지");
-
-              const actuatorControl = new ActuatorControl({
-                deviceName: "oneTwoThree",
-                active: "stop",
-              });
-              actuatorControl.simpleActuatorControl();
-
-              const { month, day, hour, minute, second } = fn.endTime(
-                detectStatus["coolTime"]
-              );
-
-              console.log("현재시간", moment().format("YYYY-MM-DD HH:mm:ss"));
-              console.log(`스케줄안의 스케줄에서 시간${minute}:${second}`);
-
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                () => {
-                  //상태값 true 변환
-                  fn.detectFsWrite("isLoop", true);
-
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            } else {
-              fn.detectFsWrite("isLoop", true);
-
-              console.log("상태값 true 변환 스케줄 작동");
-            }
-          }
+        const { month, day, hour, minute, second } = endTime(
+          detectStatus["delay"]
         );
-      } else if (sub.toFixed(1) > Number(detectStatus["fanLevel2"])) {
-        //여기서 환풍기 동작 명령 넣기
-        if (detectStatus["level"] === "") {
-          stage2Timer = true;
-          const actuatorControl = new ActuatorControl({
-            deviceName: "oneTwo",
-            active: "on",
-          });
-          actuatorControl.simpleActuatorControl();
-          console.log("환풍기 1,2번 작동하여 2개의 환풍기 작동");
-        } else if (detectStatus["fanStatus"] === "1") {
-          const actuatorControl = new ActuatorControl({
-            deviceName: "fan1",
-            active: "on",
-          });
-          actuatorControl.simpleActuatorControl();
-          console.log("환풍기 1번 작동하여 1개의 환풍기 작동");
-        } else if (detectStatus["fanStatus"] === "2") {
-          console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
-        }
-
-        // detectStatus 에서 isLoop 상태값을 false로 변환
-        fn.detectFsWrite("fanStatus", "2");
-        fn.detectFsWrite("isLoop", false);
-
-        const actuatorControl = new ActuatorControl({
-          deviceName: "oneTwo",
-          active: "on",
-        });
-        actuatorControl.simpleActuatorControl();
-
-        const { month, day, hour, minute, second } = fn.endTime("60");
 
         schedule.scheduleJob(
           `${second} ${minute} ${hour} ${day} ${month} *`,
           async () => {
-            console.log("레벨 2 스케줄 작동");
+            const reSensorData = await DataAccess.detectAction();
+            let co2Temp;
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              //환풍기 중지 명령 넣기
-              // detectStatus에서 level을 "" 으로 쓰기
-
-              const actuatorControl = new ActuatorControl({
-                deviceName: "oneTwo",
-                active: "stop",
-              });
-              actuatorControl.simpleActuatorControl();
-
-              fn.detectFsWrite("fanStatus", "");
-
-              console.log("실내 온도가 낮아서 환풍기 중지");
-
-              //상태값 true 변환
-              const { month, day, hour, minute, second } = fn.endTime(
-                detectStatus["coolTime"]
-              );
-              console.log(`스케줄안의 스케줄에서 시간${minute} ${second}`);
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  fn.detectFsWrite("isLoop", true);
-
-                  console.log("상태값 true 변환 스케줄 작동");
-                }
-              );
-            } else {
-              fn.detectFsWrite("isLoop", true);
-
-              console.log("isLoop를 true로 유지");
+            for (let i of reSensorData[0]) {
+              if (i["sensor_name"] === "co2Temp") {
+                co2Temp = i["sensor_data_value"];
+              }
             }
-          }
-        );
-      } else if (sub.toFixed(1) > Number(detectStatus["fanLevel1"])) {
-        //여기서 환풍기 동작 명령 넣기
-        if (detectStatus["fanStatus"] === "") {
-          stage2Timer = true;
-          const actuatorControl = new ActuatorControl({
-            deviceName: "fan2",
-            active: "on",
-          });
-          actuatorControl.simpleActuatorControl();
-          console.log("환풍기 2번 작동하여 1개의 환풍기 작동");
-        } else if (detectStatus["fanStatus"] === "1") {
-          console.log("환풍기 작동시킬게 없어 그냥 그대로 있는다");
-        }
-        // detectStatus 에서 isLoop 상태값을 false로 변환
-        fn.detectFsWrite("fanStatus", "1");
-        fn.detectFsWrite("isLoop", false);
 
-        const { month, day, hour, minute, second } = fn.endTime("60");
+            const reSub =
+              Number(co2Temp) - Number(settingList["settingTempMax"]);
 
-        schedule.scheduleJob(
-          `${second} ${minute} ${hour} ${day} ${month} *`,
-          async () => {
-            console.log("레벨 1 스케줄 작동");
+            console.log("딜레이 스케줄 작동");
+            if (reSub.toFixed(1) > 1) {
+              //환풍기
+              if (sub.toFixed(1) > Number(detectStatus["fanLevel3"])) {
+                ///여기서 환풍기 작동 명려 넣기
+                if (detectStatus["fanStatus"] === "") {
+                  stage2Timer = true;
 
-            if (sensorDataList.co2Temp < settingList.settingTempMax) {
-              //환풍기 중지 명령 넣기
-              // detectStatus에서 level을 "" 으로 쓰기
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "oneTwoThree",
+                    active: "on",
+                  });
 
-              const actuatorControl = new ActuatorControl({
-                deviceName: "fan2",
-                active: "stop",
-              });
+                  actuatorControl.simpleActuatorControl();
 
-              actuatorControl.simpleActuatorControl();
-
-              fn.detectFsWrite("fanStatus", "");
-
-              console.log("실내 온도가 낮아서 환풍기 중지");
-
-              //상태값 true 변환
-              const { month, day, hour, minute, second } = fn.endTime(
-                detectStatus["coolTime"]
-              );
-              schedule.scheduleJob(
-                `${second} ${minute} ${hour} ${day} ${month} *`,
-                async () => {
-                  fn.detectFsWrite("isLoop", true);
-
-                  console.log("상태값 true 변환 스케줄 작동");
+                  console.log("환풍기 1,2,3번 작동하여 3개의 환풍기 작동");
+                } else if (detectStatus["fanStatus"] === "1") {
+                  console.log("환풍기 1,3번 작동하여 2개의 환풍기 작동");
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "oneThree",
+                    active: "on",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                } else if (detectStatus["fanStatus"] === "2") {
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "fan3",
+                    active: "on",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                  console.log("환풍기 3번 작동하여 1개의 환풍기 작동");
+                } else if (detectStatus["fanStatus"] === "3") {
+                  console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
                 }
-              );
-            } else {
-              fn.detectFsWrite("isLoop", true);
 
-              console.log("상태값 true 변환 스케줄 작동");
+                // detectStatus 에서 isLoop 상태값을 false로 변환
+                fn.detectFsWrite("fanStatus", "3");
+                fn.detectFsWrite("isLoop", false);
+
+                const { month, day, hour, minute, second } = fn.endTime(
+                  detectStatus["coolTime"]
+                );
+
+                console.log("스케줄의 시간", minute, ":", second);
+
+                schedule.scheduleJob(
+                  `${second} ${minute} ${hour} ${day} ${month} *`,
+                  () => {
+                    console.log("레벨 3 스케줄 작동");
+
+                    if (sensorDataList.co2Temp < settingList.settingTempMax) {
+                      //환풍기 중지 명령 넣기
+                      // detectStatus에서 level을 "" 으로 쓰기
+                      fn.detectFsWrite("fanStatus", "");
+
+                      console.log("실내 온도가 낮아서 환풍기 중지");
+
+                      const actuatorControl = new ActuatorControl({
+                        deviceName: "oneTwoThree",
+                        active: "stop",
+                      });
+                      actuatorControl.simpleActuatorControl();
+
+                      const { month, day, hour, minute, second } = fn.endTime(
+                        detectStatus["coolTime"]
+                      );
+
+                      console.log(
+                        "현재시간",
+                        moment().format("YYYY-MM-DD HH:mm:ss")
+                      );
+                      console.log(
+                        `스케줄안의 스케줄에서 시간${minute}:${second}`
+                      );
+
+                      schedule.scheduleJob(
+                        `${second} ${minute} ${hour} ${day} ${month} *`,
+                        () => {
+                          //상태값 true 변환
+                          fn.detectFsWrite("isLoop", true);
+
+                          console.log("상태값 true 변환 스케줄 작동");
+                        }
+                      );
+                    } else {
+                      fn.detectFsWrite("isLoop", true);
+
+                      console.log("상태값 true 변환 스케줄 작동");
+                    }
+                  }
+                );
+              } else if (sub.toFixed(1) > Number(detectStatus["fanLevel2"])) {
+                //여기서 환풍기 동작 명령 넣기
+                if (detectStatus["level"] === "") {
+                  stage2Timer = true;
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "oneTwo",
+                    active: "on",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                  console.log("환풍기 1,2번 작동하여 2개의 환풍기 작동");
+                } else if (detectStatus["fanStatus"] === "1") {
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "fan1",
+                    active: "on",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                  console.log("환풍기 1번 작동하여 1개의 환풍기 작동");
+                } else if (detectStatus["fanStatus"] === "2") {
+                  console.log("환풍기 작동시킬게 없어 그냥 그대로 있음");
+                } else if (detectStatus["fanStatus"] === "3") {
+                  console.log("환풍기 3번 정지");
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "fan3",
+                    active: "stop",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                }
+
+                // detectStatus 에서 isLoop 상태값을 false로 변환
+                fn.detectFsWrite("fanStatus", "2");
+                fn.detectFsWrite("isLoop", false);
+
+                const actuatorControl = new ActuatorControl({
+                  deviceName: "oneTwo",
+                  active: "on",
+                });
+                actuatorControl.simpleActuatorControl();
+
+                const { month, day, hour, minute, second } = fn.endTime(
+                  detectStatus["run"]
+                );
+
+                schedule.scheduleJob(
+                  `${second} ${minute} ${hour} ${day} ${month} *`,
+                  async () => {
+                    console.log("레벨 2 스케줄 작동");
+
+                    if (sensorDataList.co2Temp < settingList.settingTempMax) {
+                      //환풍기 중지 명령 넣기
+                      // detectStatus에서 level을 "" 으로 쓰기
+
+                      const actuatorControl = new ActuatorControl({
+                        deviceName: "oneTwo",
+                        active: "stop",
+                      });
+                      actuatorControl.simpleActuatorControl();
+
+                      fn.detectFsWrite("fanStatus", "");
+
+                      console.log("실내 온도가 낮아서 환풍기 중지");
+
+                      //상태값 true 변환
+                      const { month, day, hour, minute, second } = fn.endTime(
+                        detectStatus["coolTime"]
+                      );
+                      console.log(
+                        `스케줄안의 스케줄에서 시간${minute} ${second}`
+                      );
+                      schedule.scheduleJob(
+                        `${second} ${minute} ${hour} ${day} ${month} *`,
+                        async () => {
+                          fn.detectFsWrite("isLoop", true);
+
+                          console.log("상태값 true 변환 스케줄 작동");
+                        }
+                      );
+                    } else {
+                      fn.detectFsWrite("isLoop", true);
+
+                      console.log("isLoop를 true로 유지");
+                    }
+                  }
+                );
+              } else if (sub.toFixed(1) > Number(detectStatus["fanLevel1"])) {
+                //여기서 환풍기 동작 명령 넣기
+                if (detectStatus["fanStatus"] === "") {
+                  stage2Timer = true;
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "fan2",
+                    active: "on",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                  console.log("환풍기 2번 작동하여 1개의 환풍기 작동");
+                } else if (detectStatus["fanStatus"] === "1") {
+                  console.log("환풍기 작동시킬게 없어 그냥 그대로 있는다");
+                } else if (detectStatus["fanStatus"] === "2") {
+                  console.log("환풍기 1번 중지");
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "fan1",
+                    active: "stop",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                } else if (detectStatus["fanStatus"] === "3") {
+                  console.log("환풍기 1번 중지");
+                  const actuatorControl = new ActuatorControl({
+                    deviceName: "oneThree",
+                    active: "stop",
+                  });
+                  actuatorControl.simpleActuatorControl();
+                }
+                // detectStatus 에서 isLoop 상태값을 false로 변환
+                fn.detectFsWrite("fanStatus", "1");
+                fn.detectFsWrite("isLoop", false);
+
+                const { month, day, hour, minute, second } = fn.endTime(
+                  detectStatus["run"]
+                );
+
+                schedule.scheduleJob(
+                  `${second} ${minute} ${hour} ${day} ${month} *`,
+                  async () => {
+                    console.log("레벨 1 스케줄 작동");
+
+                    if (sensorDataList.co2Temp < settingList.settingTempMax) {
+                      //환풍기 중지 명령 넣기
+                      // detectStatus에서 level을 "" 으로 쓰기
+
+                      const actuatorControl = new ActuatorControl({
+                        deviceName: "fan2",
+                        active: "stop",
+                      });
+
+                      actuatorControl.simpleActuatorControl();
+
+                      fn.detectFsWrite("fanStatus", "");
+
+                      console.log("실내 온도가 낮아서 환풍기 중지");
+
+                      //상태값 true 변환
+                      const { month, day, hour, minute, second } = fn.endTime(
+                        detectStatus["coolTime"]
+                      );
+                      schedule.scheduleJob(
+                        `${second} ${minute} ${hour} ${day} ${month} *`,
+                        async () => {
+                          fn.detectFsWrite("isLoop", true);
+
+                          console.log("상태값 true 변환 스케줄 작동");
+                        }
+                      );
+                    } else {
+                      fn.detectFsWrite("isLoop", true);
+
+                      console.log("상태값 true 변환 스케줄 작동");
+                    }
+                  }
+                );
+              }
+              // 끝쪽
             }
           }
         );
