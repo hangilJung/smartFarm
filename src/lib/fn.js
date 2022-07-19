@@ -1619,6 +1619,7 @@ function invalidActionStatus(body) {
     "outTemp",
     "rf",
     "ws",
+    "delay",
   ];
 
   const list = Object.keys(body);
@@ -1630,7 +1631,11 @@ function invalidActionStatus(body) {
       checkList.push(i);
     }
   }
-
+  if (body["delay"] < 0 || body["delay"] > 99) {
+    console.log("delay 유효성");
+    result = true;
+    return result;
+  }
   if (body["run"] < 0 || body["run"] > 99) {
     console.log("run 유효성");
     result = true;

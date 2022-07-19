@@ -1424,6 +1424,8 @@ class SensorData {
           dataList = { ...dataList, ws: data[i] };
         } else if (i === "rf") {
           dataList = { ...dataList, rf: data[i] };
+        } else if (i === "delay") {
+          dataList = { ...dataList, delay: data[i] };
         }
       }
 
