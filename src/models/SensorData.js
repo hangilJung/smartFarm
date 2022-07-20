@@ -323,10 +323,25 @@ class SensorData {
 
     try {
       const result = await DataAccess.dayConsumptionData();
+      const maxResult = await DataAccess.dayMaxValue();
 
+      let list = [];
+
+      for (let i of result[0]) {
+        list.push({ value: i.value, created_at: i.created_at });
+      }
+      for (let i of maxResult[0]) {
+        list.push({ max_value: i.value, created_at: i.created_at });
+      }
+      const finalResult = [list];
+      console.log(finalResult);
       const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      return fn.normalServiceAndNoDataError(result, reqDatetime, resDatetime);
+      return fn.normalServiceAndNoDataError(
+        finalResult,
+        reqDatetime,
+        resDatetime
+      );
     } catch (error) {
       console.log(error);
       logger.error(

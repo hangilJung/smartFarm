@@ -292,7 +292,7 @@ class ActuatorControl {
       ) {
         if (active == "on") {
           if (resultCode == "00" && true) {
-            await fn.sleep(3000).then(async () => {
+            await fn.sleep(5000).then(async () => {
               const result = await DataAccess.currentAmountOfChange();
               console.log(
                 "##",
@@ -338,22 +338,22 @@ class ActuatorControl {
                 if (deviceName === "oneTwo") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan2작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬2작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "oneThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "twoThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan2, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬2, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "oneTwoThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan2, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬2, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else {
                   await DataAccess.actuatorControlActionRecord(
@@ -369,14 +369,14 @@ class ActuatorControl {
           }
         } else if (active == "stop") {
           if (resultCode == "00" && true) {
-            await fn.sleep(3000).then(async () => {
+            await fn.sleep(5000).then(async () => {
               const result = await DataAccess.currentAmountOfChange();
               const resDatetime = moment().format("YYYY-MM-DD HH:mm:ss");
               console.log("@@@@", result[0][0]["sensor_data_value"]);
               console.log("$$$$$", fn.addCurrentOff(fn.deviceStatus()));
               let invalid;
-              if (Number(result[0][0]["sensor_data_value"]) > 6.8) {
-                invalid = 6.1;
+              if (Number(result[0][0]["sensor_data_value"]) > 6.1) {
+                invalid = 4.1;
               } else {
                 invalid = result[0][0]["sensor_data_value"];
               }
@@ -420,22 +420,22 @@ class ActuatorControl {
                 if (deviceName === "oneTwo") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan2작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬2작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "oneThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "twoThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan2, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬2, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else if (deviceName === "oneTwoThree") {
                   await DataAccess.actuatorControlActionRecord(
                     "fan1",
-                    `fan1, fan2, fan3작동에 통신 문제가 발생했습니다.`
+                    `팬1, 팬2, 팬3작동에 통신 문제가 발생했습니다.`
                   );
                 } else {
                   await DataAccess.actuatorControlActionRecord(

@@ -201,19 +201,19 @@ function whereToSupply(matter, line) {
 }
 
 function createCharacter(deviceName, active) {
-  let content;
+  let content = "";
 
   if (deviceName === "oneTwo") {
-    content = "팬1, 팬2을(를)";
+    content += "팬1, 팬2을(를)";
   } else if (deviceName === "oneThree") {
-    content = "팬1, 팬3을(를)";
+    content += "팬1, 팬3을(를)";
   } else if (deviceName === "twoThree") {
-    content = "팬2, 팬3을(를)";
+    content += "팬2, 팬3을(를)";
   } else if (deviceName === "oneTwoThree") {
-    content = "팬1, 팬2, 팬3을(를)";
+    content += "팬1, 팬2, 팬3을(를)";
   } else {
   }
-  content = deviceName + " 을(를)";
+  content += " 을(를)";
   if (active === "open") {
     content += " 열었습니다.";
   } else if (active === "close") {
@@ -223,6 +223,7 @@ function createCharacter(deviceName, active) {
   } else if (active === "stop") {
     content += " 중지하였습니다.";
   }
+
 
   return content;
 }
@@ -751,11 +752,11 @@ function deviceStatus() {
 }
 
 function addCurrent(onList) {
-  let curr = 0.6;
+  let curr = 0.5;
   const oneFanValue = 0.2;
   const twoFanValue = 0.2;
   const threeFanValue = 0.2;
-  const nutrientValue = 4;
+  const nutrientValue = 3.6;
 
   if (onList.includes("fan1")) {
     curr += oneFanValue;
@@ -797,11 +798,11 @@ function addCurrent(onList) {
 }
 
 function addCurrentOff(onList) {
-  let curr = 1.2;
+  let curr = 1.5;
   const oneFanValue = 0.6;
   const twoFanValue = 1.1;
   const threeFanValue = 1.7;
-  const nutrientValue = 5.6;
+  const nutrientValue = 6;
 
   if (onList.includes("fan1")) {
     curr += oneFanValue;
