@@ -17,13 +17,13 @@ module.exports = () => {
   fn.detectFsWrite("isLoop", true);
   fn.detectFsWrite("fanStatus", "");
 
-  // setInterval(() => {
-  //   const isBool = fn.detectStatusFsRead();
-  //   if (isBool.isLoop === true) {
-  //     console.log("actionLogi 작동");
-  //     ctl.load.actionLogic();
-  //   }
-  // }, 2000);
+  setInterval(() => {
+    const isBool = fn.detectStatusFsRead();
+    if (isBool.isLoop === true) {
+      console.log("actionLogi 작동");
+      ctl.load.actionLogic();
+    }
+  }, 2000);
 
   schedule.scheduleJob("10 00 * * * *", async () => {
     DataAccess.writeHourConsumptionData();

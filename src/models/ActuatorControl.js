@@ -63,6 +63,7 @@ class ActuatorControl {
           fn.currentValueFsWrite("fan1", "on");
           fn.currentValueFsWrite("fan3", "on");
         } else if (active === "off") {
+          fn.detectFsWrite("isLoop", true);
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan3", "off");
         }
@@ -92,6 +93,8 @@ class ActuatorControl {
           fn.currentValueFsWrite("fan1", "on");
           fn.currentValueFsWrite("fan2", "on");
         } else if (active === "stop") {
+          fn.detectFsWrite("isLoop", true);
+          fn.detectFsWrite("fanStatus", "");
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan2", "off");
         }
@@ -121,10 +124,13 @@ class ActuatorControl {
           fn.currentValueFsWrite("fan2", "on");
           fn.currentValueFsWrite("fan3", "on");
         } else if (active === "stop") {
+          fn.detectFsWrite("isLoop", true);
+          fn.detectFsWrite("fanStatus", "");
           fn.currentValueFsWrite("fan2", "off");
           fn.currentValueFsWrite("fan3", "off");
         }
       } else if (deviceName === "oneTwoThree") {
+        console.log('ctrl 거르는 oneTwoThree')
         ctrl = {
           farmland_id: 1,
           data: [
@@ -159,6 +165,8 @@ class ActuatorControl {
           fn.currentValueFsWrite("fan2", "on");
           fn.currentValueFsWrite("fan3", "on");
         } else if (active === "stop") {
+          fn.detectFsWrite("isLoop", true);
+          fn.detectFsWrite("fanStatus", "");
           fn.currentValueFsWrite("fan1", "off");
           fn.currentValueFsWrite("fan2", "off");
           fn.currentValueFsWrite("fan3", "off");
@@ -226,6 +234,7 @@ class ActuatorControl {
           ],
         };
       } else {
+        console.log('deviceName 하나씩 들어오는곳')
         ctrl = {
           farmland_id: 1,
           data: [
@@ -250,6 +259,7 @@ class ActuatorControl {
         fn.parameterIsUndefinded(actu.activeList[active]) ||
         fn.isDeviceNameAndActive(deviceName, active)
       ) {
+        console.log("invalidereqest 첫번째쪽");
         return fn.invalidRequestParameterError();
       }
 
@@ -314,6 +324,7 @@ class ActuatorControl {
                   fn.currentValueFsWrite("fan2", "off");
                   fn.currentValueFsWrite("fan3", "off");
                 } else {
+                  console.log("stop deviceName 쪽")
                   fn.currentValueFsWrite(deviceName, "off");
                 }
                 const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");
@@ -371,7 +382,8 @@ class ActuatorControl {
               }
 
               if (invalid < Number(fn.addCurrentOff(fn.deviceStatus()))) {
-                fn.currentValueFsWrite(deviceName, "off");
+                fn.detectFsWrite("isLoop", true);
+                fn.detectFsWrite("fanStatus", "");
                 finalResult = fn.simpleResultStatusNormal(
                   reqDatetime,
                   resDatetime,
@@ -379,19 +391,24 @@ class ActuatorControl {
                 );
               } else {
                 if (deviceName === "oneTwo") {
+                  console.log('oneTwo쪽')
                   fn.currentValueFsWrite("fan1", "on");
                   fn.currentValueFsWrite("fan2", "on");
                 } else if (deviceName === "oneThree") {
+                  console.log('oneThree쪽')
                   fn.currentValueFsWrite("fan1", "on");
                   fn.currentValueFsWrite("fan3", "on");
                 } else if (deviceName === "twoThree") {
+                  console.log('twoThree쪽')
                   fn.currentValueFsWrite("fan2", "on");
                   fn.currentValueFsWrite("fan3", "on");
                 } else if (deviceName === "oneTwoThree") {
+                  console.log('oneTwoThree쪽')
                   fn.currentValueFsWrite("fan1", "on");
                   fn.currentValueFsWrite("fan2", "on");
                   fn.currentValueFsWrite("fan3", "on");
                 } else {
+                  console.log('deviceName 쪽')
                   fn.currentValueFsWrite(deviceName, "on");
                 }
                 const resDatetime = moment().format("YYYY-MM-DD  HH:mm:ss");

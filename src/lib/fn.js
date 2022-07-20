@@ -715,9 +715,11 @@ function currentValueFsRead() {
   );
 }
 
-function currentValueFsWrite(what, status) {
+function currentValueFsWrite(what, b) {
+  console.log("waht : ", what)
+  console.log("value : ", b)
   const currentFile = currentValueFsRead();
-  currentFile[what]["status"] = status;
+  currentFile[what].status = b;
   fs.writeFileSync(
     __dirname + "/../utils/currentValue.json",
     JSON.stringify(currentFile)
@@ -795,7 +797,7 @@ function addCurrent(onList) {
 }
 
 function addCurrentOff(onList) {
-  let curr = 0.9;
+  let curr = 1.2;
   const oneFanValue = 0.6;
   const twoFanValue = 1.1;
   const threeFanValue = 1.7;

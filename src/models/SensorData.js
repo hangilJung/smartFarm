@@ -43,11 +43,11 @@ class SensorData {
   }
 
   async saveSensorData() {
-    //  try {
-    //  axios.post(process.env.TEST_LOCAL_SERVER, this.body);
-    //  } catch (error) {
-    //    console.log(error);
-    //  }
+     try {
+     axios.post(process.env.TEST_LOCAL_SERVER, this.body);
+     } catch (error) {
+       console.log(error);
+     }
     const insertDate = moment().format("YYYY-MM-DD HH:mm:ss");
     // console.log(this.body);
     logger.debug(JSON.stringify(this.body));
@@ -907,10 +907,10 @@ class SensorData {
         Number(settingList["settingTempMax"]);
       console.log(`sub 값은? ${sub.toFixed(1)}`);
 
-      if (sub.toFixed(1) > 1) {
+      if (sub.toFixed(1) > Number(detectStatus['fanLevel1'])) {
         fn.detectFsWrite("isLoop", false);
 
-        const { month, day, hour, minute, second } = endTime(
+        const { month, day, hour, minute, second } = fn.endTime(
           detectStatus["delay"]
         );
 
@@ -930,7 +930,7 @@ class SensorData {
               Number(co2Temp) - Number(settingList["settingTempMax"]);
 
             console.log("딜레이 스케줄 작동");
-            if (reSub.toFixed(1) > 1) {
+            if (reSub.toFixed(1) > Number(detectStatus['fanLevel1'])) {
               //환풍기
               if (sub.toFixed(1) > Number(detectStatus["fanLevel3"])) {
                 ///여기서 환풍기 작동 명려 넣기
@@ -1181,6 +1181,8 @@ class SensorData {
             }
           }
         );
+      } else {
+        fn.detectFsWrite("isLoop", true);
       }
 
       if (stage2Timer) {
